@@ -1,0 +1,506 @@
+# DATA_MODEL.md
+
+# Modelo de Datos Oficial
+
+## 1. Principio
+
+> El modelo de datos representa el dominio de negocio de Planify.
+
+Toda entidad, relación o modificación futura deberá respetar este documento.
+
+La base de datos utiliza PostgreSQL como motor principal y Django ORM como capa de persistencia.
+
+---
+
+# 2. Convenciones generales
+
+Todas las entidades principales deben incluir:
+
+```txt
+id
+created_at
+updated_at
+```
+
+Toda eliminación será lógica mediante:
+
+```txt
+is_active
+```
+
+No se realizarán eliminaciones físicas salvo casos excepcionales.
+
+---
+
+# 3. Diagrama conceptual
+
+```txt
+User
+ ├── UserPreference
+ ├── Favorite
+ ├── Reminder
+ ├── Notification
+ └── InteractionHistory
+
+Place
+ ├── Promotion
+ ├── Event
+ └── Activity
+
+Event
+ ├── Reminder
+ └── Favorite
+
+Activity
+ └── Recommendation
+
+Recommendation
+ ├── User
+ ├── Activity
+ ├── Event
+ └── Place
+```
+
+---
+
+# 4. Entidades principales
+
+---
+
+## User
+
+Representa a una persona registrada en la plataforma.
+
+### Campos
+
+| Campo | Tipo |
+|---------|---------|
+| id | UUID |
+| email | String |
+| password | String |
+| first_name | String |
+| last_name | String |
+| birth_date | Date |
+| role | Enum |
+| profile_image | String |
+| is_active | Boolean |
+| created_at | DateTime |
+| updated_at | DateTime |
+
+### Relaciones
+
+```txt
+1 User → N UserPreference
+
+1 User → N Favorite
+
+1 User → N Reminder
+
+1 User → N Notification
+
+1 User → N InteractionHistory
+
+1 User → N Recommendation
+```
+
+---
+
+## UserPreference
+
+Preferencias declaradas por el usuario.
+
+### Campos
+
+| Campo | Tipo |
+|---------|---------|
+| id | UUID |
+| user_id | FK |
+| category | String |
+| value | String |
+| weight | Integer |
+
+### Ejemplos
+
+```txt
+Música
+Gastronomía
+Cine
+Outdoor
+Indoor
+Tecnología
+Deportes
+```
+
+---
+
+## Place
+
+Representa un lugar físico.
+
+### Campos
+
+| Campo | Tipo |
+|---------|---------|
+| id | UUID |
+| name | String |
+| description | Text |
+| category | String |
+| address | String |
+| city | String |
+| latitude | Decimal |
+| longitude | Decimal |
+| phone | String |
+| website | String |
+| image_url | String |
+| price_level | Integer |
+| is_active | Boolean |
+| created_at | DateTime |
+| updated_at | DateTime |
+
+### Relaciones
+
+```txt
+1 Place → N Events
+
+1 Place → N Promotions
+
+1 Place → N Activities
+```
+
+---
+
+## Event
+
+Representa un evento específico.
+
+### Campos
+
+| Campo | Tipo |
+|---------|---------|
+| id | UUID |
+| place_id | FK |
+| title | String |
+| description | Text |
+| category | String |
+| start_date | DateTime |
+| end_date | DateTime |
+| minimum_age | Integer |
+| capacity | Integer |
+| price | Decimal |
+| image_url | String |
+| status | Enum |
+| created_at | DateTime |
+| updated_at | DateTime |
+
+### Estados
+
+```txt
+draft
+published
+cancelled
+finished
+```
+
+### Relaciones
+
+```txt
+N Event → 1 Place
+
+1 Event → N Favorite
+
+1 Event → N Reminder
+```
+
+---
+
+## Activity
+
+Actividad genérica sugerida por el sistema.
+
+### Campos
+
+| Campo | Tipo |
+|---------|---------|
+| id | UUID |
+| place_id | FK |
+| name | String |
+| description | Text |
+| category | String |
+| activity_type | Enum |
+| min_budget | Decimal |
+| max_budget | Decimal |
+| min_people | Integer |
+| max_people | Integer |
+| indoor | Boolean |
+| outdoor | Boolean |
+| score_base | Integer |
+| is_active | Boolean |
+| created_at | DateTime |
+| updated_at | DateTime |
+
+### Tipos
+
+```txt
+restaurant
+bar
+cinema
+museum
+park
+sports
+concert
+gaming
+tourism
+shopping
+```
+
+---
+
+## Promotion
+
+Promociones publicadas por negocios.
+
+### Campos
+
+| Campo | Tipo |
+|---------|---------|
+| id | UUID |
+| place_id | FK |
+| title | String |
+| description | Text |
+| discount_percentage | Decimal |
+| start_date | DateTime |
+| end_date | DateTime |
+| is_active | Boolean |
+| created_at | DateTime |
+| updated_at | DateTime |
+
+### Relaciones
+
+```txt
+N Promotion → 1 Place
+```
+
+---
+
+## Favorite
+
+Elementos guardados por un usuario.
+
+### Campos
+
+| Campo | Tipo |
+|---------|---------|
+| id | UUID |
+| user_id | FK |
+| event_id | FK Nullable |
+| place_id | FK Nullable |
+| activity_id | FK Nullable |
+| created_at | DateTime |
+
+### Restricción
+
+Debe existir solamente una referencia:
+
+```txt
+event_id
+o
+place_id
+o
+activity_id
+```
+
+---
+
+## Reminder
+
+Recordatorios creados por usuarios.
+
+### Campos
+
+| Campo | Tipo |
+|---------|---------|
+| id | UUID |
+| user_id | FK |
+| event_id | FK |
+| reminder_date | DateTime |
+| created_at | DateTime |
+
+---
+
+## Notification
+
+Notificaciones generadas por el sistema.
+
+### Campos
+
+| Campo | Tipo |
+|---------|---------|
+| id | UUID |
+| user_id | FK |
+| title | String |
+| message | Text |
+| notification_type | String |
+| read | Boolean |
+| created_at | DateTime |
+
+### Tipos
+
+```txt
+event_reminder
+promotion
+system
+recommendation
+```
+
+---
+
+## InteractionHistory
+
+Registro de comportamiento del usuario.
+
+Permite mejorar recomendaciones futuras.
+
+### Campos
+
+| Campo | Tipo |
+|---------|---------|
+| id | UUID |
+| user_id | FK |
+| action | String |
+| entity_type | String |
+| entity_id | UUID |
+| created_at | DateTime |
+
+### Acciones
+
+```txt
+view
+favorite
+click
+share
+search
+```
+
+---
+
+## Recommendation
+
+Resultado generado por el motor de recomendaciones.
+
+### Campos
+
+| Campo | Tipo |
+|---------|---------|
+| id | UUID |
+| user_id | FK |
+| activity_id | FK Nullable |
+| event_id | FK Nullable |
+| place_id | FK Nullable |
+| score | Decimal |
+| recommendation_reason | Text |
+| created_at | DateTime |
+
+### Ejemplo
+
+```txt
+Hace frío + llueve
+
+Score:
+92
+
+Motivo:
+"Cine cercano acorde a tu presupuesto y preferencias."
+```
+
+---
+
+## AuditLog
+
+Registro de auditoría del sistema.
+
+### Campos
+
+| Campo | Tipo |
+|---------|---------|
+| id | UUID |
+| user_id | FK Nullable |
+| action | String |
+| entity_type | String |
+| entity_id | UUID |
+| metadata | JSON |
+| created_at | DateTime |
+
+### Eventos auditables
+
+```txt
+login
+logout
+create
+update
+delete
+publish
+cancel
+favorite
+reminder
+```
+
+---
+
+# 5. Índices recomendados
+
+Crear índices para:
+
+```txt
+User.email
+
+Place.category
+
+Place.city
+
+Event.start_date
+
+Event.status
+
+Promotion.is_active
+
+Favorite.user_id
+
+Recommendation.user_id
+```
+
+---
+
+# 6. Restricciones de integridad
+
+- Todo Event debe pertenecer a un Place.
+- Toda Promotion debe pertenecer a un Place.
+- Todo Favorite debe pertenecer a un User.
+- Todo Reminder debe pertenecer a un User.
+- Toda Recommendation debe pertenecer a un User.
+- No puede existir un Event sin Place.
+- No pueden mostrarse promociones vencidas.
+- No pueden generarse recomendaciones para usuarios eliminados.
+
+---
+
+# 7. Entidades futuras (No MVP)
+
+Estas entidades no forman parte del MVP pero la arquitectura debe permitir agregarlas.
+
+```txt
+Review
+Rating
+Achievement
+Friendship
+Chat
+Reservation
+Payment
+Subscription
+AIRecommendation
+```
+
+---
+
+# 8. Regla de oro
+
+> Ninguna entidad puede agregarse, eliminarse o modificarse sin actualizar DATA_MODEL.md, ARCHITECTURE.md y API_GUIDELINES.md.

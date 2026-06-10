@@ -1,0 +1,151 @@
+import { useState, useEffect, useRef } from 'react'
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+import { MapPin, Locate } from 'lucide-react'
+import { usePlaces } from '@/hooks/usePlaces'
+import Loading from '@/components/common/Loading'
+import Button from '@/components/ui/Button'
+import 'leaflet/dist/leaflet.css'
+import L from 'leaflet'
+
+delete (L.Icon.Default.prototype as any)._getIconUrl
+L.Icon.Default.mergeOptions({
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+})
+
+const userIcon = new L.Icon({
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  className: 'user-marker-icon hue-rotate-[200deg]',
+})
+
+const BUENOS_AIRES_CENTER: [number, number] = [-34.6037, -58.3816]
+
+function RecenterMap({ center }: { center: [number, number] }) {
+  const map = useMap()
+  useEffect(() => { map.setView(center, 14) }, [center, map])
+  return null
+}
+
+export default function MapPage() {
+  const { data: places = [], isLoading } = usePlaces()
+  const placesWithCoords = places.filter((p) => p.latitude && p.longitude)
+  const [userPos, setUserPos] = useState<[number, number] | null>(null)
+  const [locating, setLocating] = useState(false)
+  const [locError, setLocError] = useState<string | null>(null)
+  const mapCenter = userPos ?? BUENOS_AIRES_CENTER
+  const didAutoLocate = useRef(false)
+
+  const locateUser = () => {
+    if (!navigator.geolocation) {
+      setLocError('Tu navegador no soporta geolocalización.')
+      return
+    }
+    setLocating(true)
+    setLocError(null)
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserPos([pos.coords.latitude, pos.coords.longitude])
+        setLocating(false)
+      },
+      () => {
+        setLocError('No se pudo obtener tu ubicación.')
+        setLocating(false)
+      },
+      { timeout: 8000 },
+    )
+  }
+
+  // Try to auto-locate once on mount
+  useEffect(() => {
+    if (!didAutoLocate.current) {
+      didAutoLocate.current = true
+      locateUser()
+    }
+  }, [])
+
+  if (isLoading) return <Loading message="Cargando mapa..." fullPage />
+
+  return (
+    <div className="flex flex-col gap-4 h-full">
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">
+            <MapPin className="h-6 w-6 text-primary-600" />
+            Mapa
+          </h1>
+          <p className="text-gray-500 text-sm">
+            {placesWithCoords.length} lugar{placesWithCoords.length !== 1 ? 'es' : ''} en el mapa.
+            {userPos && <span className="text-primary-600 ml-1">· Tu ubicación activa</span>}
+          </p>
+        </div>
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={locateUser}
+          isLoading={locating}
+          leftIcon={<Locate className="h-4 w-4" />}
+        >
+          Mi ubicación
+        </Button>
+      </div>
+
+      {locError && (
+        <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{locError}</p>
+      )}
+
+      <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm" style={{ height: '65vh' }}>
+        <MapContainer
+          center={mapCenter}
+          zoom={13}
+          style={{ height: '100%', width: '100%' }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {userPos && <RecenterMap center={userPos} />}
+          {userPos && (
+            <Marker position={userPos} icon={userIcon}>
+              <Popup><strong>Tu ubicación</strong></Popup>
+            </Marker>
+          )}
+          {placesWithCoords.map((place) => (
+            <Marker
+              key={place.id}
+              position={[parseFloat(String(place.latitude!)), parseFloat(String(place.longitude!))]}
+            >
+              <Popup>
+                <div className="min-w-[160px]">
+                  <p className="font-semibold text-gray-900">{place.name}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{place.category}</p>
+                  {place.address && (
+                    <p className="text-xs text-gray-400 mt-1">{place.address}</p>
+                  )}
+                </div>
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {placesWithCoords.map((place) => (
+          <div key={place.id} className="flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
+            <div className="bg-primary-50 rounded-lg p-2 flex-shrink-0">
+              <MapPin className="h-4 w-4 text-primary-600" />
+            </div>
+            <div className="min-w-0">
+              <p className="font-medium text-gray-900 text-sm truncate">{place.name}</p>
+              <p className="text-xs text-gray-500">{place.city} · {place.category}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}

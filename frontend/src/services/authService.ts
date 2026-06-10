@@ -1,0 +1,37 @@
+import apiClient from '@/lib/axios'
+import type { AuthResponse, ApiResponse } from '@/types'
+
+interface LoginPayload {
+  email: string
+  password: string
+}
+
+interface RegisterPayload {
+  email: string
+  password: string
+  password_confirm: string
+  first_name: string
+  last_name: string
+  birth_date?: string
+}
+
+export const authService = {
+  async login(payload: LoginPayload): Promise<AuthResponse> {
+    const { data } = await apiClient.post<ApiResponse<AuthResponse>>('/auth/login/', payload)
+    return data.data
+  },
+
+  async register(payload: RegisterPayload): Promise<AuthResponse> {
+    const { data } = await apiClient.post<ApiResponse<AuthResponse>>('/auth/register/', payload)
+    return data.data
+  },
+
+  async logout(refreshToken: string): Promise<void> {
+    await apiClient.post('/auth/logout/', { refresh: refreshToken })
+  },
+
+  async getMe(): Promise<AuthResponse['user']> {
+    const { data } = await apiClient.get<ApiResponse<AuthResponse['user']>>('/auth/me/')
+    return data.data
+  },
+}
