@@ -26,4 +26,11 @@ def remove_favorite(*, user, favorite: Favorite) -> None:
         from rest_framework.exceptions import PermissionDenied
         raise PermissionDenied("No podés eliminar el favorito de otro usuario.")
     log_action(user=user, action="unfavorite", entity_type="favorite", entity_id=str(favorite.id))
+
+    from apps.recommendations.services import log_interaction
+    entity = favorite.event or favorite.place or favorite.activity
+    if entity:
+        entity_type = "event" if favorite.event_id else ("place" if favorite.place_id else "activity")
+        log_interaction(user=user, action="unfavorite", entity_type=entity_type, entity_id=str(entity.id))
+
     favorite.delete()

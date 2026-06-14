@@ -153,6 +153,9 @@ Representa un lugar físico.
 | website | String |
 | image_url | String |
 | price_level | Integer |
+| source | String (default: 'internal', valores: 'internal', 'google') |
+| external_id | String Nullable (place_id de Google) |
+| last_synced_at | DateTime Nullable |
 | is_active | Boolean |
 | created_at | DateTime |
 | updated_at | DateTime |
@@ -376,9 +379,12 @@ Permite mejorar recomendaciones futuras.
 ```txt
 view
 favorite
+unfavorite
 click
 share
 search
+create_reminder
+recommendation_click
 ```
 
 ---
@@ -398,6 +404,7 @@ Resultado generado por el motor de recomendaciones.
 | place_id | FK Nullable |
 | score | Decimal |
 | recommendation_reason | Text |
+| score_breakdown | JSON (desglose de factores: preference, popularity, interaction, weather, distance, budget, time_of_day, day_of_week) |
 | created_at | DateTime |
 
 ### Ejemplo

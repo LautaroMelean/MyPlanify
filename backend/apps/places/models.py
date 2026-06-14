@@ -15,6 +15,9 @@ class Place(SoftDeleteModel):
     website = models.URLField(blank=True, default="")
     image_url = models.URLField(blank=True, default="")
     price_level = models.PositiveSmallIntegerField(default=0)
+    source = models.CharField(max_length=20, default="internal", db_index=True)
+    external_id = models.CharField(max_length=255, null=True, blank=True, db_index=True)
+    last_synced_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         db_table = "places"

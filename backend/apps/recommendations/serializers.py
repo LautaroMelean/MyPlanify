@@ -11,7 +11,7 @@ class RecommendationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recommendation
         fields = (
-            "id", "score", "recommendation_reason",
+            "id", "score", "recommendation_reason", "score_breakdown",
             "activity", "event", "place",
             "activity_detail", "event_detail", "place_detail",
             "item_type", "created_at",

@@ -516,26 +516,46 @@ Actualizar documentación.
 Estado actual:
 
 ```txt
-SPRINT_0_STATUS: IN_PROGRESS
+SPRINT_0_STATUS: COMPLETED
+SPRINT_1_STATUS: COMPLETED
+SPRINT_2_STATUS: COMPLETED
+SPRINT_3_STATUS: COMPLETED
+SPRINT_4_STATUS: COMPLETED
+SPRINT_5_STATUS: COMPLETED
 ```
 
-Durante Sprint 0 está prohibido desarrollar:
+Sprint 4 — Calidad, Testing y Preparación para Producción (COMPLETADO 2026-06-10):
 
-- recomendaciones finales;
-- promociones finales;
-- motor de scoring;
-- eventos completos;
-- dashboards finales.
+- Bloque 1: Auditoría del proyecto ✓
+- Bloque 2: Tests unitarios frontend (Vitest) ✓
+- Bloque 3: Tests E2E (Playwright) ✓
+- Bloque 4: Dockerfiles de producción ✓
+- Bloque 5: docker-compose.prod.yml ✓
+- Bloque 6: Healthcheck + Logging ✓
+- Bloque 7: ADRs (001-004) ✓
+- Bloque 8: Security review ✓
+- Bloque 9: Actualización de docs ✓
 
-Sprint 0 solo construye:
+Sprint 5 — Integraciones Externas y Recomendaciones V2 (COMPLETADO 2026-06-13):
 
-- estructura;
-- autenticación;
-- permisos;
-- arquitectura;
-- base de datos;
-- infraestructura;
-- documentación.
+- Bloque A: Migraciones Place (source, external_id, last_synced_at) + Recommendation (score_breakdown) ✓
+- Bloque B: OpenWeather provider con caché Redis + endpoint GET /api/v1/weather/current/ ✓
+- Bloque C: Google Places provider + servicio de sincronización + endpoints external/places/ ✓
+- Bloque D: Recommendations Engine V2 (día de semana, interacciones ponderadas, score_breakdown) ✓
+- Bloque E: Frontend — WeatherWidget + score breakdown en cards de recomendación ✓
+- Bloque F: Tests — providers, vistas, WeatherWidget ✓
+- Bloque G: Seguridad — validación lat/lon, timeout 3s, API keys no logueadas ✓
+- Bloque H: ADRs (005-007) + docs actualizadas ✓
+
+Prohibiciones activas:
+
+- No implementar IA avanzada.
+- No implementar reservas.
+- No implementar pagos.
+- No implementar Ticketmaster (Sprint 6+).
+- No implementar Google Calendar (Sprint 6+).
+- No modificar arquitectura sin ADR.
+- No agregar dependencias innecesarias.
 
 ---
 

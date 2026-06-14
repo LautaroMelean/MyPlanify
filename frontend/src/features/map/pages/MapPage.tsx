@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import { MapPin, Locate } from 'lucide-react'
 import { usePlaces } from '@/hooks/usePlaces'
+import { useWeather } from '@/hooks/useWeather'
 import Loading from '@/components/common/Loading'
 import Button from '@/components/ui/Button'
+import WeatherWidget from '@/components/ui/WeatherWidget'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 
@@ -35,6 +37,8 @@ export default function MapPage() {
   const { data: places = [], isLoading } = usePlaces()
   const placesWithCoords = places.filter((p) => p.latitude && p.longitude)
   const [userPos, setUserPos] = useState<[number, number] | null>(null)
+  const weatherCoords = userPos ? { lat: userPos[0], lon: userPos[1] } : null
+  const { data: weather } = useWeather(weatherCoords)
   const [locating, setLocating] = useState(false)
   const [locError, setLocError] = useState<string | null>(null)
   const mapCenter = userPos ?? BUENOS_AIRES_CENTER
@@ -97,6 +101,8 @@ export default function MapPage() {
       {locError && (
         <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{locError}</p>
       )}
+
+      {userPos && <WeatherWidget weather={weather} />}
 
       <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm" style={{ height: '65vh' }}>
         <MapContainer

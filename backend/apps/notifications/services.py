@@ -19,6 +19,10 @@ def create_reminder(*, user, event, reminder_date) -> Reminder:
         raise ValidationError("Ya tenés un recordatorio para este evento.")
     reminder = Reminder.objects.create(user=user, event=event, reminder_date=reminder_date)
     log_action(user=user, action="reminder", entity_type="reminder", entity_id=str(reminder.id))
+
+    from apps.recommendations.services import log_interaction
+    log_interaction(user=user, action="create_reminder", entity_type="event", entity_id=str(event.id))
+
     create_notification(
         user=user,
         title=f"Recordatorio: {event.title}",

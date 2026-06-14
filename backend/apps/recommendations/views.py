@@ -1,7 +1,8 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
-from apps.core.responses import success_response
+from apps.core.responses import success_response, error_response
 from .serializers import RecommendationSerializer
 from .services import generate_recommendations_for_user, log_interaction
 
@@ -43,3 +44,22 @@ def recommendation_list(request):
             log_interaction(user=request.user, action="view", entity_type=entity_type, entity_id=entity_id)
 
     return success_response(RecommendationSerializer(recommendations, many=True).data)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def recommendation_click(request):
+    entity_type = request.data.get("entity_type", "")
+    entity_id = request.data.get("entity_id", "")
+    if not entity_type or not entity_id:
+        return error_response(
+            "MISSING_PARAMS", "Se requieren entity_type y entity_id.",
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+    log_interaction(
+        user=request.user,
+        action="recommendation_click",
+        entity_type=entity_type,
+        entity_id=str(entity_id),
+    )
+    return success_response(None)

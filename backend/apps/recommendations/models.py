@@ -11,6 +11,7 @@ class Recommendation(models.Model):
     place = models.ForeignKey("places.Place", on_delete=models.CASCADE, null=True, blank=True)
     score = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     recommendation_reason = models.TextField(blank=True, default="")
+    score_breakdown = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

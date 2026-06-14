@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Sparkles, MapPin, Activity, Calendar } from 'lucide-react'
+import { Sparkles, MapPin, Activity, Calendar, CheckCircle } from 'lucide-react'
 import { useRecommendations } from '@/hooks/useRecommendations'
+import { useWeather } from '@/hooks/useWeather'
 import FavoriteButton from '@/components/ui/FavoriteButton'
+import WeatherWidget from '@/components/ui/WeatherWidget'
 import Loading from '@/components/common/Loading'
 import EmptyState from '@/components/common/EmptyState'
-import type { Recommendation } from '@/types'
+import type { Recommendation, ScoreBreakdown } from '@/types'
 
 export default function RecommendationsPage() {
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null)
@@ -19,20 +21,24 @@ export default function RecommendationsPage() {
   const { data: recommendations = [], isLoading } = useRecommendations(
     coords ? { lat: coords.lat, lon: coords.lon } : {},
   )
+  const { data: weather } = useWeather(coords)
 
   if (isLoading) return <Loading message="Generando recomendaciones..." fullPage />
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">
-          <Sparkles className="h-6 w-6 text-primary-600" />
-          Para vos
-        </h1>
-        <p className="text-gray-500 text-sm">
-          Recomendaciones personalizadas basadas en tus preferencias
-          {coords ? ' y tu ubicación actual' : ''}.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">
+            <Sparkles className="h-6 w-6 text-primary-600" />
+            Para vos
+          </h1>
+          <p className="text-gray-500 text-sm">
+            Recomendaciones personalizadas basadas en tus preferencias
+            {coords ? ' y tu ubicación actual' : ''}.
+          </p>
+        </div>
+        {coords && <WeatherWidget weather={weather} />}
       </div>
 
       {recommendations.length === 0 ? (
@@ -52,6 +58,17 @@ export default function RecommendationsPage() {
   )
 }
 
+function getReasonLabels(breakdown: ScoreBreakdown): string[] {
+  const labels: string[] = []
+  if (breakdown.preference >= 20)   labels.push('Coincide con tus gustos')
+  if (breakdown.distance >= 5)      labels.push('Está cerca de vos')
+  if (breakdown.weather > 0)        labels.push('Ideal para el clima actual')
+  if (breakdown.time_of_day >= 5)   labels.push('Perfecto para este momento')
+  if (breakdown.day_of_week >= 5)   labels.push('Ideal para hoy')
+  if (breakdown.interaction > 0)    labels.push('Basado en tu historial')
+  return labels.slice(0, 3)
+}
+
 function RecommendationCard({ rec }: { rec: Recommendation }) {
   const score = Math.round(parseFloat(rec.score))
 
@@ -67,8 +84,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
     rec.place_detail?.category ??
     ''
 
-  const itemId =
-    rec.activity ?? rec.event ?? rec.place ?? ''
+  const itemId = rec.activity ?? rec.event ?? rec.place ?? ''
 
   const icon =
     rec.item_type === 'activity' ? <Activity className="h-4 w-4" /> :
@@ -78,6 +94,8 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
   const typeLabel =
     rec.item_type === 'activity' ? 'Actividad' :
     rec.item_type === 'event' ? 'Evento' : 'Lugar'
+
+  const reasonLabels = rec.score_breakdown ? getReasonLabels(rec.score_breakdown) : []
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex flex-col gap-3 hover:shadow-md transition-shadow">
@@ -100,7 +118,19 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
         </div>
       </div>
 
-      {rec.recommendation_reason && (
+      {reasonLabels.length > 0 && (
+        <div className="flex flex-col gap-1">
+          <p className="text-xs font-medium text-gray-500">Te lo recomendamos porque:</p>
+          {reasonLabels.map((label) => (
+            <div key={label} className="flex items-center gap-1.5 text-xs text-gray-600">
+              <CheckCircle className="h-3.5 w-3.5 text-green-500 flex-shrink-0" />
+              {label}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!reasonLabels.length && rec.recommendation_reason && (
         <p className="text-xs text-gray-500 italic">{rec.recommendation_reason}</p>
       )}
 

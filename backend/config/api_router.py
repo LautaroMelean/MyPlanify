@@ -1,4 +1,5 @@
 from django.urls import path, include
+from apps.integrations.urls import weather_urlpatterns, external_places_urlpatterns
 
 urlpatterns = [
     path("health/", include("apps.core.urls")),
@@ -13,4 +14,6 @@ urlpatterns = [
     path("promotions/", include("apps.promotions.urls")),
     path("notifications/", include("apps.notifications.urls")),
     path("reminders/", include("apps.notifications.reminder_urls")),
+    path("weather/", include((weather_urlpatterns, "weather"))),
+    path("external/places/", include((external_places_urlpatterns, "external-places"))),
 ]

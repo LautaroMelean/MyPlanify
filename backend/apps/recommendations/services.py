@@ -8,24 +8,28 @@ from .models import Recommendation, InteractionHistory
 
 logger = logging.getLogger(__name__)
 
-# ── Sprint 2 core weights (sum = 100) ────────────────────────────────────────
+# ── V1 base weights (sum = 100) ───────────────────────────────────────────────
 WEIGHT_PREFERENCE  = 40
 WEIGHT_CATEGORY    = 25
 WEIGHT_POPULARITY  = 15
 WEIGHT_PROXIMITY   = 10
 WEIGHT_INTERACTION = 10
 
-# ── Sprint 3 contextual modifiers (additive, score clamped to [0, 100]) ─────
+# ── Contextual modifiers (additive, score clamped [0, 100]) ──────────────────
 MOD_BUDGET_MATCH   =  10
 MOD_BUDGET_OVER    = -10
 MOD_PEOPLE_INVALID = -20
 MOD_AGE_BLOCKED    = -50
 MOD_TIME_BONUS     =   5
-MOD_DISTANCE = {   # km → bonus
-    2:  10,
-    5:   8,
-    10:  5,
-    20:  2,
+MOD_DISTANCE = {2: 10, 5: 8, 10: 5, 20: 2}
+
+# ── V2 interaction weights ────────────────────────────────────────────────────
+INTERACTION_WEIGHTS = {
+    "favorite":             0.25,
+    "create_reminder":      0.20,
+    "recommendation_click": 0.15,
+    "view":                 0.05,
+    "unfavorite":          -0.10,
 }
 
 
@@ -54,8 +58,13 @@ def _popularity_score(score_base: int) -> float:
     return min((score_base / 100) * WEIGHT_POPULARITY, WEIGHT_POPULARITY)
 
 
-def _interaction_score(entity_id: str, interaction_set: set) -> float:
-    return WEIGHT_INTERACTION if str(entity_id) in interaction_set else 0
+def _interaction_score_v2(entity_id: str, interactions: list[tuple]) -> float:
+    """V2: weighted by action type, returns score contribution 0-10."""
+    total = 0.0
+    for eid, action in interactions:
+        if str(eid) == str(entity_id):
+            total += INTERACTION_WEIGHTS.get(action, 0)
+    return max(-WEIGHT_INTERACTION, min(WEIGHT_INTERACTION, total * WEIGHT_INTERACTION))
 
 
 def _weather_modifier(is_outdoor: bool, is_indoor: bool, is_outdoor_friendly) -> float:
@@ -83,8 +92,8 @@ def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return 2 * R * math.asin(math.sqrt(a))
 
 
-def _distance_modifier(user_lat: float, user_lon: float, place_lat, place_lon) -> float:
-    if user_lat is None or user_lon is None or place_lat is None or place_lon is None:
+def _distance_modifier(user_lat, user_lon, place_lat, place_lon) -> float:
+    if any(x is None for x in [user_lat, user_lon, place_lat, place_lon]):
         return 0
     try:
         km = _haversine_km(user_lat, user_lon, float(place_lat), float(place_lon))
@@ -96,7 +105,7 @@ def _distance_modifier(user_lat: float, user_lon: float, place_lat, place_lon) -
     return 0
 
 
-def _budget_modifier(budget: float | None, min_cost: float | None) -> float:
+def _budget_modifier(budget, min_cost) -> float:
     if budget is None or min_cost is None:
         return 0
     if min_cost <= budget:
@@ -106,7 +115,7 @@ def _budget_modifier(budget: float | None, min_cost: float | None) -> float:
     return MOD_BUDGET_OVER
 
 
-def _people_modifier(people: int | None, min_people: int, max_people: int | None) -> float:
+def _people_modifier(people, min_people: int, max_people) -> float:
     if people is None:
         return 0
     if people < min_people:
@@ -117,9 +126,7 @@ def _people_modifier(people: int | None, min_people: int, max_people: int | None
 
 
 def _age_modifier(user, minimum_age: int) -> float:
-    if not minimum_age or minimum_age <= 0:
-        return 0
-    if not user.birth_date:
+    if not minimum_age or minimum_age <= 0 or not user.birth_date:
         return 0
     today = date.today()
     age = today.year - user.birth_date.year - (
@@ -131,15 +138,15 @@ def _age_modifier(user, minimum_age: int) -> float:
 def _time_of_day_modifier(is_indoor: bool, is_outdoor: bool, category: str) -> float:
     hour = timezone.localtime(timezone.now()).hour
     cat = category.lower()
-    if 6 <= hour < 12:  # mañana
+    if 6 <= hour < 12:
         if any(k in cat for k in ("café", "cafe", "desayuno", "breakfast", "outdoor", "park", "parque")):
             return MOD_TIME_BONUS
         if is_outdoor:
             return MOD_TIME_BONUS
-    elif 12 <= hour < 19:  # tarde
+    elif 12 <= hour < 19:
         if any(k in cat for k in ("restaurant", "food", "gastronomía", "museo", "museum", "cine", "cinema")):
             return MOD_TIME_BONUS
-    else:  # noche (19-6)
+    else:
         if any(k in cat for k in ("bar", "music", "gaming", "concierto", "concert", "entertainment")):
             return MOD_TIME_BONUS
         if is_indoor:
@@ -147,18 +154,36 @@ def _time_of_day_modifier(is_indoor: bool, is_outdoor: bool, category: str) -> f
     return 0
 
 
-def _build_reason(category: str, pref_map: dict, weather_used: bool, is_outdoor_friendly,
-                  distance_km: float | None = None) -> str:
-    parts = []
+def _day_of_week_modifier(is_outdoor: bool, category: str) -> float:
+    """V2: weekends favour outdoor/long activities, weekdays favour nearby/quick ones."""
+    weekday = timezone.localtime(timezone.now()).weekday()  # 0=Mon, 6=Sun
     cat = category.lower()
-    for key in pref_map:
-        if key in cat or cat in key:
-            parts.append(f"coincide con tus preferencias de {key}")
-            break
-    if weather_used and is_outdoor_friendly is not None:
-        parts.append("ideal para el clima de hoy" if not is_outdoor_friendly else "perfecto para salir con el clima actual")
-    if distance_km is not None and distance_km <= 5:
-        parts.append(f"a solo {distance_km:.1f} km de tu ubicación")
+    is_weekend = weekday >= 5
+    if is_weekend:
+        if is_outdoor or any(k in cat for k in ("parque", "park", "turismo", "museo", "excursión")):
+            return 5
+    else:
+        if any(k in cat for k in ("café", "cafe", "bar", "restaurant", "gastronomía")):
+            return 3
+    return 0
+
+
+def _build_reason_from_breakdown(breakdown: dict, pref_map: dict, weather_data: dict | None) -> str:
+    parts = []
+    if breakdown.get("preference", 0) >= 20:
+        keys = list(pref_map.keys())
+        pref_label = keys[0] if keys else "tus gustos"
+        parts.append(f"coincide con tus preferencias de {pref_label}")
+    if breakdown.get("distance", 0) >= 5:
+        parts.append("está cerca de tu ubicación")
+    if breakdown.get("weather", 0) > 0 and weather_data and weather_data.get("is_outdoor_friendly"):
+        parts.append("perfecto para salir con el clima actual")
+    elif breakdown.get("weather", 0) > 0 and weather_data and weather_data.get("is_outdoor_friendly") is False:
+        parts.append("ideal para el clima de hoy")
+    if breakdown.get("time_of_day", 0) >= MOD_TIME_BONUS:
+        parts.append("ideal para este momento del día")
+    if breakdown.get("day_of_week", 0) >= 5:
+        parts.append("perfecto para el fin de semana")
     if not parts:
         parts.append("popular entre usuarios similares")
     return ", ".join(parts).capitalize() + "."
@@ -177,9 +202,8 @@ def generate_recommendations_for_user(
     from apps.events.selectors import get_published_events
     from apps.places.selectors import get_active_places
     from apps.users.selectors import get_user_preferences
-    from apps.integrations.weather_service import weather_service
+    from apps.integrations.providers.openweather import openweather_provider
 
-    # Resolve user location: query params take priority, then profile
     user_lat = lat if lat is not None else (float(user.latitude) if user.latitude else None)
     user_lon = lon if lon is not None else (float(user.longitude) if user.longitude else None)
 
@@ -189,15 +213,13 @@ def generate_recommendations_for_user(
         for p in prefs
     }
 
-    weather = {}
+    weather = None
     if user_lat is not None and user_lon is not None:
-        weather = weather_service.get_current_weather(user_lat, user_lon)
-    is_outdoor_friendly = weather.get("is_outdoor_friendly")
-    weather_used = is_outdoor_friendly is not None
+        weather = openweather_provider.get_current_weather(user_lat, user_lon)
+    is_outdoor_friendly = weather.get("is_outdoor_friendly") if weather else None
 
-    interaction_set = set(
-        str(eid)
-        for eid in InteractionHistory.objects.filter(user=user).values_list("entity_id", flat=True)
+    interactions = list(
+        InteractionHistory.objects.filter(user=user).values_list("entity_id", "action")
     )
 
     pending = []
@@ -214,24 +236,38 @@ def generate_recommendations_for_user(
                 pass
 
         min_cost = float(activity.min_budget) if activity.min_budget else None
-        score = (
-            _pref_boost(activity.category, activity.activity_type, pref_map)
-            + _category_score(activity.category, pref_map)
-            + _popularity_score(activity.score_base)
-            + _interaction_score(activity.id, interaction_set)
-            + _weather_modifier(activity.outdoor, activity.indoor, is_outdoor_friendly)
-            + _distance_modifier(user_lat, user_lon, place_lat, place_lon)
-            + _budget_modifier(budget, min_cost)
-            + _people_modifier(people, activity.min_people, activity.max_people)
-            + _time_of_day_modifier(activity.indoor, activity.outdoor, activity.category)
-        )
-        score = max(0, min(100, score))
-        reason = _build_reason(activity.category, pref_map, weather_used, is_outdoor_friendly, distance_km)
+
+        pref_s       = _pref_boost(activity.category, activity.activity_type, pref_map)
+        cat_s        = _category_score(activity.category, pref_map)
+        pop_s        = _popularity_score(activity.score_base)
+        inter_s      = _interaction_score_v2(activity.id, interactions)
+        weather_s    = _weather_modifier(activity.outdoor, activity.indoor, is_outdoor_friendly)
+        dist_s       = _distance_modifier(user_lat, user_lon, place_lat, place_lon)
+        budget_s     = _budget_modifier(budget, min_cost)
+        people_s     = _people_modifier(people, activity.min_people, activity.max_people)
+        time_s       = _time_of_day_modifier(activity.indoor, activity.outdoor, activity.category)
+        day_s        = _day_of_week_modifier(activity.outdoor, activity.category)
+
+        breakdown = {
+            "preference": round(pref_s + cat_s, 2),
+            "popularity": round(pop_s, 2),
+            "interaction": round(inter_s, 2),
+            "weather": round(weather_s, 2),
+            "distance": round(dist_s, 2),
+            "budget": round(budget_s, 2),
+            "time_of_day": round(time_s, 2),
+            "day_of_week": round(day_s, 2),
+        }
+        score = max(0, min(100,
+            pref_s + cat_s + pop_s + inter_s + weather_s
+            + dist_s + budget_s + people_s + time_s + day_s
+        ))
+        reason = _build_reason_from_breakdown(breakdown, pref_map, weather)
         pending.append(Recommendation(
-            user=user,
-            activity=activity,
+            user=user, activity=activity,
             score=Decimal(str(round(score, 2))),
             recommendation_reason=reason,
+            score_breakdown=breakdown,
         ))
 
     # ── Events ────────────────────────────────────────────────────────────────
@@ -250,24 +286,36 @@ def generate_recommendations_for_user(
         proximity_bonus = WEIGHT_PROXIMITY if 0 <= days_away <= 7 else 0
         event_cost = float(event.price) if event.price else 0
 
-        score = (
-            _pref_boost(event.category, "", pref_map)
-            + _category_score(event.category, pref_map)
-            + _popularity_score(60)
-            + proximity_bonus
-            + _interaction_score(event.id, interaction_set)
-            + _distance_modifier(user_lat, user_lon, place_lat, place_lon)
-            + _budget_modifier(budget, event_cost)
-            + _age_modifier(user, event.minimum_age)
-            + _time_of_day_modifier(is_indoor=True, is_outdoor=False, category=event.category)
-        )
-        score = max(0, min(100, score))
-        reason = _build_reason(event.category, pref_map, False, None, distance_km)
+        pref_s   = _pref_boost(event.category, "", pref_map)
+        cat_s    = _category_score(event.category, pref_map)
+        pop_s    = _popularity_score(60)
+        inter_s  = _interaction_score_v2(event.id, interactions)
+        dist_s   = _distance_modifier(user_lat, user_lon, place_lat, place_lon)
+        budget_s = _budget_modifier(budget, event_cost)
+        age_s    = _age_modifier(user, event.minimum_age)
+        time_s   = _time_of_day_modifier(is_indoor=True, is_outdoor=False, category=event.category)
+        day_s    = _day_of_week_modifier(is_outdoor=False, category=event.category)
+
+        breakdown = {
+            "preference": round(pref_s + cat_s, 2),
+            "popularity": round(pop_s + proximity_bonus, 2),
+            "interaction": round(inter_s, 2),
+            "weather": 0,
+            "distance": round(dist_s, 2),
+            "budget": round(budget_s, 2),
+            "time_of_day": round(time_s, 2),
+            "day_of_week": round(day_s, 2),
+        }
+        score = max(0, min(100,
+            pref_s + cat_s + pop_s + proximity_bonus + inter_s
+            + dist_s + budget_s + age_s + time_s + day_s
+        ))
+        reason = _build_reason_from_breakdown(breakdown, pref_map, None)
         pending.append(Recommendation(
-            user=user,
-            event=event,
+            user=user, event=event,
             score=Decimal(str(round(score, 2))),
             recommendation_reason=reason,
+            score_breakdown=breakdown,
         ))
 
     # ── Places ────────────────────────────────────────────────────────────────
@@ -279,21 +327,33 @@ def generate_recommendations_for_user(
             except Exception:
                 pass
 
-        score = (
-            _pref_boost(place.category, "", pref_map)
-            + _category_score(place.category, pref_map)
-            + _popularity_score(50)
-            + _interaction_score(place.id, interaction_set)
-            + _distance_modifier(user_lat, user_lon, place.latitude, place.longitude)
-            + _time_of_day_modifier(is_indoor=True, is_outdoor=False, category=place.category)
-        )
-        score = max(0, min(100, score))
-        reason = _build_reason(place.category, pref_map, False, None, distance_km)
+        pref_s  = _pref_boost(place.category, "", pref_map)
+        cat_s   = _category_score(place.category, pref_map)
+        pop_s   = _popularity_score(50)
+        inter_s = _interaction_score_v2(place.id, interactions)
+        dist_s  = _distance_modifier(user_lat, user_lon, place.latitude, place.longitude)
+        time_s  = _time_of_day_modifier(is_indoor=True, is_outdoor=False, category=place.category)
+        day_s   = _day_of_week_modifier(is_outdoor=False, category=place.category)
+
+        breakdown = {
+            "preference": round(pref_s + cat_s, 2),
+            "popularity": round(pop_s, 2),
+            "interaction": round(inter_s, 2),
+            "weather": 0,
+            "distance": round(dist_s, 2),
+            "budget": 0,
+            "time_of_day": round(time_s, 2),
+            "day_of_week": round(day_s, 2),
+        }
+        score = max(0, min(100,
+            pref_s + cat_s + pop_s + inter_s + dist_s + time_s + day_s
+        ))
+        reason = _build_reason_from_breakdown(breakdown, pref_map, None)
         pending.append(Recommendation(
-            user=user,
-            place=place,
+            user=user, place=place,
             score=Decimal(str(round(score, 2))),
             recommendation_reason=reason,
+            score_breakdown=breakdown,
         ))
 
     Recommendation.objects.filter(user=user).delete()

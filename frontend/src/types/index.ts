@@ -76,9 +76,23 @@ export interface Place {
   website: string
   image_url: string
   price_level: number
+  source: string
+  external_id?: string | null
   is_active: boolean
   created_at: string
   updated_at: string
+}
+
+// ─── Weather ──────────────────────────────────────────────────────────────────
+
+export interface Weather {
+  temperature: number
+  feels_like: number
+  condition: string
+  humidity: number
+  wind_speed: number
+  clouds: number
+  is_outdoor_friendly: boolean
 }
 
 // ─── Events ───────────────────────────────────────────────────────────────────
@@ -134,10 +148,22 @@ export interface Favorite {
   created_at: string
 }
 
+export interface ScoreBreakdown {
+  preference: number
+  popularity: number
+  interaction: number
+  weather: number
+  distance: number
+  budget: number
+  time_of_day: number
+  day_of_week: number
+}
+
 export interface Recommendation {
   id: string
   score: string
   recommendation_reason: string
+  score_breakdown: ScoreBreakdown
   activity: string | null
   event: string | null
   place: string | null

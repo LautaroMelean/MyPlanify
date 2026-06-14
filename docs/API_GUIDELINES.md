@@ -132,8 +132,28 @@ GET /api/v1/notifications/
 ### Recomendaciones
 
 ```txt
-GET /api/v1/recommendations/
+GET  /api/v1/recommendations/
+POST /api/v1/recommendations/click/
 ```
+
+### Clima
+
+```txt
+GET /api/v1/weather/current/?lat={lat}&lon={lon}
+```
+
+Respuesta exitosa: `{"success": true, "data": {"temperature": 18, "feels_like": 16, "condition": "Clear", ...}}`
+
+Fallback (API caída o sin key): `{"success": true, "data": null}`
+
+### Lugares externos
+
+```txt
+GET /api/v1/external/places/?lat={lat}&lon={lon}&radius={m}&type={type}
+GET /api/v1/external/places/search/?q={query}&lat={lat}&lon={lon}
+```
+
+Ambos endpoints devuelven el mismo formato que `/api/v1/places/`. El campo `source` indica el origen ('internal' o 'google').
 
 ---
 
