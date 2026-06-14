@@ -4,6 +4,7 @@ import { useActivity } from '@/hooks/useActivities'
 import Loading from '@/components/common/Loading'
 import Button from '@/components/ui/Button'
 import FavoriteButton from '@/components/ui/FavoriteButton'
+import ReviewSection from '@/components/ui/ReviewSection'
 
 const TYPE_LABELS: Record<string, string> = {
   restaurant: 'Restaurante', bar: 'Bar', cinema: 'Cine', museum: 'Museo',
@@ -107,6 +108,8 @@ export default function ActivityDetail() {
           </div>
         </div>
       </div>
+
+      <ReviewSection entityType="activity" entityId={activity.id} />
     </div>
   )
 }

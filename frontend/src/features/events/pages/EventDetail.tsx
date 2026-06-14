@@ -6,6 +6,7 @@ import { useCreateReminder } from '@/hooks/useReminders'
 import Loading from '@/components/common/Loading'
 import Button from '@/components/ui/Button'
 import FavoriteButton from '@/components/ui/FavoriteButton'
+import ReviewSection from '@/components/ui/ReviewSection'
 import { useState } from 'react'
 
 function formatDate(iso: string) {
@@ -168,6 +169,8 @@ export default function EventDetail() {
           </div>
         </div>
       )}
+
+      <ReviewSection entityType="event" entityId={event.id} />
     </div>
   )
 }

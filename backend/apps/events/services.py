@@ -4,6 +4,14 @@ from .models import Event, EventStatus
 from apps.audit.services import log_action
 
 
+def update_event(*, user, event: Event, **kwargs) -> Event:
+    for field, value in kwargs.items():
+        setattr(event, field, value)
+    event.save()
+    log_action(user=user, action="update", entity_type="event", entity_id=str(event.id))
+    return event
+
+
 def create_event(*, user, **kwargs) -> Event:
     event = Event.objects.create(organizer=user, **kwargs)
     log_action(user=user, action="create", entity_type="event", entity_id=str(event.id))

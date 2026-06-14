@@ -39,6 +39,7 @@ LOCAL_APPS = [
     "apps.promotions",
     "apps.notifications",
     "apps.integrations",
+    "apps.reviews",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -136,6 +137,17 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.JSONRenderer",
     ),
     "EXCEPTION_HANDLER": "apps.core.exceptions.custom_exception_handler",
+    # Rate limiting: 100 req/day for anonymous, 1000 req/day for authenticated users.
+    # Auth endpoints (login/register) apply their own tighter throttle via throttle_classes.
+    "DEFAULT_THROTTLE_CLASSES": (
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ),
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "100/day",
+        "user": "1000/day",
+        "auth": "10/minute",
+    },
 }
 
 SIMPLE_JWT = {

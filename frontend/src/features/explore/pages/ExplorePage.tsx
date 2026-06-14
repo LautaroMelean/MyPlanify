@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { MapPin, Activity, Calendar } from 'lucide-react'
+import { MapPin, Activity, Calendar, TrendingUp } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { usePlaces } from '@/hooks/usePlaces'
 import { useActivities } from '@/hooks/useActivities'
 import { useEvents } from '@/hooks/useEvents'
+import { useTrending } from '@/hooks/useTrending'
 import PlaceCard from '@/components/ui/PlaceCard'
 import ActivityCard from '@/components/ui/ActivityCard'
 import EventCard from '@/components/ui/EventCard'
@@ -15,10 +17,14 @@ type Tab = 'lugares' | 'actividades' | 'eventos'
 export default function ExplorePage() {
   const [tab, setTab] = useState<Tab>('lugares')
   const [search, setSearch] = useState('')
+  const navigate = useNavigate()
 
   const places = usePlaces({ city: search || undefined })
   const activities = useActivities({ category: search || undefined })
   const events = useEvents({ category: search || undefined })
+  const { data: trending } = useTrending()
+
+  const showTrending = !search
 
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: 'lugares', label: 'Lugares', icon: <MapPin className="h-4 w-4" /> },
@@ -39,6 +45,73 @@ export default function ExplorePage() {
         placeholder={tab === 'lugares' ? 'Buscar por ciudad...' : 'Buscar por categoría...'}
         className="max-w-md"
       />
+
+      {/* Trending section — shown only when no search active */}
+      {showTrending && trending && (
+        <>
+          {trending.places.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <TrendingUp className="h-4 w-4 text-primary-600" />
+                <h2 className="text-sm font-semibold text-gray-700">Lugares más populares</h2>
+              </div>
+              <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
+                {trending.places.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => navigate(`/places/${p.id}`)}
+                    className="flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow text-left"
+                  >
+                    {p.image_url ? (
+                      <img src={p.image_url} alt={p.name} className="w-full h-24 object-cover" />
+                    ) : (
+                      <div className="w-full h-24 bg-primary-50 flex items-center justify-center">
+                        <MapPin className="h-8 w-8 text-primary-300" />
+                      </div>
+                    )}
+                    <div className="p-2">
+                      <p className="text-xs font-semibold text-gray-900 truncate">{p.name}</p>
+                      <p className="text-xs text-gray-400 truncate">{p.city}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {trending.events.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <TrendingUp className="h-4 w-4 text-primary-600" />
+                <h2 className="text-sm font-semibold text-gray-700">Eventos más guardados</h2>
+              </div>
+              <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
+                {trending.events.map((e) => (
+                  <button
+                    key={e.id}
+                    onClick={() => navigate(`/events/${e.id}`)}
+                    className="flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow text-left"
+                  >
+                    {e.image_url ? (
+                      <img src={e.image_url} alt={e.title} className="w-full h-24 object-cover" />
+                    ) : (
+                      <div className="w-full h-24 bg-indigo-50 flex items-center justify-center">
+                        <Calendar className="h-8 w-8 text-indigo-300" />
+                      </div>
+                    )}
+                    <div className="p-2">
+                      <p className="text-xs font-semibold text-gray-900 truncate">{e.title}</p>
+                      <p className="text-xs text-gray-400">
+                        {new Date(e.start_date).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-1 border-b border-gray-200">

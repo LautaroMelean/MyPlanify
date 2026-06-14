@@ -76,7 +76,7 @@ export interface Place {
   website: string
   image_url: string
   price_level: number
-  source: string
+  source?: string
   external_id?: string | null
   is_active: boolean
   created_at: string
@@ -163,7 +163,7 @@ export interface Recommendation {
   id: string
   score: string
   recommendation_reason: string
-  score_breakdown: ScoreBreakdown
+  score_breakdown?: ScoreBreakdown
   activity: string | null
   event: string | null
   place: string | null
@@ -196,6 +196,32 @@ export interface Recommendation {
     longitude: number | null
   } | null
   created_at: string
+}
+
+// ─── Reviews ──────────────────────────────────────────────────────────────────
+
+export type ReviewEntityType = 'place' | 'activity' | 'event'
+
+export interface Review {
+  id: string
+  user_email: string
+  user_name: string
+  entity_type: ReviewEntityType
+  entity_id: string
+  stars: number
+  text: string
+  created_at: string
+}
+
+export interface EntityRating {
+  average: number
+  count: number
+}
+
+export interface ReviewsResponse {
+  rating: EntityRating
+  my_review: Review | null
+  reviews: Review[]
 }
 
 // ─── Notifications / Reminders ────────────────────────────────────────────────

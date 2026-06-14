@@ -3,6 +3,7 @@ import { MapPin, Phone, Globe, DollarSign, ArrowLeft } from 'lucide-react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { usePlace } from '@/hooks/usePlaces'
 import { usePromotions } from '@/hooks/usePromotions'
+import ReviewSection from '@/components/ui/ReviewSection'
 import { useEvents } from '@/hooks/useEvents'
 import Loading from '@/components/common/Loading'
 import Button from '@/components/ui/Button'
@@ -164,6 +165,8 @@ export default function PlaceDetail() {
           </div>
         </div>
       )}
+
+      <ReviewSection entityType="place" entityId={place.id} />
     </div>
   )
 }

@@ -34,7 +34,7 @@ def place_detail(request, pk):
     if request.method == "GET":
         return success_response(PlaceSerializer(place).data)
 
-    if not PlacePermission().has_permission(request, None):
+    if not PlacePermission().has_object_permission(request, None, place):
         from rest_framework import status as http_status
         return error_response("PERMISSION_DENIED", "No tenés permiso para modificar este lugar.", status_code=http_status.HTTP_403_FORBIDDEN)
 

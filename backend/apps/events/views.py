@@ -5,7 +5,7 @@ from rest_framework import status
 from apps.core.responses import success_response, created_response, no_content_response, error_response
 from .serializers import EventSerializer, EventCreateSerializer
 from .selectors import get_published_events, get_event_by_id
-from .services import create_event, publish_event, cancel_event
+from .services import create_event, update_event, publish_event, cancel_event
 from .permissions import EventPermission
 
 
@@ -44,11 +44,7 @@ def event_detail(request, pk):
     if request.method == "PATCH":
         serializer = EventCreateSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        for field, value in serializer.validated_data.items():
-            setattr(event, field, value)
-        event.save()
-        from apps.audit.services import log_action
-        log_action(user=request.user, action="update", entity_type="event", entity_id=str(event.id))
+        event = update_event(user=request.user, event=event, **serializer.validated_data)
         return success_response(EventSerializer(event).data)
 
     if request.method == "DELETE":
