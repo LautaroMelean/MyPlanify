@@ -5,14 +5,18 @@ from rest_framework import status
 from apps.core.responses import (
     success_response, created_response, no_content_response, error_response
 )
-from .models import PlanItem
-from .selectors import get_plans_for_user, get_plan_by_id, get_plan_by_slug
+from .models import Plan, PlanItem
+from .selectors import get_plans_for_user, get_plan_by_id, get_plan_by_slug, get_trending_plans
 from .serializers import (
     PlanSerializer, PlanGenerateSerializer,
-    PlanItemSerializer, PlanItemCreateSerializer, PlanUpdateSerializer,
-    PlanFeedbackSerializer, PlanFeedbackReadSerializer,
+    PlanItemSerializer, PlanItemCreateSerializer, PlanItemUpdateSerializer,
+    PlanUpdateSerializer, PlanFeedbackSerializer, PlanFeedbackReadSerializer,
+    TrendingPlanSerializer, ClonePlanSerializer, SurprisePlanSerializer,
 )
-from .services import generate_plan, create_empty_plan, add_item, remove_item, delete_plan, create_plan_feedback, share_plan
+from .services import (
+    generate_plan, create_empty_plan, add_item, remove_item, update_item,
+    delete_plan, create_plan_feedback, share_plan, clone_plan, generate_surprise_plan,
+)
 
 
 @api_view(["POST"])
@@ -104,9 +108,9 @@ def add_plan_item(request, plan_id):
     return created_response(PlanItemSerializer(item).data)
 
 
-@api_view(["DELETE"])
+@api_view(["PATCH", "DELETE"])
 @permission_classes([IsAuthenticated])
-def remove_plan_item(request, plan_id, item_id):
+def plan_item_detail(request, plan_id, item_id):
     plan = get_plan_by_id(plan_id, user=request.user)
     if not plan:
         return error_response("NOT_FOUND", "Plan no encontrado.", status_code=status.HTTP_404_NOT_FOUND)
@@ -116,8 +120,21 @@ def remove_plan_item(request, plan_id, item_id):
     except PlanItem.DoesNotExist:
         return error_response("NOT_FOUND", "Ítem no encontrado.", status_code=status.HTTP_404_NOT_FOUND)
 
-    remove_item(item)
-    return no_content_response()
+    if request.method == "DELETE":
+        remove_item(item)
+        return no_content_response()
+
+    # PATCH
+    serializer = PlanItemUpdateSerializer(data=request.data)
+    if not serializer.is_valid():
+        return error_response("VALIDATION_ERROR", "Datos inválidos.", serializer.errors)
+
+    item = update_item(
+        item=item,
+        note=serializer.validated_data.get("note"),
+        order=serializer.validated_data.get("order"),
+    )
+    return success_response(PlanItemSerializer(item).data)
 
 
 @api_view(["GET"])
@@ -145,6 +162,67 @@ def plan_share(request, plan_id):
         return error_response("NOT_FOUND", "Plan no encontrado.", status_code=status.HTTP_404_NOT_FOUND)
     share_plan(plan=plan, user=request.user)
     return success_response({"shared": True})
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def plan_trending(request):
+    city = request.query_params.get("city")
+    period = request.query_params.get("period", "week")
+    try:
+        limit = int(request.query_params.get("limit", 10))
+        limit = max(1, min(limit, 20))
+    except (ValueError, TypeError):
+        limit = 10
+
+    exclude_user = request.user if request.user.is_authenticated else None
+    results = get_trending_plans(city=city, period=period, limit=limit, exclude_user=exclude_user)
+
+    data = [
+        TrendingPlanSerializer({
+            "id": plan.id,
+            "title": plan.title,
+            "city": plan.city,
+            "date": plan.date,
+            "slug": plan.slug,
+            "item_count": plan.item_count,
+            "view_count": views,
+            "share_count": shares,
+        }).data
+        for plan, views, shares in results
+    ]
+    return success_response(data)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def plan_clone(request, plan_id):
+    try:
+        source = Plan.objects.prefetch_related("items").get(id=plan_id, is_public=True)
+    except Plan.DoesNotExist:
+        # Allow cloning own private plans too
+        source = get_plan_by_id(plan_id, user=request.user)
+        if not source:
+            return error_response("NOT_FOUND", "Plan no encontrado.", status_code=status.HTTP_404_NOT_FOUND)
+
+    serializer = ClonePlanSerializer(data=request.data)
+    if not serializer.is_valid():
+        return error_response("VALIDATION_ERROR", "Datos inválidos.", serializer.errors)
+
+    cloned = clone_plan(source_plan=source, user=request.user, new_date=serializer.validated_data["date"])
+    return created_response(PlanSerializer(cloned).data)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def plan_surprise(request):
+    serializer = SurprisePlanSerializer(data=request.data)
+    if not serializer.is_valid():
+        return error_response("VALIDATION_ERROR", "Datos inválidos.", serializer.errors)
+
+    plan_date = serializer.validated_data.get("date")
+    plan = generate_surprise_plan(user=request.user, plan_date=plan_date)
+    return created_response(PlanSerializer(plan).data)
 
 
 @api_view(["POST"])

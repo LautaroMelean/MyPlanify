@@ -494,3 +494,205 @@ class TestRecommendationV3:
         from apps.recommendations.services import _feedback_score
         score = _feedback_score(str(uuid.uuid4()), "place")
         assert score == 0
+
+
+# ─── Sprint 9 Tests ───────────────────────────────────────────────────────────
+
+@pytest.fixture
+def public_plan_with_item(db, regular_user, place):
+    from apps.planner.models import Plan, PlanItem
+    p = Plan.objects.create(
+        user=regular_user,
+        title="Plan Trending",
+        date=date(2026, 7, 5),
+        budget=2000,
+        people_count=1,
+        city="Buenos Aires",
+        slug=f"trending-{str(uuid.uuid4())[:8]}",
+        is_public=True,
+        status="generated",
+    )
+    PlanItem.objects.create(plan=p, entity_type="place", entity_id=place.id, slot="morning", order=0)
+    return p
+
+
+@pytest.mark.django_db
+class TestPlanTrending:
+    url = "/api/v1/plans/trending/"
+
+    def test_anyone_can_access_trending(self, api_client, public_plan_with_item):
+        response = api_client.get(self.url)
+        assert response.status_code == 200
+        assert isinstance(response.json()["data"], list)
+
+    def test_trending_includes_public_plans_with_items(self, api_client, public_plan_with_item):
+        response = api_client.get(self.url)
+        ids = [p["id"] for p in response.json()["data"]]
+        assert str(public_plan_with_item.id) in ids
+
+    def test_trending_filters_by_city(self, api_client, public_plan_with_item):
+        response = api_client.get(self.url, {"city": "Buenos Aires"})
+        assert response.status_code == 200
+        for p in response.json()["data"]:
+            assert "Buenos Aires" in p["city"] or p["city"].lower().count("buenos") > 0
+
+    def test_trending_excludes_private_plans(self, api_client, plan):
+        response = api_client.get(self.url)
+        ids = [p["id"] for p in response.json()["data"]]
+        assert str(plan.id) not in ids
+
+    def test_trending_excludes_plans_without_items(self, api_client, regular_user):
+        from apps.planner.models import Plan
+        empty = Plan.objects.create(
+            user=regular_user, title="Empty", date=date(2026, 7, 10),
+            budget=1000, people_count=1, city="Buenos Aires",
+            slug=f"empty-{str(uuid.uuid4())[:8]}", is_public=True, status="generated",
+        )
+        response = api_client.get(self.url)
+        ids = [p["id"] for p in response.json()["data"]]
+        assert str(empty.id) not in ids
+
+    def test_authenticated_user_does_not_see_own_plans_in_trending(self, authenticated_client, public_plan_with_item):
+        # authenticated_client is regular_user who owns public_plan_with_item
+        response = authenticated_client.get(self.url)
+        ids = [p["id"] for p in response.json()["data"]]
+        assert str(public_plan_with_item.id) not in ids
+
+    def test_trending_response_has_expected_fields(self, api_client, public_plan_with_item):
+        response = api_client.get(self.url)
+        assert response.status_code == 200
+        data = response.json()["data"]
+        if data:
+            plan = data[0]
+            for field in ("id", "title", "city", "date", "slug", "item_count", "view_count", "share_count"):
+                assert field in plan
+
+
+@pytest.mark.django_db
+class TestPlanClone:
+    def test_authenticated_user_can_clone_public_plan(self, api_client, user_factory, public_plan_with_item):
+        other = user_factory(email="cloner@example.com")
+        api_client.force_authenticate(user=other)
+        payload = {"date": str(date.today() + timedelta(days=3))}
+        response = api_client.post(f"/api/v1/plans/{public_plan_with_item.id}/clone/", payload, format="json")
+        assert response.status_code == 201
+        data = response.json()["data"]
+        assert data["status"] == "draft"
+        assert data["is_public"] is False
+
+    def test_cloned_plan_has_same_items(self, api_client, user_factory, public_plan_with_item):
+        other = user_factory(email="cloner2@example.com")
+        api_client.force_authenticate(user=other)
+        payload = {"date": str(date.today() + timedelta(days=5))}
+        response = api_client.post(f"/api/v1/plans/{public_plan_with_item.id}/clone/", payload, format="json")
+        assert response.status_code == 201
+        assert len(response.json()["data"]["items"]) == len(public_plan_with_item.items.all())
+
+    def test_cloned_plan_has_different_slug(self, api_client, user_factory, public_plan_with_item):
+        other = user_factory(email="cloner3@example.com")
+        api_client.force_authenticate(user=other)
+        payload = {"date": str(date.today() + timedelta(days=6))}
+        response = api_client.post(f"/api/v1/plans/{public_plan_with_item.id}/clone/", payload, format="json")
+        assert response.json()["data"]["slug"] != public_plan_with_item.slug
+
+    def test_unauthenticated_cannot_clone(self, api_client, public_plan_with_item):
+        payload = {"date": str(date.today() + timedelta(days=3))}
+        response = api_client.post(f"/api/v1/plans/{public_plan_with_item.id}/clone/", payload, format="json")
+        assert response.status_code == 401
+
+    def test_past_date_returns_400(self, authenticated_client, public_plan_with_item):
+        payload = {"date": str(date.today() - timedelta(days=1))}
+        response = authenticated_client.post(f"/api/v1/plans/{public_plan_with_item.id}/clone/", payload, format="json")
+        assert response.status_code == 400
+
+
+@pytest.mark.django_db
+class TestPlanSurprise:
+    url = "/api/v1/plans/surprise/"
+
+    def test_unauthenticated_cannot_use_surprise(self, api_client):
+        assert api_client.post(self.url, {}, format="json").status_code == 401
+
+    def test_surprise_creates_plan(self, authenticated_client):
+        response = authenticated_client.post(self.url, {}, format="json")
+        assert response.status_code == 201
+        data = response.json()["data"]
+        assert data["status"] == "generated"
+
+    def test_surprise_uses_default_budget_when_no_prior_plans(self, authenticated_client):
+        response = authenticated_client.post(self.url, {}, format="json")
+        assert response.status_code == 201
+        # Default budget is 3000
+        assert float(response.json()["data"]["budget"]) == 3000.00
+
+    def test_surprise_uses_last_plan_city(self, authenticated_client, plan):
+        # plan.city = "Buenos Aires"
+        response = authenticated_client.post(self.url, {}, format="json")
+        assert response.status_code == 201
+        assert response.json()["data"]["city"] == plan.city
+
+    def test_surprise_with_explicit_date(self, authenticated_client):
+        target_date = str(date.today() + timedelta(days=3))
+        response = authenticated_client.post(self.url, {"date": target_date}, format="json")
+        assert response.status_code == 201
+        assert response.json()["data"]["date"] == target_date
+
+
+@pytest.mark.django_db
+class TestPlanItemUpdate:
+    def test_owner_can_update_note(self, authenticated_client, plan, place):
+        from apps.planner.models import PlanItem
+        item = PlanItem.objects.create(
+            plan=plan, entity_type="place", entity_id=place.id, slot="morning", order=0
+        )
+        response = authenticated_client.patch(
+            f"/api/v1/plans/{plan.id}/items/{item.id}/",
+            {"note": "Nueva nota"},
+            format="json",
+        )
+        assert response.status_code == 200
+        assert response.json()["data"]["note"] == "Nueva nota"
+
+    def test_owner_can_update_order(self, authenticated_client, plan, place):
+        from apps.planner.models import PlanItem
+        item = PlanItem.objects.create(
+            plan=plan, entity_type="place", entity_id=place.id, slot="morning", order=0
+        )
+        response = authenticated_client.patch(
+            f"/api/v1/plans/{plan.id}/items/{item.id}/",
+            {"order": 5},
+            format="json",
+        )
+        assert response.status_code == 200
+        assert response.json()["data"]["order"] == 5
+
+    def test_non_owner_cannot_update_item(self, api_client, user_factory, plan, place):
+        from apps.planner.models import PlanItem
+        item = PlanItem.objects.create(
+            plan=plan, entity_type="place", entity_id=place.id, slot="morning", order=0
+        )
+        other = user_factory(email="itemother@example.com")
+        api_client.force_authenticate(user=other)
+        response = api_client.patch(
+            f"/api/v1/plans/{plan.id}/items/{item.id}/",
+            {"note": "Hack"},
+            format="json",
+        )
+        assert response.status_code == 404
+
+    def test_wrong_plan_item_returns_404(self, authenticated_client, plan, place):
+        from apps.planner.models import PlanItem, Plan
+        other_plan = Plan.objects.create(
+            user=plan.user, title="Otro", date=date(2026, 9, 1),
+            budget=1000, people_count=1, city="BA",
+            slug=f"otro2-{str(uuid.uuid4())[:8]}", status="draft",
+        )
+        item = PlanItem.objects.create(
+            plan=other_plan, entity_type="place", entity_id=place.id, slot="morning", order=0
+        )
+        response = authenticated_client.patch(
+            f"/api/v1/plans/{plan.id}/items/{item.id}/",
+            {"note": "Test"},
+            format="json",
+        )
+        assert response.status_code == 404

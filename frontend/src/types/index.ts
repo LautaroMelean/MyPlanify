@@ -324,6 +324,32 @@ export interface OrganizerStats {
   avg_rating: number | null
 }
 
+// ─── Trending Plans ───────────────────────────────────────────────────────────
+
+export interface TrendingPlan {
+  id: string
+  title: string
+  city: string
+  date: string
+  slug: string
+  item_count: number
+  view_count: number
+  share_count: number
+}
+
+// ─── User Activity Stats ──────────────────────────────────────────────────────
+
+export interface UserActivityStats {
+  plans_completed: number
+  places_visited: number
+  cities_explored: number
+  favorite_category: string | null
+  current_streak_weeks: number
+  best_streak_weeks: number
+  total_plans: number
+  avg_rating_given: number | null
+}
+
 // ─── Promotions ───────────────────────────────────────────────────────────────
 
 export type PromotionStatus = 'draft' | 'active' | 'expired' | 'cancelled'

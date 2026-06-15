@@ -48,3 +48,38 @@ export function useDeletePlan() {
     },
   })
 }
+
+export function useUpdatePlanItem(planId: string) {
+  const qc = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ itemId, payload }: { itemId: string; payload: { note?: string; order?: number } }) =>
+      plannerService.updateItem(planId, itemId, payload),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['plan', planId] })
+    },
+  })
+}
+
+export function useClonePlan() {
+  const qc = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ planId, date }: { planId: string; date: string }) =>
+      plannerService.clonePlan(planId, date),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['my-plans'] })
+    },
+  })
+}
+
+export function useSurprisePlan() {
+  const qc = useQueryClient()
+
+  return useMutation({
+    mutationFn: (date?: string) => plannerService.surprise(date),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['my-plans'] })
+    },
+  })
+}

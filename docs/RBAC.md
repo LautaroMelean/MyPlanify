@@ -112,6 +112,25 @@ Todos los permisos deberán validarse desde el backend.
 
 ---
 
+### Descubrimiento y Clonado de Planes (Sprint 9)
+
+| Acción | admin | moderator | business_owner | event_organizer | user | guest |
+|----------|----------|----------|----------|----------|----------|----------|
+| Ver trending plans | Sí | Sí | Sí | Sí | Sí | Sí (AllowAny) |
+| Clonar plan público | Sí | Sí | Sí | Sí | Sí | No |
+| Modo Sorprendeme | Sí | Sí | Sí | Sí | Sí | No |
+| PATCH ítem de plan | Sí | No | No | No | Solo plan propio | No |
+
+---
+
+### Stats de Actividad Personal (Sprint 9)
+
+| Acción | admin | moderator | business_owner | event_organizer | user | guest |
+|----------|----------|----------|----------|----------|----------|----------|
+| Ver /dashboard/me/stats/ | Sí | Sí | Sí | Sí | Sí | No |
+
+---
+
 ### Favoritos
 
 | Acción | admin | moderator | business_owner | event_organizer | user | guest |

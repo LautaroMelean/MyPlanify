@@ -1,5 +1,5 @@
 import apiClient from '@/lib/axios'
-import type { ApiResponse, BusinessStats, OrganizerStats, Place, Promotion, Event } from '@/types'
+import type { ApiResponse, BusinessStats, OrganizerStats, UserActivityStats, Place, Promotion, Event } from '@/types'
 
 const BASE = '/dashboard'
 
@@ -26,6 +26,11 @@ export const dashboardService = {
 
   async getOwnedEvents(): Promise<Event[]> {
     const { data } = await apiClient.get<ApiResponse<Event[]>>(`${BASE}/organizer/events/`)
+    return data.data
+  },
+
+  async getUserActivityStats(): Promise<UserActivityStats> {
+    const { data } = await apiClient.get<ApiResponse<UserActivityStats>>(`${BASE}/me/stats/`)
     return data.data
   },
 }

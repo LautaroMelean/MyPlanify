@@ -304,6 +304,77 @@ def share_plan(plan: Plan, user) -> None:
     )
 
 
+def clone_plan(source_plan: Plan, user, new_date) -> Plan:
+    slug = _generate_slug(new_date, user.id)
+    cloned = Plan.objects.create(
+        user=user,
+        title=source_plan.title,
+        date=new_date,
+        budget=source_plan.budget,
+        people_count=source_plan.people_count,
+        city=source_plan.city,
+        slug=slug,
+        is_public=False,
+        status="draft",
+    )
+    for item in source_plan.items.all():
+        PlanItem.objects.create(
+            plan=cloned,
+            entity_type=item.entity_type,
+            entity_id=item.entity_id,
+            slot=item.slot,
+            order=item.order,
+            note=item.note,
+            generation_reason=item.generation_reason,
+        )
+    from apps.recommendations.services import log_interaction
+    log_interaction(user=user, action="plan_cloned", entity_type="plan", entity_id=str(source_plan.id))
+    log_action(
+        user=user, action="plan_cloned",
+        entity_type="plan", entity_id=str(cloned.id),
+        metadata={"source_plan_id": str(source_plan.id), "date": str(new_date)},
+    )
+    return cloned
+
+
+def generate_surprise_plan(user, plan_date=None) -> Plan:
+    from datetime import date as date_type
+    from decimal import Decimal
+    from django.utils import timezone
+    from apps.recommendations.services import log_interaction
+
+    if plan_date is None:
+        plan_date = (timezone.now() + timezone.timedelta(days=1)).date()
+
+    # City from last plan, fallback "Buenos Aires"
+    last_plan = Plan.objects.filter(user=user).order_by("-created_at").first()
+    city = last_plan.city if last_plan else "Buenos Aires"
+
+    # Budget: average of last 3 plans, fallback $3000
+    recent = list(Plan.objects.filter(user=user).order_by("-created_at").values_list("budget", flat=True)[:3])
+    if recent:
+        budget = Decimal(sum(float(b) for b in recent) / len(recent)).quantize(Decimal("0.01"))
+    else:
+        budget = Decimal("3000.00")
+
+    plan = generate_plan(user=user, plan_date=plan_date, budget=budget, people_count=1, city=city)
+    log_interaction(user=user, action="plan_surprise", entity_type="plan", entity_id=str(plan.id))
+    return plan
+
+
+def update_item(item: PlanItem, note: str = None, order: int = None) -> PlanItem:
+    update_fields = []
+    if note is not None:
+        item.note = note
+        update_fields.append("note")
+    if order is not None:
+        item.order = order
+        update_fields.append("order")
+    if update_fields:
+        item.save(update_fields=update_fields)
+    return item
+
+
 def create_plan_feedback(plan: Plan, user, entity_type: str, entity_id: str, rating: int, comment: str = ""):
     from rest_framework.exceptions import ValidationError as DRFValidationError
     from .models import PlanFeedback

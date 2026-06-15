@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Plus, X } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { usePreferences, useSetPreferences, useRemovePreference } from '@/hooks/usePreferences'
+import { useUserActivityStats } from '@/hooks/useDashboard'
+import { ActivityStatsCard } from '@/features/dashboard/components/ActivityStatsCard'
 import Card from '@/components/ui/Card'
 import Avatar from '@/components/ui/Avatar'
 import Badge from '@/components/ui/Badge'
@@ -23,6 +25,7 @@ const PREFERENCE_OPTIONS = [
 export default function ProfilePage() {
   const { user } = useAuthStore()
   const { data: preferences = [] } = usePreferences()
+  const { data: activityStats } = useUserActivityStats()
   const setPrefs = useSetPreferences()
   const removePref = useRemovePreference()
   const [adding, setAdding] = useState(false)
@@ -72,6 +75,9 @@ export default function ProfilePage() {
           </div>
         </dl>
       </Card>
+
+      {/* Actividad */}
+      {activityStats && <ActivityStatsCard stats={activityStats} />}
 
       {/* Preferencias */}
       <Card>

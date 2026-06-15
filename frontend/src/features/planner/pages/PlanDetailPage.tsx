@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Globe, Lock } from 'lucide-react'
+import { ArrowLeft, Globe, Lock, Copy } from 'lucide-react'
 import { usePlan } from '@/hooks/usePlan'
-import { useRemovePlanItem, useUpdatePlan } from '@/hooks/usePlanItem'
+import { useRemovePlanItem, useUpdatePlan, useUpdatePlanItem, useClonePlan } from '@/hooks/usePlanItem'
 import { ItineraryView } from '../components/ItineraryView'
 import { SharePlanButton } from '../components/SharePlanButton'
 import { PlanFeedbackModal } from '../components/PlanFeedbackModal'
+import { CalendarExportButton } from '../components/CalendarExportButton'
+import { ClonePlanModal } from '../components/ClonePlanModal'
 import Button from '@/components/ui/Button'
 import type { PlanItem } from '@/types'
 
@@ -16,8 +18,11 @@ export default function PlanDetailPage() {
   const { data: plan, isLoading } = usePlan(id ?? '')
   const removeItem = useRemovePlanItem(id ?? '')
   const updatePlan = useUpdatePlan(id ?? '')
+  const updateItem = useUpdatePlanItem(id ?? '')
+  const clonePlan = useClonePlan()
 
   const [feedbackItem, setFeedbackItem] = useState<PlanItem | null>(null)
+  const [showCloneModal, setShowCloneModal] = useState(false)
 
   if (isLoading) {
     return (
@@ -42,6 +47,36 @@ export default function PlanDetailPage() {
     updatePlan.mutate({ is_public: true })
   }
 
+  const handleSaveNote = (itemId: string, note: string) => {
+    updateItem.mutate({ itemId, payload: { note } })
+  }
+
+  const handleReorder = (itemId: string, direction: 'up' | 'down') => {
+    const item = plan.items.find((i) => i.id === itemId)
+    if (!item) return
+    const slotItems = plan.items
+      .filter((i) => i.slot === item.slot)
+      .sort((a, b) => a.order - b.order)
+    const idx = slotItems.findIndex((i) => i.id === itemId)
+    const targetIdx = direction === 'up' ? idx - 1 : idx + 1
+    if (targetIdx < 0 || targetIdx >= slotItems.length) return
+    const targetItem = slotItems[targetIdx]
+    updateItem.mutate({ itemId, payload: { order: targetItem.order } })
+    updateItem.mutate({ itemId: targetItem.id, payload: { order: item.order } })
+  }
+
+  const handleClone = (date: string) => {
+    clonePlan.mutate(
+      { planId: plan.id, date },
+      {
+        onSuccess: (cloned) => {
+          setShowCloneModal(false)
+          navigate(`/planes/${cloned.id}`)
+        },
+      }
+    )
+  }
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <button
@@ -60,7 +95,7 @@ export default function PlanDetailPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap justify-end">
           <Button
             variant="ghost"
             size="sm"
@@ -69,6 +104,17 @@ export default function PlanDetailPage() {
             isLoading={updatePlan.isPending}
           >
             {plan.is_public ? 'Público' : 'Privado'}
+          </Button>
+
+          <CalendarExportButton plan={plan} />
+
+          <Button
+            variant="ghost"
+            size="sm"
+            leftIcon={<Copy className="h-4 w-4" />}
+            onClick={() => setShowCloneModal(true)}
+          >
+            Usar de nuevo
           </Button>
 
           <SharePlanButton
@@ -89,6 +135,8 @@ export default function PlanDetailPage() {
           plan={plan}
           onRemoveItem={(itemId) => removeItem.mutate(itemId)}
           onFeedbackItem={setFeedbackItem}
+          onSaveNote={handleSaveNote}
+          onReorderItem={handleReorder}
         />
       )}
 
@@ -97,6 +145,14 @@ export default function PlanDetailPage() {
         onClose={() => setFeedbackItem(null)}
         planId={plan.id}
         item={feedbackItem}
+      />
+
+      <ClonePlanModal
+        isOpen={showCloneModal}
+        onClose={() => setShowCloneModal(false)}
+        onConfirm={handleClone}
+        isLoading={clonePlan.isPending}
+        title="Usar de nuevo"
       />
     </div>
   )

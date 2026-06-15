@@ -14,10 +14,12 @@ interface Props {
   plan: Plan
   onRemoveItem?: (itemId: string) => void
   onFeedbackItem?: (item: PlanItem) => void
+  onSaveNote?: (itemId: string, note: string) => void
+  onReorderItem?: (itemId: string, direction: 'up' | 'down') => void
   readonly?: boolean
 }
 
-export function ItineraryView({ plan, onRemoveItem, onFeedbackItem, readonly = false }: Props) {
+export function ItineraryView({ plan, onRemoveItem, onFeedbackItem, onSaveNote, onReorderItem, readonly = false }: Props) {
   return (
     <div className="space-y-6">
       {SLOTS.map((slot) => {
@@ -40,6 +42,8 @@ export function ItineraryView({ plan, onRemoveItem, onFeedbackItem, readonly = f
                     item={item}
                     onRemove={onRemoveItem}
                     onFeedback={onFeedbackItem}
+                    onSaveNote={onSaveNote}
+                    onReorder={onReorderItem}
                     readonly={readonly}
                   />
                 ))}

@@ -397,6 +397,8 @@ plan_viewed     — Sprint 8: usuario autenticado abre un plan público ajeno
 plan_shared     — Sprint 8: propietario comparte su plan
 plan_feedback   — Sprint 8: propietario da feedback a un ítem del plan
 plan_completed  — Sprint 8: tarea Celery marca plan como completado
+plan_cloned     — Sprint 9: usuario copia un plan ajeno como draft propio
+plan_surprise   — Sprint 9: usuario genera un plan vía Modo Sorprendeme
 ```
 
 ---

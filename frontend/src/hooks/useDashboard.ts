@@ -35,3 +35,10 @@ export function useOwnedEvents() {
     queryFn: dashboardService.getOwnedEvents,
   })
 }
+
+export function useUserActivityStats() {
+  return useQuery({
+    queryKey: ['dashboard', 'me', 'stats'],
+    queryFn: dashboardService.getUserActivityStats,
+  })
+}

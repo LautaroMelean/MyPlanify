@@ -1,5 +1,5 @@
 import apiClient from '@/lib/axios'
-import type { ApiResponse, Plan, PlanGenerateInput, PlanFeedback, PlanFeedbackInput } from '@/types'
+import type { ApiResponse, Plan, PlanItem, PlanGenerateInput, PlanFeedback, PlanFeedbackInput, TrendingPlan } from '@/types'
 
 const BASE = '/plans'
 
@@ -53,6 +53,26 @@ export const plannerService = {
 
   async submitFeedback(planId: string, payload: PlanFeedbackInput): Promise<PlanFeedback> {
     const { data } = await apiClient.post<ApiResponse<PlanFeedback>>(`${BASE}/${planId}/feedback/`, payload)
+    return data.data
+  },
+
+  async getTrending(params?: { city?: string; period?: string; limit?: number }): Promise<TrendingPlan[]> {
+    const { data } = await apiClient.get<ApiResponse<TrendingPlan[]>>(`${BASE}/trending/`, { params })
+    return data.data
+  },
+
+  async clonePlan(planId: string, date: string): Promise<Plan> {
+    const { data } = await apiClient.post<ApiResponse<Plan>>(`${BASE}/${planId}/clone/`, { date })
+    return data.data
+  },
+
+  async surprise(date?: string): Promise<Plan> {
+    const { data } = await apiClient.post<ApiResponse<Plan>>(`${BASE}/surprise/`, date ? { date } : {})
+    return data.data
+  },
+
+  async updateItem(planId: string, itemId: string, payload: { note?: string; order?: number }): Promise<PlanItem> {
+    const { data } = await apiClient.patch<ApiResponse<PlanItem>>(`${BASE}/${planId}/items/${itemId}/`, payload)
     return data.data
   },
 }

@@ -64,3 +64,39 @@ class PlanFeedbackReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanFeedback
         fields = ("id", "entity_type", "entity_id", "rating", "comment", "created_at")
+
+
+class TrendingPlanSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
+    title = serializers.CharField()
+    city = serializers.CharField()
+    date = serializers.DateField()
+    slug = serializers.CharField()
+    item_count = serializers.IntegerField()
+    view_count = serializers.IntegerField()
+    share_count = serializers.IntegerField()
+
+
+class PlanItemUpdateSerializer(serializers.Serializer):
+    note = serializers.CharField(allow_blank=True, max_length=500, required=False)
+    order = serializers.IntegerField(min_value=0, required=False)
+
+
+class ClonePlanSerializer(serializers.Serializer):
+    date = serializers.DateField()
+
+    def validate_date(self, value):
+        from datetime import date as date_type
+        if value < date_type.today():
+            raise serializers.ValidationError("La fecha no puede ser en el pasado.")
+        return value
+
+
+class SurprisePlanSerializer(serializers.Serializer):
+    date = serializers.DateField(required=False)
+
+    def validate_date(self, value):
+        from datetime import date as date_type
+        if value < date_type.today():
+            raise serializers.ValidationError("La fecha no puede ser en el pasado.")
+        return value

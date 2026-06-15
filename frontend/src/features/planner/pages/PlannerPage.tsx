@@ -1,14 +1,17 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CalendarDays } from 'lucide-react'
+import { CalendarDays, Sparkles } from 'lucide-react'
 import { PlannerForm } from '../components/PlannerForm'
 import { ItineraryView } from '../components/ItineraryView'
+import { InspireFeed } from '../components/InspireFeed'
 import { usePlanner } from '@/hooks/usePlanner'
+import { useSurprisePlan } from '@/hooks/usePlanItem'
 import type { Plan } from '@/types'
-import { useState } from 'react'
 
 export default function PlannerPage() {
   const navigate = useNavigate()
   const planner = usePlanner()
+  const surprise = useSurprisePlan()
   const [currentPlan, setCurrentPlan] = useState<Plan | null>(null)
 
   const handleSubmit = (input: Parameters<typeof planner.mutate>[0]) => {
@@ -17,9 +20,16 @@ export default function PlannerPage() {
     })
   }
 
+  const handleSurprise = () => {
+    surprise.mutate(undefined, {
+      onSuccess: (plan) => navigate(`/planes/${plan.id}`),
+    })
+  }
+
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <div className="flex items-center gap-3 mb-6">
+    <div className="max-w-3xl mx-auto px-4 py-8 space-y-8">
+      {/* Header */}
+      <div className="flex items-center gap-3">
         <CalendarDays className="h-7 w-7 text-primary-600" />
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Planner Inteligente</h1>
@@ -27,6 +37,23 @@ export default function PlannerPage() {
         </div>
       </div>
 
+      {/* Surprise button */}
+      <div className="flex flex-col items-center gap-2 p-5 bg-gradient-to-r from-primary-50 to-purple-50 rounded-xl border border-primary-100">
+        <p className="text-sm text-gray-600 font-medium">¿No sabés qué hacer? Dejalo en nuestras manos</p>
+        <button
+          onClick={handleSurprise}
+          disabled={surprise.isPending}
+          className="flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-sm transition-colors disabled:opacity-60"
+        >
+          <Sparkles className="h-5 w-5" />
+          {surprise.isPending ? 'Armando algo especial...' : '¡Sorprendeme!'}
+        </button>
+        {surprise.isError && (
+          <p className="text-xs text-red-500">Error al generar el plan. Intentá de nuevo.</p>
+        )}
+      </div>
+
+      {/* Plan form */}
       <div className="grid md:grid-cols-2 gap-6">
         <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
           <h2 className="text-base font-semibold text-gray-800 mb-4">Configurar plan</h2>
@@ -75,6 +102,11 @@ export default function PlannerPage() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Inspire Feed */}
+      <div className="border-t border-gray-100 pt-6">
+        <InspireFeed />
       </div>
     </div>
   )
