@@ -24,7 +24,11 @@ OSM_TO_CATEGORY: dict[str, str] = {
     "theatre": "Cultura",
     "arts_centre": "Cultura",
     "library": "Cultura",
+    "community_centre": "Cultura",
+    "social_centre": "Cultura",
     "park": "Parque",
+    "garden": "Parque",
+    "nature_reserve": "Parque",
     "fitness_centre": "Deporte",
     "sports_centre": "Deporte",
     "stadium": "Deporte",
@@ -43,11 +47,15 @@ OSM_TO_CATEGORY: dict[str, str] = {
     "bowling_alley": "Entretenimiento",
     "escape_game": "Entretenimiento",
     "amusement_arcade": "Entretenimiento",
+    "amusement_park": "Entretenimiento",
     "zoo": "Turismo",
     "theme_park": "Turismo",
     "aquarium": "Turismo",
     "artwork": "Cultura",
-    "ice_cream": "Gastronomía",
+    "planetarium": "Cultura",
+    "gallery": "Cultura",
+    "pitch": "Deporte",
+    "track": "Deporte",
 }
 
 _TYPE_TO_FILTER: dict[str, str] = {
@@ -67,6 +75,28 @@ _TYPE_TO_FILTER: dict[str, str] = {
     "shopping": '["shop"~"mall|supermarket"]',
 }
 
+# City name normalization — OSM geocodes CABA as "Ciudad Autónoma de Buenos Aires"
+CITY_ALIASES = {
+    "ciudad autónoma de buenos aires": "Buenos Aires",
+    "ciudad autonoma de buenos aires": "Buenos Aires",
+    "caba": "Buenos Aires",
+    "capital federal": "Buenos Aires",
+    "ciudad de buenos aires": "Buenos Aires",
+}
+
+# Entertainment-focused amenity tags (expanded)
+_DEFAULT_AMENITIES = (
+    "restaurant|fast_food|bar|pub|cafe|ice_cream|museum|cinema|nightclub|theatre|"
+    "arts_centre|library|biergarten|community_centre|planetarium|gambling"
+)
+_DEFAULT_LEISURE = (
+    "park|fitness_centre|sports_centre|stadium|swimming_pool|golf_course|"
+    "miniature_golf|bowling_alley|escape_game|amusement_arcade|garden|"
+    "nature_reserve|pitch|track|water_park|hackerspace"
+)
+_DEFAULT_TOURISM = "attraction|viewpoint|zoo|theme_park|aquarium|artwork|gallery"
+
+
 def _parse_bool_tag(value: str | None) -> bool | None:
     if value in ("yes", "true", "1"):
         return True
@@ -75,9 +105,12 @@ def _parse_bool_tag(value: str | None) -> bool | None:
     return None
 
 
-_DEFAULT_AMENITIES = "restaurant|fast_food|bar|pub|cafe|ice_cream|museum|cinema|nightclub|theatre|arts_centre|library|biergarten"
-_DEFAULT_LEISURE = "park|fitness_centre|sports_centre|stadium|swimming_pool|golf_course|miniature_golf|bowling_alley|escape_game|amusement_arcade"
-_DEFAULT_TOURISM = "attraction|viewpoint|zoo|theme_park|aquarium|artwork"
+def _normalize_city(raw: str) -> str:
+    """Normalize OSM city strings to canonical form."""
+    if not raw:
+        return ""
+    key = raw.strip().lower()
+    return CITY_ALIASES.get(key, raw.strip())
 
 
 class OverpassProvider:
@@ -109,19 +142,28 @@ class OverpassProvider:
         around = f"(around:{radius},{lat},{lon})"
         tag = _TYPE_TO_FILTER.get(place_type, "")
         if tag:
-            # nodes only — faster; large places (parks, malls) are also tagged on nodes in OSM
             return (
                 f"[out:json][timeout:{TIMEOUT}];"
-                f"(node{tag}{around};);"
-                f"out 60;"
+                f"("
+                f"node{tag}{around};"
+                f"way{tag}{around};"
+                f"relation{tag}{around};"
+                f");"
+                f"out center 60;"
             )
+        # Full entertainment query — node + way + relation for parks and large venues
         return (
             f"[out:json][timeout:{TIMEOUT}];"
-            f'(node["amenity"~"{_DEFAULT_AMENITIES}"]{around};'
+            f"("
+            f'node["amenity"~"{_DEFAULT_AMENITIES}"]{around};'
             f'node["leisure"~"{_DEFAULT_LEISURE}"]{around};'
             f'node["tourism"~"{_DEFAULT_TOURISM}"]{around};'
+            f'way["leisure"~"park|garden|nature_reserve|sports_centre|stadium"]{around};'
+            f'way["tourism"~"attraction|viewpoint|zoo|theme_park|aquarium"]{around};'
+            f'way["amenity"~"theatre|arts_centre|museum|cinema"]{around};'
+            f'relation["leisure"~"park|nature_reserve"]{around};'
             f");"
-            f"out 80;"
+            f"out center 100;"
         )
 
     def _parse_elements(self, elements: list) -> list[dict]:
@@ -133,7 +175,14 @@ class OverpassProvider:
             if not name:
                 continue
 
-            lat, lon = el.get("lat"), el.get("lon")
+            # Support node (lat/lon direct) and way/relation (center coords)
+            if el.get("type") == "node":
+                lat, lon = el.get("lat"), el.get("lon")
+            else:
+                center = el.get("center", {})
+                lat = center.get("lat")
+                lon = center.get("lon")
+
             if lat is None or lon is None:
                 continue
 
@@ -142,11 +191,14 @@ class OverpassProvider:
                 continue
             seen.add(external_id)
 
+            raw_city = tags.get("addr:city") or tags.get("addr:town") or ""
+            city = _normalize_city(raw_city)
+
             results.append({
                 "external_id": external_id,
                 "name": name,
                 "address": self._build_address(tags),
-                "city": tags.get("addr:city") or tags.get("addr:town") or "",
+                "city": city,
                 "latitude": lat,
                 "longitude": lon,
                 "category": self._resolve_category(tags),
@@ -179,7 +231,7 @@ class OverpassProvider:
             parts.append(f"{street} {number}".strip())
         city = tags.get("addr:city") or tags.get("addr:town")
         if city:
-            parts.append(city)
+            parts.append(_normalize_city(city))
         return ", ".join(parts)
 
 

@@ -10,11 +10,24 @@ from apps.audit.services import log_action
 
 logger = logging.getLogger(__name__)
 
+# Preferred categories per slot — used for slot bonus
 SLOT_KEYWORDS = {
-    "morning": ["café", "cafe", "desayuno", "breakfast", "park", "parque", "outdoor", "brunch", "coffee"],
-    "afternoon": ["restaurant", "museo", "museum", "tour", "arte", "art", "gastronomía", "food", "cultural"],
-    "evening": ["bar", "music", "gaming", "concierto", "concert", "entertainment", "nightlife", "show", "teatro"],
+    "morning": ["café", "cafe", "desayuno", "breakfast", "park", "parque", "outdoor", "brunch", "coffee",
+                "museo", "museum", "jardín", "jardin", "reserva", "botanico", "ciencias", "yoga"],
+    "afternoon": ["restaurant", "museo", "museum", "tour", "arte", "art", "gastronomía", "food", "cultural",
+                  "turismo", "tourism", "feria", "mercado", "tango", "caminito", "teatro", "colón"],
+    "evening": ["bar", "music", "gaming", "concierto", "concert", "entertainment", "nightlife", "show",
+                "teatro", "jazz", "milonga", "karaoke", "cervecería", "cocktail", "stand-up", "humor"],
 }
+
+# Categories that count as "something to do" (not just eating/drinking)
+ACTIVITY_CATEGORIES = {
+    "Museo", "Turismo", "Cultura", "Parque", "Deporte", "Entretenimiento",
+    "museum", "tourism", "park", "sports", "concert", "gaming",
+}
+
+GASTRO_CATEGORIES = {"Gastronomía", "Café", "restaurant", "cafe"}
+BAR_CATEGORIES = {"Bar", "bar"}
 
 
 def _slot_bonus(slot: str, category: str, activity_type: str = "") -> float:
@@ -24,6 +37,29 @@ def _slot_bonus(slot: str, category: str, activity_type: str = "") -> float:
         if kw in text:
             return 15
     return 0
+
+
+def _top_category(category: str, activity_type: str) -> str:
+    """Returns a simplified category bucket for variety enforcement."""
+    cat = category.lower()
+    atype = activity_type.lower() if activity_type else ""
+    if any(k in cat or k in atype for k in ("gastronomía", "restaurant", "fast_food", "food_court", "comida")):
+        return "gastro"
+    if any(k in cat or k in atype for k in ("café", "cafe", "coffee", "brunch", "desayuno")):
+        return "cafe"
+    if any(k in cat or k in atype for k in ("bar", "pub", "cervecería", "cocktail", "nightlife", "jazz")):
+        return "bar"
+    if any(k in cat or k in atype for k in ("museo", "museum", "cultura", "arte", "galería")):
+        return "culture"
+    if any(k in cat or k in atype for k in ("parque", "park", "jardín", "reserva", "outdoor")):
+        return "outdoor"
+    if any(k in cat or k in atype for k in ("deporte", "sports", "gym", "kayak", "bici", "running")):
+        return "sport"
+    if any(k in cat or k in atype for k in ("turismo", "tourism", "tour", "tango", "milonga", "feria")):
+        return "tourism"
+    if any(k in cat or k in atype for k in ("entretenimiento", "gaming", "escape", "bowling", "arcade", "concert", "show", "teatro")):
+        return "entertainment"
+    return "other"
 
 
 def _generate_slug(plan_date: date_type, user_id) -> str:
@@ -41,7 +77,9 @@ def _build_item_reason(breakdown: dict, pref_map: dict, is_outdoor_friendly) -> 
 def generate_plan(user, plan_date: date_type, budget: Decimal, people_count: int, city: str) -> Plan:
     """
     Generate a 3-slot itinerary plan for the given date.
-    Weather rule: ≤5 days from today → real OpenWeather; >5 days → neutral (is_outdoor_friendly=None).
+    Enforces variety: no two slots share the same broad category.
+    Prioritizes "do something" activities over pure gastronomy.
+    Weather rule: ≤5 days from today → real OpenWeather; >5 days → neutral.
     """
     from apps.activities.models import Activity
     from apps.places.models import Place
@@ -85,16 +123,19 @@ def generate_plan(user, plan_date: date_type, budget: Decimal, people_count: int
     budget_per_slot = float(budget) / 3
     all_candidates = []
 
-    # Activities
+    # ── Activities — filter by own city field ─────────────────────────────────
     activity_qs = Activity.objects.filter(
         is_active=True,
         min_budget__lte=budget_per_slot,
         min_people__lte=people_count,
     ).select_related("place")
     if city:
-        activity_qs = activity_qs.filter(place__city__icontains=city)
+        from django.db.models import Q
+        activity_qs = activity_qs.filter(
+            Q(city__icontains=city) | Q(city="")
+        )
 
-    for act in activity_qs[:30]:
+    for act in activity_qs[:60]:
         pref_s = _pref_boost(act.category, act.activity_type, pref_map)
         pop_s = _popularity_score(act.score_base)
         inter_s = _interaction_score_v2(act.id, interactions)
@@ -108,29 +149,37 @@ def generate_plan(user, plan_date: date_type, budget: Decimal, people_count: int
         }
         base_score = max(0, min(100, sum(breakdown.values())))
 
+        # Activities get a +10 "do-something" bonus to prioritize over pure gastro
+        activity_bonus = 10
         all_candidates.append({
-            "base_score": base_score,
+            "base_score": base_score + activity_bonus,
             "breakdown": breakdown,
             "entity_type": "activity",
             "entity_id": act.id,
             "name": act.name,
             "category": act.category,
             "activity_type": act.activity_type,
+            "top_cat": _top_category(act.category, act.activity_type),
         })
 
-    # Places
+    # ── Places — order by name, expand pool to 80 ────────────────────────────
     place_qs = Place.objects.filter(is_active=True)
     if city:
         place_qs = place_qs.filter(city__icontains=city)
+    # Exclude pharmacies, hospitals, supermarkets — not entertainment
+    place_qs = place_qs.exclude(category__in=["Salud", "Alojamiento", "Shopping"])
 
-    for place in place_qs[:20]:
+    for place in place_qs.order_by("name")[:80]:
         pref_s = _pref_boost(place.category, "", pref_map)
         pop_s = max(0, 15 - place.price_level * 2)
         inter_s = _interaction_score_v2(place.id, interactions)
 
+        # Outdoor-friendly bonus when weather is good
+        outdoor_s = 5 if (place.outdoor_seating and is_outdoor_friendly) else 0
+
         breakdown = {
             "preference": pref_s, "popularity": pop_s, "interaction": inter_s,
-            "weather": 0, "budget": 0, "people": 0,
+            "weather": outdoor_s, "budget": 0, "people": 0,
         }
         base_score = max(0, min(100, sum(breakdown.values())))
 
@@ -142,9 +191,10 @@ def generate_plan(user, plan_date: date_type, budget: Decimal, people_count: int
             "name": place.name,
             "category": place.category,
             "activity_type": "",
+            "top_cat": _top_category(place.category, ""),
         })
 
-    # Events on plan date
+    # ── Events on plan date ───────────────────────────────────────────────────
     event_qs = Event.objects.filter(
         status=EventStatus.PUBLISHED,
         price__lte=budget_per_slot,
@@ -171,18 +221,34 @@ def generate_plan(user, plan_date: date_type, budget: Decimal, people_count: int
             "name": event.title,
             "category": event.category,
             "activity_type": "",
+            "top_cat": _top_category(event.category, ""),
         })
 
-    # Pick top-1 per slot without repeating entities
+    # ── Pick top-1 per slot with variety enforcement ─────────────────────────
+    # Ideal arc: morning=outdoor/culture/sport, afternoon=culture/gastro/tourism, evening=bar/entertainment
+    SLOT_PREFERRED = {
+        "morning":   {"outdoor", "culture", "sport", "tourism", "cafe"},
+        "afternoon": {"culture", "tourism", "gastro", "other"},
+        "evening":   {"bar", "entertainment", "other"},
+    }
+
     used_ids: set = set()
+    used_cats: set = set()
     slot_results: dict = {}
 
     for slot in ("morning", "afternoon", "evening"):
+        preferred = SLOT_PREFERRED[slot]
         scored = []
         for c in all_candidates:
             if c["entity_id"] in used_ids:
                 continue
             total = c["base_score"] + _slot_bonus(slot, c["category"], c.get("activity_type", ""))
+            # Bonus for preferred category in this slot
+            if c["top_cat"] in preferred:
+                total += 12
+            # Penalty for reusing same broad category
+            if c["top_cat"] in used_cats:
+                total -= 20
             scored.append((min(100, total), c))
 
         scored.sort(key=lambda x: x[0], reverse=True)
@@ -190,6 +256,7 @@ def generate_plan(user, plan_date: date_type, budget: Decimal, people_count: int
         if scored:
             _, best = scored[0]
             used_ids.add(best["entity_id"])
+            used_cats.add(best["top_cat"])
             reason = _build_item_reason(best["breakdown"], pref_map, is_outdoor_friendly)
             slot_results[slot] = {
                 "entity_type": best["entity_type"],
@@ -346,11 +413,9 @@ def generate_surprise_plan(user, plan_date=None) -> Plan:
     if plan_date is None:
         plan_date = (timezone.now() + timezone.timedelta(days=1)).date()
 
-    # City from last plan, fallback "Buenos Aires"
     last_plan = Plan.objects.filter(user=user).order_by("-created_at").first()
     city = last_plan.city if last_plan else "Buenos Aires"
 
-    # Budget: average of last 3 plans, fallback $3000
     recent = list(Plan.objects.filter(user=user).order_by("-created_at").values_list("budget", flat=True)[:3])
     if recent:
         budget = Decimal(sum(float(b) for b in recent) / len(recent)).quantize(Decimal("0.01"))

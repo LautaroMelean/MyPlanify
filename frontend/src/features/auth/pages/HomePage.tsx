@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sparkles, MapPin, Users, DollarSign, ArrowRight, Compass, Map, Heart, TrendingUp } from 'lucide-react'
+import { Sparkles, MapPin, Users, DollarSign, ArrowRight, Compass, Map, Heart, TrendingUp, Cloud } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useWeather } from '@/hooks/useWeather'
 import { useForecast } from '@/hooks/useForecast'
@@ -30,7 +30,7 @@ export default function HomePage() {
   const navigate = useNavigate()
   const planner = usePlanner()
 
-  const { data: weather } = useWeather(BA)
+  const { data: weather, isLoading: weatherLoading } = useWeather(BA)
   const { data: forecast, isLoading: forecastLoading } = useForecast(BA)
   const { data: places = [] } = usePlaces({ city: 'Buenos Aires' })
 
@@ -57,7 +57,15 @@ export default function HomePage() {
           </h1>
           <p className="text-gray-500 text-sm capitalize mt-0.5">{TODAY_LABEL} · Buenos Aires</p>
         </div>
-        <WeatherWidget weather={weather} />
+        {weatherLoading ? (
+          <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-4 py-3 animate-pulse w-40 h-10" />
+        ) : weather ? (
+          <WeatherWidget weather={weather} />
+        ) : (
+          <div className="flex items-center gap-2 text-sm text-gray-400 bg-white border border-gray-200 rounded-xl px-4 py-3">
+            <Cloud className="h-4 w-4" /> Buenos Aires
+          </div>
+        )}
       </div>
 
       {/* HERO — generar plan */}
@@ -132,41 +140,41 @@ export default function HomePage() {
       </div>
 
       {/* Pronóstico semanal */}
-      <div>
-        <h2 className="text-sm font-semibold text-gray-700 mb-2">Pronóstico de la semana en BA</h2>
-        <WeatherForecastWidget forecast={forecast} isLoading={forecastLoading} highlightDate={TODAY} />
-      </div>
+      {(forecastLoading || (forecast && forecast.length > 0)) && (
+        <div>
+          <h2 className="text-sm font-semibold text-gray-700 mb-2">Pronóstico de la semana en BA</h2>
+          <WeatherForecastWidget forecast={forecast} isLoading={forecastLoading} highlightDate={TODAY} />
+        </div>
+      )}
 
       {/* Lugares destacados */}
-      {featuredPlaces.length > 0 && (
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-primary-600" />
-              <h2 className="text-sm font-semibold text-gray-700">Lugares en Buenos Aires</h2>
-            </div>
-            <button
-              onClick={() => navigate('/explorar')}
-              className="text-xs text-primary-600 hover:underline flex items-center gap-0.5"
-            >
-              Ver todos <ArrowRight className="h-3 w-3" />
-            </button>
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <MapPin className="h-4 w-4 text-primary-600" />
+            <h2 className="text-sm font-semibold text-gray-700">Lugares en Buenos Aires</h2>
           </div>
+          <button
+            onClick={() => navigate('/explorar')}
+            className="text-xs text-primary-600 hover:underline flex items-center gap-0.5"
+          >
+            Ver todos <ArrowRight className="h-3 w-3" />
+          </button>
+        </div>
+        {featuredPlaces.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {featuredPlaces.map((place) => (
               <PlaceCard key={place.id} place={place} />
             ))}
           </div>
-          {places.length === 0 && (
-            <div className="text-center py-8 text-gray-400 text-sm">
-              <MapPin className="h-8 w-8 mx-auto mb-2 text-gray-300" />
-              Los lugares de Buenos Aires se cargan automáticamente.
-              <br />
-              Andá a <button onClick={() => navigate('/explorar')} className="text-primary-600 underline">Explorar → Cerca de mí</button> para sincronizar desde OpenStreetMap.
-            </div>
-          )}
-        </div>
-      )}
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-48 bg-gray-100 rounded-xl animate-pulse" />
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Acciones rápidas */}
       <div>

@@ -4,13 +4,60 @@ from .models import Plan, PlanItem, PlanFeedback
 
 
 class PlanItemSerializer(serializers.ModelSerializer):
+    entity_name = serializers.SerializerMethodField()
+    entity_description = serializers.SerializerMethodField()
+    entity_category = serializers.SerializerMethodField()
+
     class Meta:
         model = PlanItem
         fields = (
-            "id", "entity_type", "entity_id", "slot", "order",
-            "note", "generation_reason", "created_at",
+            "id", "entity_type", "entity_id", "entity_name",
+            "entity_description", "entity_category",
+            "slot", "order", "note", "generation_reason", "created_at",
         )
         read_only_fields = ("id", "created_at")
+
+    def _resolve_entity(self, obj):
+        cache = getattr(self, "_entity_cache", {})
+        key = f"{obj.entity_type}:{obj.entity_id}"
+        if key in cache:
+            return cache[key]
+        try:
+            if obj.entity_type == "place":
+                from apps.places.models import Place
+                entity = Place.objects.get(id=obj.entity_id)
+            elif obj.entity_type == "activity":
+                from apps.activities.models import Activity
+                entity = Activity.objects.get(id=obj.entity_id)
+            elif obj.entity_type == "event":
+                from apps.events.models import Event
+                entity = Event.objects.get(id=obj.entity_id)
+            else:
+                entity = None
+        except Exception:
+            entity = None
+        if not hasattr(self, "_entity_cache"):
+            self._entity_cache = {}
+        self._entity_cache[key] = entity
+        return entity
+
+    def get_entity_name(self, obj) -> str:
+        entity = self._resolve_entity(obj)
+        if entity is None:
+            return ""
+        return getattr(entity, "title", None) or getattr(entity, "name", "") or ""
+
+    def get_entity_description(self, obj) -> str:
+        entity = self._resolve_entity(obj)
+        if entity is None:
+            return ""
+        return getattr(entity, "description", "") or ""
+
+    def get_entity_category(self, obj) -> str:
+        entity = self._resolve_entity(obj)
+        if entity is None:
+            return ""
+        return getattr(entity, "category", "") or ""
 
 
 class PlanSerializer(serializers.ModelSerializer):

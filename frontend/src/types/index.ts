@@ -278,6 +278,9 @@ export interface PlanItem {
   id: string
   entity_type: PlanEntityType
   entity_id: string
+  entity_name: string
+  entity_description: string
+  entity_category: string
   slot: PlanSlot
   order: number
   note: string

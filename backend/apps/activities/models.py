@@ -23,6 +23,7 @@ class Activity(SoftDeleteModel):
         blank=True,
         related_name="activities",
     )
+    city = models.CharField(max_length=100, blank=True, default="", db_index=True)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, default="")
     category = models.CharField(max_length=100, db_index=True)
