@@ -1,5 +1,5 @@
 from django.urls import path, include
-from apps.integrations.urls import weather_urlpatterns, external_places_urlpatterns
+from apps.integrations.urls import weather_urlpatterns, external_places_urlpatterns, geocoding_urlpatterns
 from apps.core.views import trending, search
 
 urlpatterns = [
@@ -19,6 +19,7 @@ urlpatterns = [
     path("reminders/", include("apps.notifications.reminder_urls")),
     path("weather/", include((weather_urlpatterns, "weather"))),
     path("external/places/", include((external_places_urlpatterns, "external-places"))),
+    path("geocode/", include((geocoding_urlpatterns, "geocoding"))),
     path("reviews/", include("apps.reviews.urls")),
     path("plans/", include("apps.planner.urls")),
     path("dashboard/", include("apps.dashboard.urls")),

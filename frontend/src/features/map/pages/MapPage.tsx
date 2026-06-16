@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
-import { MapPin, Locate } from 'lucide-react'
+import { MapPin, Locate, Search, X } from 'lucide-react'
 import { usePlaces } from '@/hooks/usePlaces'
 import { useWeather } from '@/hooks/useWeather'
+import { useExternalPlaces } from '@/hooks/useExternalPlaces'
+import { geocodingService } from '@/services/geocodingService'
 import Loading from '@/components/common/Loading'
 import Button from '@/components/ui/Button'
 import WeatherWidget from '@/components/ui/WeatherWidget'
@@ -35,14 +37,33 @@ function RecenterMap({ center }: { center: [number, number] }) {
 
 export default function MapPage() {
   const { data: places = [], isLoading } = usePlaces()
-  const placesWithCoords = places.filter((p) => p.latitude && p.longitude)
   const [userPos, setUserPos] = useState<[number, number] | null>(null)
+  const [mapCenter, setMapCenter] = useState<[number, number]>(BUENOS_AIRES_CENTER)
   const weatherCoords = userPos ? { lat: userPos[0], lon: userPos[1] } : null
   const { data: weather } = useWeather(weatherCoords)
   const [locating, setLocating] = useState(false)
   const [locError, setLocError] = useState<string | null>(null)
-  const mapCenter = userPos ?? BUENOS_AIRES_CENTER
   const didAutoLocate = useRef(false)
+
+  // City search state
+  const [cityQuery, setCityQuery] = useState('')
+  const [citySearching, setCitySearching] = useState(false)
+  const [cityError, setCityError] = useState<string | null>(null)
+  const [searchedCity, setSearchedCity] = useState<string | null>(null)
+  const [searchCenter, setSearchCenter] = useState<[number, number] | null>(null)
+
+  // External places from Overpass for searched city or user location
+  const externalCoords = searchCenter
+    ? { lat: searchCenter[0], lon: searchCenter[1], radius: 2000 }
+    : userPos
+    ? { lat: userPos[0], lon: userPos[1], radius: 1500 }
+    : null
+  const { data: externalPlaces = [], isLoading: externalLoading } = useExternalPlaces(externalCoords)
+
+  const placesWithCoords = [
+    ...places.filter((p) => p.latitude && p.longitude),
+    ...externalPlaces.filter((p) => p.latitude && p.longitude && !places.find((ip) => ip.id === p.id)),
+  ]
 
   const locateUser = () => {
     if (!navigator.geolocation) {
@@ -51,9 +72,13 @@ export default function MapPage() {
     }
     setLocating(true)
     setLocError(null)
+    setSearchCenter(null)
+    setSearchedCity(null)
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setUserPos([pos.coords.latitude, pos.coords.longitude])
+        const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude]
+        setUserPos(coords)
+        setMapCenter(coords)
         setLocating(false)
       },
       () => {
@@ -64,7 +89,30 @@ export default function MapPage() {
     )
   }
 
-  // Try to auto-locate once on mount
+  const searchCity = async () => {
+    const q = cityQuery.trim()
+    if (!q) return
+    setCitySearching(true)
+    setCityError(null)
+    const result = await geocodingService.geocode(q)
+    setCitySearching(false)
+    if (!result) {
+      setCityError('No se encontró esa ciudad. Probá con otro nombre.')
+      return
+    }
+    const coords: [number, number] = [result.lat, result.lon]
+    setSearchCenter(coords)
+    setMapCenter(coords)
+    setSearchedCity(result.city || result.display_name.split(',')[0])
+    setCityQuery('')
+  }
+
+  const clearSearch = () => {
+    setSearchCenter(null)
+    setSearchedCity(null)
+    setCityError(null)
+  }
+
   useEffect(() => {
     if (!didAutoLocate.current) {
       didAutoLocate.current = true
@@ -84,7 +132,9 @@ export default function MapPage() {
           </h1>
           <p className="text-gray-500 text-sm">
             {placesWithCoords.length} lugar{placesWithCoords.length !== 1 ? 'es' : ''} en el mapa.
-            {userPos && <span className="text-primary-600 ml-1">· Tu ubicación activa</span>}
+            {userPos && !searchedCity && <span className="text-primary-600 ml-1">· Tu ubicación activa</span>}
+            {searchedCity && <span className="text-primary-600 ml-1">· {searchedCity}</span>}
+            {externalLoading && <span className="text-gray-400 ml-1">· Cargando lugares de OpenStreetMap…</span>}
           </p>
         </div>
         <Button
@@ -98,11 +148,40 @@ export default function MapPage() {
         </Button>
       </div>
 
+      {/* City search */}
+      <div className="flex gap-2">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <input
+            type="text"
+            value={cityQuery}
+            onChange={(e) => setCityQuery(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && searchCity()}
+            placeholder="Buscar ciudad... (ej: Córdoba, Rosario)"
+            className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-200"
+          />
+        </div>
+        <Button size="sm" onClick={searchCity} isLoading={citySearching}>
+          Buscar
+        </Button>
+        {searchedCity && (
+          <button
+            onClick={clearSearch}
+            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 px-2"
+          >
+            <X className="h-3 w-3" /> Limpiar
+          </button>
+        )}
+      </div>
+
       {locError && (
         <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{locError}</p>
       )}
+      {cityError && (
+        <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{cityError}</p>
+      )}
 
-      {userPos && <WeatherWidget weather={weather} />}
+      {userPos && !searchedCity && <WeatherWidget weather={weather} />}
 
       <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm" style={{ height: '65vh' }}>
         <MapContainer
@@ -114,7 +193,7 @@ export default function MapPage() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {userPos && <RecenterMap center={userPos} />}
+          <RecenterMap center={mapCenter} />
           {userPos && (
             <Marker position={userPos} icon={userIcon}>
               <Popup><strong>Tu ubicación</strong></Popup>
@@ -132,6 +211,9 @@ export default function MapPage() {
                   {place.address && (
                     <p className="text-xs text-gray-400 mt-1">{place.address}</p>
                   )}
+                  {place.source === 'osm' && (
+                    <p className="text-xs text-green-600 mt-1">· OpenStreetMap</p>
+                  )}
                 </div>
               </Popup>
             </Marker>
@@ -147,7 +229,7 @@ export default function MapPage() {
             </div>
             <div className="min-w-0">
               <p className="font-medium text-gray-900 text-sm truncate">{place.name}</p>
-              <p className="text-xs text-gray-500">{place.city} · {place.category}</p>
+              <p className="text-xs text-gray-500">{place.city || '—'} · {place.category}</p>
             </div>
           </div>
         ))}

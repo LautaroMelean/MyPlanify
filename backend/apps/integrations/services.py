@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.db.models import Q
 
 from apps.places.models import Place
-from .providers.google_places import google_places_provider
+from .providers.overpass import overpass_provider
 
 logger = logging.getLogger(__name__)
 
@@ -20,19 +20,12 @@ def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return 2 * R * math.asin(math.sqrt(a))
 
 
-def _is_stale(place: Place) -> bool:
-    if place.last_synced_at is None:
-        return True
-    delta = timezone.now() - place.last_synced_at
-    return delta.total_seconds() > SYNC_STALE_HOURS * 3600
-
-
 def get_external_places(lat: float, lon: float, radius: int = 1500, place_type: str = "") -> list:
-    """Return nearby Google-sourced places, fetching from API only when cache/DB is stale."""
+    """Return nearby OSM places, fetching from Overpass only when DB is stale."""
     stale_threshold = timezone.now() - timezone.timedelta(hours=SYNC_STALE_HOURS)
     db_places = list(
         Place.objects.filter(
-            source="google",
+            source="osm",
             is_active=True,
             last_synced_at__gte=stale_threshold,
             latitude__isnull=False,
@@ -48,13 +41,13 @@ def get_external_places(lat: float, lon: float, radius: int = 1500, place_type: 
     if nearby_db:
         return nearby_db
 
-    raw_results = google_places_provider.search_nearby(lat, lon, radius, place_type)
+    raw_results = overpass_provider.search_nearby(lat, lon, radius, place_type)
     return _upsert_places(raw_results)
 
 
 def search_external_places(query: str, lat: float, lon: float) -> list:
-    """Text search through Google Places, fallback to internal places on failure."""
-    raw_results = google_places_provider.search_by_query(query, lat, lon)
+    """Text search — Overpass doesn't support it natively, so returns nearby + internal fallback."""
+    raw_results = overpass_provider.search_by_query(query, lat, lon)
     if not raw_results:
         return list(
             Place.objects.filter(is_active=True, name__icontains=query).order_by("name")[:20]
@@ -73,12 +66,14 @@ def _upsert_places(raw_results: list) -> list:
             defaults={
                 "name": item["name"],
                 "address": item["address"],
-                "city": "",
+                "city": item.get("city", ""),
                 "latitude": item["latitude"],
                 "longitude": item["longitude"],
                 "category": item["category"],
                 "price_level": item.get("price_level", 0),
-                "source": "google",
+                "phone": item.get("phone", ""),
+                "website": item.get("website", ""),
+                "source": "osm",
                 "last_synced_at": now,
                 "is_active": True,
             },

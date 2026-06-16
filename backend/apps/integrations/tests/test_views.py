@@ -78,3 +78,65 @@ class TestExternalPlacesView:
     def test_search_requires_query(self, auth_client):
         resp = auth_client.get("/api/v1/external/places/search/", {"lat": -34.6, "lon": -58.4})
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
+
+
+@pytest.mark.django_db
+class TestGeocodingView:
+    url = "/api/v1/geocode/"
+
+    def test_requires_authentication(self, api_client):
+        resp = api_client.get(self.url, {"q": "Buenos Aires"})
+        assert resp.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_returns_400_when_missing_query(self, auth_client):
+        resp = auth_client.get(self.url)
+        assert resp.status_code == status.HTTP_400_BAD_REQUEST
+
+    @patch("apps.integrations.providers.nominatim.NominatimProvider.geocode")
+    def test_returns_geocoded_result(self, mock_geocode, auth_client):
+        mock_geocode.return_value = {
+            "lat": -34.6037,
+            "lon": -58.3816,
+            "display_name": "Buenos Aires, Argentina",
+            "city": "Buenos Aires",
+            "country": "Argentina",
+            "country_code": "ar",
+        }
+        resp = auth_client.get(self.url, {"q": "Buenos Aires"})
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.data["success"] is True
+        assert resp.data["data"]["city"] == "Buenos Aires"
+        assert resp.data["data"]["lat"] == pytest.approx(-34.6037)
+
+    @patch("apps.integrations.providers.nominatim.NominatimProvider.geocode")
+    def test_returns_404_when_not_found(self, mock_geocode, auth_client):
+        mock_geocode.return_value = None
+        resp = auth_client.get(self.url, {"q": "xyzabcnotaplace123"})
+        assert resp.status_code == status.HTTP_404_NOT_FOUND
+
+
+@pytest.mark.django_db
+class TestReverseGeocodingView:
+    url = "/api/v1/geocode/reverse/"
+
+    def test_requires_authentication(self, api_client):
+        resp = api_client.get(self.url, {"lat": -34.6, "lon": -58.4})
+        assert resp.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_returns_400_when_missing_params(self, auth_client):
+        resp = auth_client.get(self.url)
+        assert resp.status_code == status.HTTP_400_BAD_REQUEST
+
+    @patch("apps.integrations.providers.nominatim.NominatimProvider.reverse_geocode")
+    def test_returns_reverse_geocoded_result(self, mock_reverse, auth_client):
+        mock_reverse.return_value = {
+            "lat": -34.6037,
+            "lon": -58.3816,
+            "display_name": "Buenos Aires, Argentina",
+            "city": "Buenos Aires",
+            "country": "Argentina",
+            "country_code": "ar",
+        }
+        resp = auth_client.get(self.url, {"lat": -34.6, "lon": -58.4})
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.data["data"]["city"] == "Buenos Aires"

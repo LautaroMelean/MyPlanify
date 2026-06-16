@@ -1,10 +1,11 @@
 import { useState, useCallback } from 'react'
-import { MapPin, Activity, Calendar, TrendingUp, Navigation, Filter, X } from 'lucide-react'
+import { MapPin, Activity, Calendar, TrendingUp, Navigation, Filter, X, Globe } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { usePlaces } from '@/hooks/usePlaces'
 import { useActivities } from '@/hooks/useActivities'
 import { useEvents } from '@/hooks/useEvents'
 import { useTrending } from '@/hooks/useTrending'
+import { useExternalPlaces } from '@/hooks/useExternalPlaces'
 import PlaceCard from '@/components/ui/PlaceCard'
 import ActivityCard from '@/components/ui/ActivityCard'
 import EventCard from '@/components/ui/EventCard'
@@ -56,6 +57,18 @@ export default function ExplorePage() {
       ? { lat: nearbyCoords.lat, lon: nearbyCoords.lon, radius_km: 5 }
       : {},
   )
+
+  // Real OSM places from Overpass — fetched and upserted when user shares location
+  const externalNearby = useExternalPlaces(
+    nearbyCoords ? { lat: nearbyCoords.lat, lon: nearbyCoords.lon, radius: 3000 } : null,
+  )
+
+  // Merge internal + OSM places, deduplicated by id
+  const nearbyAll = (() => {
+    const seen = new Set<string>()
+    const merged = [...(nearbyPlaces.data ?? []), ...(externalNearby.data ?? [])]
+    return merged.filter((p) => { if (seen.has(p.id)) return false; seen.add(p.id); return true })
+  })()
 
   const { data: trending } = useTrending()
   const showTrending = !search && tab !== 'cerca'
@@ -368,10 +381,22 @@ export default function ExplorePage() {
           {nearbyCoords && (
             <>
               <div className="flex items-center justify-between mb-4">
-                <p className="text-sm text-gray-500 flex items-center gap-1">
-                  <Navigation className="h-4 w-4 text-primary-600" />
-                  Lugares dentro de 5 km
-                </p>
+                <div className="flex flex-col gap-0.5">
+                  <p className="text-sm text-gray-500 flex items-center gap-1">
+                    <Navigation className="h-4 w-4 text-primary-600" />
+                    Lugares dentro de 3 km · {nearbyAll.length} encontrados
+                  </p>
+                  {externalNearby.isLoading && (
+                    <p className="text-xs text-gray-400 flex items-center gap-1">
+                      <Globe className="h-3 w-3" /> Buscando en OpenStreetMap…
+                    </p>
+                  )}
+                  {!externalNearby.isLoading && externalNearby.data && externalNearby.data.length > 0 && (
+                    <p className="text-xs text-green-600 flex items-center gap-1">
+                      <Globe className="h-3 w-3" /> {externalNearby.data.length} lugares de OpenStreetMap incluidos
+                    </p>
+                  )}
+                </div>
                 <button
                   onClick={() => setNearbyCoords(null)}
                   className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1"
@@ -379,9 +404,9 @@ export default function ExplorePage() {
                   <X className="h-3 w-3" /> Cambiar ubicación
                 </button>
               </div>
-              <TabContent isLoading={nearbyPlaces.isLoading} isEmpty={!nearbyPlaces.data?.length}>
+              <TabContent isLoading={nearbyPlaces.isLoading && externalNearby.isLoading} isEmpty={nearbyAll.length === 0}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {nearbyPlaces.data?.map((place) => <PlaceCard key={place.id} place={place} />)}
+                  {nearbyAll.map((place) => <PlaceCard key={place.id} place={place} />)}
                 </div>
               </TabContent>
             </>
