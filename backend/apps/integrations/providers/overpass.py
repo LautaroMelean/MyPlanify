@@ -37,6 +37,17 @@ OSM_TO_CATEGORY: dict[str, str] = {
     "pharmacy": "Salud",
     "mall": "Shopping",
     "supermarket": "Shopping",
+    "swimming_pool": "Deporte",
+    "golf_course": "Deporte",
+    "miniature_golf": "Deporte",
+    "bowling_alley": "Entretenimiento",
+    "escape_game": "Entretenimiento",
+    "amusement_arcade": "Entretenimiento",
+    "zoo": "Turismo",
+    "theme_park": "Turismo",
+    "aquarium": "Turismo",
+    "artwork": "Cultura",
+    "ice_cream": "Gastronomía",
 }
 
 _TYPE_TO_FILTER: dict[str, str] = {
@@ -56,9 +67,9 @@ _TYPE_TO_FILTER: dict[str, str] = {
     "shopping": '["shop"~"mall|supermarket"]',
 }
 
-_DEFAULT_AMENITIES = "restaurant|fast_food|bar|pub|cafe|museum|cinema|nightclub|theatre|arts_centre|library|hospital|pharmacy"
-_DEFAULT_LEISURE = "park|fitness_centre|sports_centre|stadium"
-_DEFAULT_TOURISM = "attraction|viewpoint|hotel|hostel"
+_DEFAULT_AMENITIES = "restaurant|fast_food|bar|pub|cafe|ice_cream|museum|cinema|nightclub|theatre|arts_centre|library|biergarten"
+_DEFAULT_LEISURE = "park|fitness_centre|sports_centre|stadium|swimming_pool|golf_course|miniature_golf|bowling_alley|escape_game|amusement_arcade"
+_DEFAULT_TOURISM = "attraction|viewpoint|zoo|theme_park|aquarium|artwork"
 
 
 class OverpassProvider:
