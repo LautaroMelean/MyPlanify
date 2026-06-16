@@ -5,8 +5,9 @@ from django.core.cache import cache
 logger = logging.getLogger(__name__)
 
 CACHE_TTL = 86400  # 24 hours — OSM data is stable
-TIMEOUT = 10
+TIMEOUT = 25
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
+HEADERS = {"User-Agent": "Planify/1.0 (lautaromatiasmelean@gmail.com)"}
 
 OSM_TO_CATEGORY: dict[str, str] = {
     "restaurant": "Gastronomía",
@@ -71,7 +72,7 @@ class OverpassProvider:
 
         query = self._build_query(lat_r, lon_r, radius, place_type)
         try:
-            resp = requests.post(OVERPASS_URL, data={"data": query}, timeout=TIMEOUT)
+            resp = requests.get(OVERPASS_URL, params={"data": query}, headers=HEADERS, timeout=TIMEOUT)
             resp.raise_for_status()
             elements = resp.json().get("elements", [])
             results = self._parse_elements(elements)
@@ -89,20 +90,19 @@ class OverpassProvider:
         around = f"(around:{radius},{lat},{lon})"
         tag = _TYPE_TO_FILTER.get(place_type, "")
         if tag:
+            # nodes only — faster; large places (parks, malls) are also tagged on nodes in OSM
             return (
                 f"[out:json][timeout:{TIMEOUT}];"
-                f"(node{tag}{around};way{tag}{around};);"
-                f"out center 50;"
+                f"(node{tag}{around};);"
+                f"out 60;"
             )
         return (
             f"[out:json][timeout:{TIMEOUT}];"
             f'(node["amenity"~"{_DEFAULT_AMENITIES}"]{around};'
-            f'way["amenity"~"{_DEFAULT_AMENITIES}"]{around};'
             f'node["leisure"~"{_DEFAULT_LEISURE}"]{around};'
-            f'way["leisure"~"{_DEFAULT_LEISURE}"]{around};'
             f'node["tourism"~"{_DEFAULT_TOURISM}"]{around};'
             f");"
-            f"out center 50;"
+            f"out 80;"
         )
 
     def _parse_elements(self, elements: list) -> list[dict]:
@@ -114,11 +114,7 @@ class OverpassProvider:
             if not name:
                 continue
 
-            if el["type"] == "node":
-                lat, lon = el.get("lat"), el.get("lon")
-            else:
-                center = el.get("center", {})
-                lat, lon = center.get("lat"), center.get("lon")
+            lat, lon = el.get("lat"), el.get("lon")
             if lat is None or lon is None:
                 continue
 

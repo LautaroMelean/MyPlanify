@@ -48,7 +48,7 @@ class OverpassProviderTests(TestCase):
     def tearDown(self):
         cache.clear()
 
-    @patch("apps.integrations.providers.overpass.requests.post")
+    @patch("apps.integrations.providers.overpass.requests.get")
     def test_search_nearby_returns_results(self, mock_post):
         mock_post.return_value = _mock_response()
         results = self.provider.search_nearby(-34.6, -58.4)
@@ -57,20 +57,20 @@ class OverpassProviderTests(TestCase):
         self.assertEqual(results[0]["source"], "osm")
         self.assertIn("osm:node:12345", results[0]["external_id"])
 
-    @patch("apps.integrations.providers.overpass.requests.post")
+    @patch("apps.integrations.providers.overpass.requests.get")
     def test_caches_results(self, mock_post):
         mock_post.return_value = _mock_response()
         self.provider.search_nearby(-34.60, -58.40)
         self.provider.search_nearby(-34.60, -58.40)
         self.assertEqual(mock_post.call_count, 1)
 
-    @patch("apps.integrations.providers.overpass.requests.post")
+    @patch("apps.integrations.providers.overpass.requests.get")
     def test_fallback_on_api_error(self, mock_post):
         mock_post.side_effect = Exception("timeout")
         results = self.provider.search_nearby(-34.6, -58.4)
         self.assertEqual(results, [])
 
-    @patch("apps.integrations.providers.overpass.requests.post")
+    @patch("apps.integrations.providers.overpass.requests.get")
     def test_skips_elements_without_name(self, mock_post):
         mock_post.return_value = _mock_response([
             {"type": "node", "id": 1, "lat": -34.6, "lon": -58.4, "tags": {}},
@@ -78,9 +78,19 @@ class OverpassProviderTests(TestCase):
         results = self.provider.search_nearby(-34.6, -58.4)
         self.assertEqual(results, [])
 
-    @patch("apps.integrations.providers.overpass.requests.post")
-    def test_parses_way_element_with_center(self, mock_post):
-        mock_post.return_value = _mock_response([OSM_WAY_ELEMENT])
+    @patch("apps.integrations.providers.overpass.requests.get")
+    def test_parses_node_with_phone_and_website(self, mock_get):
+        node = {
+            "type": "node", "id": 99999,
+            "lat": -34.61, "lon": -58.44,
+            "tags": {
+                "name": "Bar San Telmo", "amenity": "bar",
+                "addr:street": "Defensa", "addr:housenumber": "123",
+                "addr:city": "Buenos Aires",
+                "phone": "+54 11 1234-5678", "website": "https://example.com",
+            },
+        }
+        mock_get.return_value = _mock_response([node])
         results = self.provider.search_nearby(-34.6, -58.4)
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0]["name"], "Bar San Telmo")
@@ -88,7 +98,7 @@ class OverpassProviderTests(TestCase):
         self.assertEqual(results[0]["website"], "https://example.com")
         self.assertAlmostEqual(results[0]["latitude"], -34.61)
 
-    @patch("apps.integrations.providers.overpass.requests.post")
+    @patch("apps.integrations.providers.overpass.requests.get")
     def test_deduplicates_elements(self, mock_post):
         mock_post.return_value = _mock_response([OSM_ELEMENT, OSM_ELEMENT])
         results = self.provider.search_nearby(-34.6, -58.4)
@@ -115,18 +125,17 @@ class OverpassProviderTests(TestCase):
     def test_build_address_empty_when_no_data(self):
         self.assertEqual(self.provider._build_address({}), "")
 
-    @patch("apps.integrations.providers.overpass.requests.post")
+    @patch("apps.integrations.providers.overpass.requests.get")
     def test_search_by_query_falls_back_to_nearby(self, mock_post):
         mock_post.return_value = _mock_response()
         results = self.provider.search_by_query("bar", -34.6, -58.4)
         self.assertTrue(mock_post.called)
         self.assertEqual(len(results), 1)
 
-    @patch("apps.integrations.providers.overpass.requests.post")
-    def test_type_filter_uses_specific_tag(self, mock_post):
-        mock_post.return_value = _mock_response([])
+    @patch("apps.integrations.providers.overpass.requests.get")
+    def test_type_filter_uses_specific_tag(self, mock_get):
+        mock_get.return_value = _mock_response([])
         self.provider.search_nearby(-34.6, -58.4, place_type="restaurant")
-        # call_args is (args, kwargs); data= is passed as kwarg
-        call_kwargs = mock_post.call_args[1]
-        query_sent = call_kwargs.get("data", {}).get("data", "")
+        call_kwargs = mock_get.call_args[1]
+        query_sent = call_kwargs.get("params", {}).get("data", "")
         self.assertIn("restaurant", query_sent)
