@@ -29,6 +29,10 @@ const userIcon = new L.Icon({
 
 const BUENOS_AIRES_CENTER: [number, number] = [-34.6037, -58.3816]
 
+const EXCLUDED_CATEGORIES = new Set([
+  'Salud', 'Educación', 'Alojamiento', 'Shopping', 'Servicios', 'Farmacia',
+])
+
 function RecenterMap({ center }: { center: [number, number] }) {
   const map = useMap()
   useEffect(() => { map.setView(center, 14) }, [center, map])
@@ -61,8 +65,10 @@ export default function MapPage() {
   const { data: externalPlaces = [], isLoading: externalLoading } = useExternalPlaces(externalCoords)
 
   const placesWithCoords = [
-    ...places.filter((p) => p.latitude && p.longitude),
-    ...externalPlaces.filter((p) => p.latitude && p.longitude && !places.find((ip) => ip.id === p.id)),
+    ...places.filter((p) => p.latitude && p.longitude && !EXCLUDED_CATEGORIES.has(p.category)),
+    ...externalPlaces.filter(
+      (p) => p.latitude && p.longitude && !EXCLUDED_CATEGORIES.has(p.category) && !places.find((ip) => ip.id === p.id),
+    ),
   ]
 
   const locateUser = () => {

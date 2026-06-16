@@ -8,18 +8,27 @@ import Loading from '@/components/common/Loading'
 import EmptyState from '@/components/common/EmptyState'
 import type { Recommendation, ScoreBreakdown } from '@/types'
 
+const BA_COORDS = { lat: -34.6037, lon: -58.3816 }
+
 export default function RecommendationsPage() {
-  const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null)
+  const [coords, setCoords] = useState<{ lat: number; lon: number }>(BA_COORDS)
+  const [usingGeo, setUsingGeo] = useState(false)
 
   useEffect(() => {
     navigator.geolocation?.getCurrentPosition(
-      (pos) => setCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
-      () => setCoords(null),
+      (pos) => {
+        setCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude })
+        setUsingGeo(true)
+      },
+      () => {
+        setCoords(BA_COORDS)
+        setUsingGeo(false)
+      },
     )
   }, [])
 
   const { data: recommendations = [], isLoading } = useRecommendations(
-    coords ? { lat: coords.lat, lon: coords.lon } : {},
+    { lat: coords.lat, lon: coords.lon },
   )
   const { data: weather } = useWeather(coords)
 
@@ -35,10 +44,10 @@ export default function RecommendationsPage() {
           </h1>
           <p className="text-gray-500 text-sm">
             Recomendaciones personalizadas basadas en tus preferencias
-            {coords ? ' y tu ubicación actual' : ''}.
+            {usingGeo ? ' y tu ubicación actual' : ' · Buenos Aires'}.
           </p>
         </div>
-        {coords && <WeatherWidget weather={weather} />}
+        <WeatherWidget weather={weather} />
       </div>
 
       {recommendations.length === 0 ? (

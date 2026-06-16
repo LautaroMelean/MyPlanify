@@ -30,6 +30,26 @@ GASTRO_CATEGORIES = {"Gastronomía", "Café", "restaurant", "cafe"}
 BAR_CATEGORIES = {"Bar", "bar"}
 
 
+_BA_BARRIOS: frozenset[str] = frozenset({
+    "agronomía", "almagro", "balvanera", "barracas", "belgrano", "boedo",
+    "caballito", "chacarita", "coghlan", "colegiales", "constitución",
+    "flores", "floresta", "la boca", "la paternal", "liniers", "mataderos",
+    "monte castro", "montserrat", "nueva pompeya", "núñez", "palermo",
+    "parque avellaneda", "parque chacabuco", "parque chas", "parque patricios",
+    "paternal", "puerto madero", "recoleta", "retiro", "saavedra",
+    "san cristóbal", "san nicolás", "san telmo", "vélez sársfield", "versalles",
+    "villa crespo", "villa del parque", "villa devoto", "villa general mitre",
+    "villa lugano", "villa luro", "villa ortúzar", "villa pueyrredón",
+    "villa real", "villa riachuelo", "villa santa rita", "villa soldati", "villa urquiza",
+    "buenos aires",
+})
+
+
+def _is_ba_context(city: str) -> bool:
+    """Return True if city is Buenos Aires or any CABA barrio."""
+    return city.lower().strip() in _BA_BARRIOS
+
+
 def _slot_bonus(slot: str, category: str, activity_type: str = "") -> float:
     keywords = SLOT_KEYWORDS.get(slot, [])
     text = (category + " " + activity_type).lower()
@@ -121,7 +141,12 @@ def _collect_candidates(
             min_people__lte=people_count,
         )
     if city and phase in (1, 2):
-        activity_qs = activity_qs.filter(Q(city__icontains=city) | Q(city=""))
+        if _is_ba_context(city):
+            activity_qs = activity_qs.filter(
+                Q(city__icontains="Buenos Aires") | Q(city__icontains=city) | Q(city="")
+            )
+        else:
+            activity_qs = activity_qs.filter(Q(city__icontains=city) | Q(city=""))
 
     for act in activity_qs[:80]:
         pref_s = _pref_boost(act.category, act.activity_type, pref_map)
@@ -152,7 +177,12 @@ def _collect_candidates(
         category__in=["Salud", "Alojamiento", "Shopping"]
     )
     if city and phase in (1, 2):
-        place_qs = place_qs.filter(city__icontains=city)
+        if _is_ba_context(city):
+            place_qs = place_qs.filter(
+                Q(city__icontains="Buenos Aires") | Q(city__icontains=city) | Q(city="")
+            )
+        else:
+            place_qs = place_qs.filter(Q(city__icontains=city) | Q(city=""))
 
     for place in place_qs.order_by("name")[:80]:
         pref_s = _pref_boost(place.category, "", pref_map)
@@ -184,7 +214,12 @@ def _collect_candidates(
     if phase == 1:
         event_qs = event_qs.filter(price__lte=budget_per_slot)
     if city and phase in (1, 2):
-        event_qs = event_qs.filter(place__city__icontains=city)
+        if _is_ba_context(city):
+            event_qs = event_qs.filter(
+                Q(place__city__icontains="Buenos Aires") | Q(place__city__icontains=city)
+            )
+        else:
+            event_qs = event_qs.filter(place__city__icontains=city)
 
     for event in event_qs[:15]:
         pref_s = _pref_boost(event.category, "", pref_map)
@@ -287,11 +322,27 @@ def generate_plan(user, plan_date: date_type, budget: Decimal, people_count: int
     )
 
     budget_per_slot = float(budget) / 3
-    all_candidates = _collect_candidates(
-        city, budget_per_slot, people_count, is_outdoor_friendly,
-        pref_map, interactions, plan_date, phase=1,
-    )
-    slot_results = _pick_slots(all_candidates, is_outdoor_friendly, pref_map)
+
+    PHASES = [
+        (1, city, budget_per_slot, people_count, ""),
+        (2, city, budget_per_slot, people_count, ""),
+        (3, "",   budget_per_slot, people_count, ""),
+    ]
+
+    slot_results: dict = {}
+    for phase, phase_city, bps, ppl, phase_label in PHASES:
+        if len(slot_results) >= 3:
+            break
+        already_used = {v["entity_id"] for v in slot_results.values()}
+        candidates = _collect_candidates(
+            phase_city, bps, ppl, is_outdoor_friendly,
+            pref_map, interactions, plan_date, phase=phase,
+        )
+        candidates = [c for c in candidates if c["entity_id"] not in already_used]
+        phase_results = _pick_slots(candidates, is_outdoor_friendly, pref_map, phase_label)
+        for slot, data in phase_results.items():
+            if slot not in slot_results:
+                slot_results[slot] = data
 
     title = f"Plan para {plan_date.strftime('%d/%m/%Y')}"
     slug = _generate_slug(plan_date, user.id)
@@ -488,14 +539,24 @@ def generate_surprise_plan(user, plan_date=None) -> Plan:
 
     slot_results: dict = {}
     for phase, phase_city, bps, people, phase_label in PHASES:
+        if len(slot_results) >= 3:
+            break
+        already_used = {v["entity_id"] for v in slot_results.values()}
         candidates = _collect_candidates(
             phase_city, bps, people, is_outdoor_friendly,
             pref_map, interactions, plan_date, phase=phase,
         )
-        slot_results = _pick_slots(candidates, is_outdoor_friendly, pref_map, phase_label)
-        if slot_results:
-            logger.info("Surprise plan generated in phase %d for user %s", phase, user.id)
-            break
+        # Exclude entities already picked in earlier phases to avoid duplicates
+        candidates = [c for c in candidates if c["entity_id"] not in already_used]
+        phase_results = _pick_slots(candidates, is_outdoor_friendly, pref_map, phase_label)
+        for slot, data in phase_results.items():
+            if slot not in slot_results:
+                slot_results[slot] = data
+
+    logger.info(
+        "Surprise plan: %d/%d slots filled for user %s",
+        len(slot_results), 3, user.id,
+    )
 
     title = f"Plan para {plan_date.strftime('%d/%m/%Y')}"
     slug = _generate_slug(plan_date, user.id)

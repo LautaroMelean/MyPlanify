@@ -178,8 +178,19 @@ Planify/
 
 | Sprint | Status | Description |
 |---|---|---|
-| **Sprint 0** | `IN_PROGRESS` | Architecture, auth, base structure, Docker |
-| Sprint 1 | Pending | Events, places, activities, favorites, recommendations |
+| Sprint 0 | ✅ `DONE` | Architecture, JWT auth, base structure, Docker |
+| Sprint 1 | ✅ `DONE` | Events, places, activities, favorites, recommendations v1 |
+| Sprint 2 | ✅ `DONE` | Recommendation Engine v1, UserPreferences, Reminders, RBAC |
+| Sprint 3 | ✅ `DONE` | Full experience: promotions, advanced recs, detail pages, geo |
+| Sprint 4 | ✅ `DONE` | Quality, testing (90+ Vitest, 5 Playwright), production Docker |
+| Sprint 5 | ✅ `DONE` | External integrations: OpenWeather, Google Places, Rec Engine v2 |
+| Sprint 6 | ✅ `DONE` | Reviews & Ratings, Global Search, Advanced Filters, Trending |
+| Sprint 7 | ✅ `DONE` | Smart Planner: generate_plan, itinerary view, plan CRUD |
+| Sprint 8 | ✅ `DONE` | Ownership, Business/Organizer Dashboards, Rec Engine v3, Plan Feedback |
+| Sprint 9 | ✅ `DONE` | Discovery: trending plans, clone plan, Sorprendeme, calendar export |
+| Sprint 10 | ✅ `DONE` | Rich places data (opening_hours, cuisine, fee, wifi), weather forecast |
+| Sprint 11 | ✅ `DONE` | GCBA Open Data, OpenTripMap enrichment, smart Sorprendeme (3-phase) |
+| Sprint 12 | ✅ `DONE` | UI polish: spinners, date formatting, card hover, EmptyState, Navbar |
 
 ---
 
@@ -193,4 +204,4 @@ All project documentation lives in `docs/`:
 - `RBAC.md` — Roles and permissions
 - `RULES.md` — Project constitution
 - `WORKFLOW.md` — State machines and flows
-- `SPRINT_0.md` — Current sprint tasks
+- `adr/` — Architecture Decision Records (ADR-001 through ADR-020)

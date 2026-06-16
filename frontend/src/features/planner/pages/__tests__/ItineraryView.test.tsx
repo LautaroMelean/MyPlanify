@@ -96,7 +96,7 @@ describe('ItineraryView', () => {
   it('shows empty slot message when a slot has no items', () => {
     const plan = makePlan({ items: [] })
     renderWithProviders(<ItineraryView plan={plan} />)
-    const emptyMessages = screen.getAllByText(/Sin ítems en este horario/i)
+    const emptyMessages = screen.getAllByText(/Sin actividades para este horario/i)
     expect(emptyMessages).toHaveLength(3)
   })
 })

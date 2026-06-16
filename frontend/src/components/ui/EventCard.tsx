@@ -19,16 +19,18 @@ export default function EventCard({ event }: EventCardProps) {
 
   return (
     <div
-      className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+      className="group bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-all cursor-pointer"
       onClick={() => navigate(`/events/${event.id}`)}
     >
-      {event.image_url ? (
-        <img src={event.image_url} alt={event.title} className="w-full h-40 object-cover" />
-      ) : (
-        <div className="w-full h-40 bg-primary-50 flex items-center justify-center">
-          <Calendar className="h-10 w-10 text-primary-300" />
-        </div>
-      )}
+      <div className="overflow-hidden h-40">
+        {event.image_url ? (
+          <img src={event.image_url} alt={event.title} className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
+        ) : (
+          <div className="w-full h-40 bg-indigo-50 flex items-center justify-center">
+            <Calendar className="h-10 w-10 text-indigo-300" />
+          </div>
+        )}
+      </div>
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
@@ -57,13 +59,13 @@ export default function EventCard({ event }: EventCardProps) {
             )}
             <span className="text-xs text-gray-500 flex items-center gap-0.5">
               <DollarSign className="h-3 w-3" />
-              {parseFloat(event.price) === 0 ? 'Gratis' : `$${event.price}`}
+              {parseFloat(event.price) === 0 ? 'Gratis' : `$${Math.round(parseFloat(event.price)).toLocaleString('es-AR')}`}
             </span>
           </div>
         </div>
 
         {event.place_name && (
-          <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
+          <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
             <MapPin className="h-3 w-3" />
             {event.place_name}
           </p>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Globe, Lock, Copy } from 'lucide-react'
+import { ArrowLeft, Globe, Lock, Copy, Loader2, CalendarDays } from 'lucide-react'
 import { usePlan } from '@/hooks/usePlan'
 import { useRemovePlanItem, useUpdatePlan, useUpdatePlanItem, useClonePlan } from '@/hooks/usePlanItem'
 import { useForecast } from '@/hooks/useForecast'
@@ -11,6 +11,7 @@ import { CalendarExportButton } from '../components/CalendarExportButton'
 import { ClonePlanModal } from '../components/ClonePlanModal'
 import WeatherForecastWidget from '@/components/ui/WeatherForecastWidget'
 import Button from '@/components/ui/Button'
+import EmptyState from '@/components/common/EmptyState'
 import type { PlanItem } from '@/types'
 
 export default function PlanDetailPage() {
@@ -37,7 +38,8 @@ export default function PlanDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-48 text-gray-500 text-sm">
+      <div className="flex items-center justify-center h-48 gap-2 text-gray-500 text-sm">
+        <Loader2 className="h-5 w-5 animate-spin" />
         Cargando plan...
       </div>
     )
@@ -45,11 +47,13 @@ export default function PlanDetailPage() {
 
   if (!plan) {
     return (
-      <div className="flex flex-col items-center justify-center h-48 text-gray-400 text-sm">
-        <p>Plan no encontrado.</p>
-        <button onClick={() => navigate('/mis-planes')} className="mt-2 text-primary-600 hover:underline">
-          Volver a mis planes
-        </button>
+      <div className="max-w-3xl mx-auto px-4 py-16">
+        <EmptyState
+          title="Plan no encontrado"
+          description="Este plan no existe o no tenés acceso a él."
+          icon={<CalendarDays className="h-12 w-12 text-gray-300" />}
+          action={{ label: 'Volver a mis planes', onClick: () => navigate('/mis-planes') }}
+        />
       </div>
     )
   }
@@ -89,10 +93,10 @@ export default function PlanDetailPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8">
       <button
         onClick={() => navigate('/mis-planes')}
-        className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-5"
+        className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 rounded"
       >
         <ArrowLeft className="h-4 w-4" />
         Mis planes
@@ -102,7 +106,7 @@ export default function PlanDetailPage() {
         <div>
           <h1 className="text-xl font-bold text-gray-900">{plan.title}</h1>
           <p className="text-sm text-gray-500 mt-1">
-            {plan.city} · {plan.people_count} persona{plan.people_count !== 1 ? 's' : ''} · ${plan.budget}
+            {plan.city} · {plan.people_count} persona{plan.people_count !== 1 ? 's' : ''} · ${Number(plan.budget).toLocaleString('es-AR')}
           </p>
         </div>
 
@@ -152,9 +156,12 @@ export default function PlanDetailPage() {
       )}
 
       {plan.items.length === 0 ? (
-        <div className="text-sm text-gray-500 italic">
-          Este plan no tiene ítems aún.
-        </div>
+        <EmptyState
+          title="Plan vacío"
+          description="Este plan no tiene actividades todavía. Podés agregar ítems desde el Planner."
+          icon={<CalendarDays className="h-12 w-12 text-gray-300" />}
+          action={{ label: 'Ir al Planner', onClick: () => navigate('/planner') }}
+        />
       ) : (
         <ItineraryView
           plan={plan}

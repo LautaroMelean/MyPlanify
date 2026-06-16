@@ -1,8 +1,15 @@
 import { useNavigate } from 'react-router-dom'
-import { CalendarDays, Trash2, Globe, Lock } from 'lucide-react'
+import { CalendarDays, Trash2, Globe, Lock, Plus, Loader2 } from 'lucide-react'
 import { useMyPlans } from '@/hooks/useMyPlans'
 import { useDeletePlan } from '@/hooks/usePlanItem'
 import Button from '@/components/ui/Button'
+import EmptyState from '@/components/common/EmptyState'
+
+function formatPlanDate(iso: string) {
+  return new Date(iso + 'T12:00:00').toLocaleDateString('es-AR', {
+    day: 'numeric', month: 'short', year: 'numeric',
+  })
+}
 
 export default function MyPlansPage() {
   const navigate = useNavigate()
@@ -11,10 +18,18 @@ export default function MyPlansPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-48 text-gray-500 text-sm">
+      <div className="flex items-center justify-center h-48 gap-2 text-gray-500 text-sm">
+        <Loader2 className="h-5 w-5 animate-spin" />
         Cargando planes...
       </div>
     )
+  }
+
+  const handleDelete = (e: React.MouseEvent, planId: string) => {
+    e.stopPropagation()
+    if (window.confirm('¿Eliminás este plan? Esta acción no se puede deshacer.')) {
+      deletePlan.mutate(planId)
+    }
   }
 
   return (
@@ -24,28 +39,24 @@ export default function MyPlansPage() {
           <CalendarDays className="h-7 w-7 text-primary-600" />
           <h1 className="text-2xl font-bold text-gray-900">Mis Planes</h1>
         </div>
-        <Button size="sm" onClick={() => navigate('/planner')}>
-          + Nuevo plan
+        <Button size="sm" leftIcon={<Plus className="h-4 w-4" />} onClick={() => navigate('/planner')}>
+          Nuevo plan
         </Button>
       </div>
 
       {(!plans || plans.length === 0) ? (
-        <div className="flex flex-col items-center justify-center h-48 text-gray-400 text-sm text-center">
-          <CalendarDays className="h-12 w-12 mb-2 text-gray-300" />
-          <p>Todavía no tenés planes guardados.</p>
-          <button
-            onClick={() => navigate('/planner')}
-            className="mt-2 text-primary-600 hover:underline text-sm"
-          >
-            Crear tu primer plan
-          </button>
-        </div>
+        <EmptyState
+          title="Todavía no tenés planes"
+          description="Usá el Planner para generar tu primer itinerario del día."
+          icon={<CalendarDays className="h-12 w-12 text-gray-300" />}
+          action={{ label: 'Crear mi primer plan', onClick: () => navigate('/planner') }}
+        />
       ) : (
         <div className="space-y-3">
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-primary-300 transition-colors cursor-pointer"
+              className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-primary-300 hover:shadow-md transition-all cursor-pointer"
               onClick={() => navigate(`/planes/${plan.id}`)}
             >
               <div className="flex-1 min-w-0">
@@ -58,15 +69,13 @@ export default function MyPlansPage() {
                   )}
                 </div>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  {plan.city} · {plan.items.length} ítems · {plan.date}
+                  {plan.city} · {formatPlanDate(plan.date)}
+                  {plan.items.length > 0 && ` · ${plan.items.length} ${plan.items.length === 1 ? 'actividad' : 'actividades'}`}
                 </p>
               </div>
               <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  deletePlan.mutate(plan.id)
-                }}
-                className="p-1.5 text-gray-400 hover:text-red-500 transition-colors flex-shrink-0"
+                onClick={(e) => handleDelete(e, plan.id)}
+                className="p-1.5 text-gray-300 hover:text-red-500 transition-colors flex-shrink-0 rounded-lg hover:bg-red-50"
                 aria-label="Eliminar plan"
               >
                 <Trash2 className="h-4 w-4" />

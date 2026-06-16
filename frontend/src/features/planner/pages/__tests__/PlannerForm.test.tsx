@@ -54,14 +54,14 @@ describe('PlannerForm', () => {
     const dateStr = today.toISOString().split('T')[0]
 
     fireEvent.change(screen.getByLabelText(/Fecha del plan/i), { target: { value: dateStr } })
-    fireEvent.change(screen.getByLabelText(/Ciudad/i), { target: { value: 'Córdoba' } })
+    fireEvent.change(screen.getByLabelText(/Ciudad/i), { target: { value: 'Palermo' } })
     fireEvent.change(screen.getByLabelText(/Presupuesto/i), { target: { value: '3000' } })
 
     fireEvent.click(screen.getByRole('button', { name: /Generar itinerario/i }))
 
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledWith(
-        expect.objectContaining({ date: dateStr, city: 'Córdoba', budget: '3000' })
+        expect.objectContaining({ date: dateStr, city: 'Palermo', budget: '3000' })
       )
     })
   })

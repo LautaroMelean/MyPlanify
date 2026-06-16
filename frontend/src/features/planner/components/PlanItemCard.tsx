@@ -64,11 +64,11 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
       <div className="flex items-start gap-3">
         {/* Reorder buttons */}
         {onReorder && (
-          <div className="flex flex-col gap-0.5 pt-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-            <button onClick={() => onReorder(item.id, 'up')} className="p-0.5 text-gray-300 hover:text-gray-600" aria-label="Mover arriba">
+          <div className="flex flex-col gap-0.5 pt-1 opacity-30 group-hover:opacity-100 transition-opacity flex-shrink-0">
+            <button onClick={() => onReorder(item.id, 'up')} className="p-0.5 text-gray-400 hover:text-gray-700" aria-label="Mover arriba">
               <ChevronUp className="h-3.5 w-3.5" />
             </button>
-            <button onClick={() => onReorder(item.id, 'down')} className="p-0.5 text-gray-300 hover:text-gray-600" aria-label="Mover abajo">
+            <button onClick={() => onReorder(item.id, 'down')} className="p-0.5 text-gray-400 hover:text-gray-700" aria-label="Mover abajo">
               <ChevronDown className="h-3.5 w-3.5" />
             </button>
           </div>
@@ -81,7 +81,7 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
         <div className="flex-1 min-w-0">
           {/* Type tag + category */}
           <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+            <span className="text-xs font-semibold text-gray-500">
               {ENTITY_LABELS[item.entity_type] || item.entity_type}
             </span>
             {item.entity_category && (
@@ -93,7 +93,7 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
           {item.entity_name ? (
             <p className="font-semibold text-gray-900 text-sm leading-snug">{item.entity_name}</p>
           ) : (
-            <p className="text-sm text-gray-400 italic">Cargando...</p>
+            <div className="h-4 w-32 bg-gray-200 rounded animate-pulse mt-0.5" />
           )}
 
           {/* Description toggle */}
@@ -114,7 +114,8 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
 
           {/* Generation reason */}
           {item.generation_reason && (
-            <p className="text-xs text-gray-500 italic mt-1 border-l-2 border-gray-200 pl-2">
+            <p className="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+              <Zap className="h-2.5 w-2.5 flex-shrink-0 text-primary-400" />
               {item.generation_reason}
             </p>
           )}
@@ -133,9 +134,9 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
           ) : (
             <div
               onClick={() => !readonly && onSaveNote && setEditingNote(true)}
-              className={`mt-1.5 text-sm min-h-[1rem] ${
-                !readonly && onSaveNote ? 'cursor-text hover:text-primary-600 transition-colors' : ''
-              } ${item.note ? 'text-gray-700' : 'text-gray-300 italic'}`}
+              className={`mt-1.5 text-sm min-h-[1rem] rounded px-1 -mx-1 ${
+                !readonly && onSaveNote ? 'cursor-text hover:bg-black/5 transition-colors' : ''
+              } ${item.note ? 'text-gray-700' : 'text-gray-400 italic'}`}
             >
               {item.note || (!readonly && onSaveNote ? 'Agregar nota...' : '')}
             </div>

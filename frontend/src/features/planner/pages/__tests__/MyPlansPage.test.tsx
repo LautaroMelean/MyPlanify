@@ -64,7 +64,7 @@ describe('MyPlansPage', () => {
 
     renderWithProviders(<MyPlansPage />)
     await waitFor(() => {
-      expect(screen.getByText(/no tenés planes guardados/i)).toBeInTheDocument()
+      expect(screen.getByText(/Todavía no tenés planes/i)).toBeInTheDocument()
     })
   })
 })

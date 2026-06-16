@@ -14,14 +14,34 @@ const typeLabels: Record<string, string> = {
   tourism: 'Turismo', shopping: 'Shopping',
 }
 
+const typeColors: Record<string, string> = {
+  restaurant: 'from-orange-400 to-amber-500',
+  bar: 'from-purple-500 to-violet-600',
+  cinema: 'from-red-400 to-rose-500',
+  museum: 'from-blue-400 to-indigo-500',
+  park: 'from-green-400 to-emerald-500',
+  sports: 'from-cyan-400 to-sky-500',
+  concert: 'from-pink-400 to-fuchsia-500',
+  gaming: 'from-violet-400 to-purple-600',
+  tourism: 'from-teal-400 to-cyan-500',
+  shopping: 'from-yellow-400 to-amber-500',
+}
+
+function isFree(value: string | number | null | undefined): boolean {
+  if (value === null || value === undefined) return false
+  return parseFloat(String(value)) === 0
+}
+
 export default function ActivityCard({ activity }: ActivityCardProps) {
   const navigate = useNavigate()
+  const gradient = typeColors[activity.activity_type] ?? 'from-primary-400 to-primary-600'
 
   return (
     <div
-      className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-all cursor-pointer"
       onClick={() => navigate(`/activities/${activity.id}`)}
     >
+      <div className={`h-2 bg-gradient-to-r ${gradient}`} />
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
@@ -48,7 +68,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
         <div className="flex flex-wrap gap-2 mt-3">
           <span className="text-xs text-gray-500 flex items-center gap-1">
             <DollarSign className="h-3 w-3" />
-            {activity.min_budget === '0.00' ? 'Gratis' : `Desde $${activity.min_budget}`}
+            {isFree(activity.min_budget) ? 'Gratis' : `Desde $${Math.round(parseFloat(String(activity.min_budget))).toLocaleString('es-AR')}`}
           </span>
           {activity.min_people > 1 && (
             <span className="text-xs text-gray-500 flex items-center gap-1">

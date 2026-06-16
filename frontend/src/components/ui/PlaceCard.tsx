@@ -15,16 +15,18 @@ export default function PlaceCard({ place }: PlaceCardProps) {
 
   return (
     <div
-      className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+      className="group bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-all cursor-pointer"
       onClick={() => navigate(`/places/${place.id}`)}
     >
-      {place.image_url ? (
-        <img src={place.image_url} alt={place.name} className="w-full h-40 object-cover" />
-      ) : (
-        <div className="w-full h-40 bg-primary-50 flex items-center justify-center">
-          <MapPin className="h-10 w-10 text-primary-300" />
-        </div>
-      )}
+      <div className="overflow-hidden h-40">
+        {place.image_url ? (
+          <img src={place.image_url} alt={place.name} className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
+        ) : (
+          <div className="w-full h-40 bg-primary-50 flex items-center justify-center">
+            <MapPin className="h-10 w-10 text-primary-300" />
+          </div>
+        )}
+      </div>
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">

@@ -33,7 +33,9 @@ export function ItineraryView({ plan, onRemoveItem, onFeedbackItem, onSaveNote, 
             </div>
 
             {items.length === 0 ? (
-              <p className="text-sm text-gray-400 italic pl-2">Sin ítems en este horario</p>
+              <div className="border border-dashed border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-400">
+                Sin actividades para este horario
+              </div>
             ) : (
               <div className="space-y-2">
                 {items.map((item) => (

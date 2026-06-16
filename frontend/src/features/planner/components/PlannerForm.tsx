@@ -3,6 +3,23 @@ import { Calendar, DollarSign, Users, MapPin } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import type { PlanGenerateInput } from '@/types'
 
+const CABA_BARRIOS = [
+  'Buenos Aires',
+  'Agronomía', 'Almagro', 'Balvanera', 'Barracas', 'Belgrano', 'Boedo',
+  'Caballito', 'Chacarita', 'Coghlan', 'Colegiales', 'Constitución',
+  'Flores', 'Floresta', 'La Boca', 'La Paternal', 'Liniers', 'Mataderos',
+  'Monte Castro', 'Montserrat', 'Nueva Pompeya', 'Núñez', 'Palermo',
+  'Parque Avellaneda', 'Parque Chacabuco', 'Parque Chas', 'Parque Patricios',
+  'Paternal', 'Puerto Madero', 'Recoleta', 'Retiro', 'Saavedra',
+  'San Cristóbal', 'San Nicolás', 'San Telmo', 'Vélez Sársfield', 'Versalles',
+  'Villa Crespo', 'Villa del Parque', 'Villa Devoto', 'Villa General Mitre',
+  'Villa Lugano', 'Villa Luro', 'Villa Ortúzar', 'Villa Pueyrredón',
+  'Villa Real', 'Villa Riachuelo', 'Villa Santa Rita', 'Villa Soldati', 'Villa Urquiza',
+]
+
+// Otras ciudades desactivadas hasta tener datos reales para ellas
+// const OTHER_CITIES = ['Córdoba', 'Rosario', 'Mendoza', 'Mar del Plata', 'La Plata', 'Tucumán']
+
 interface Props {
   onSubmit: (input: PlanGenerateInput) => void
   isLoading: boolean
@@ -50,17 +67,19 @@ export function PlannerForm({ onSubmit, isLoading }: Props) {
       <div>
         <label htmlFor="plan-city" className="block text-sm font-medium text-gray-700 mb-1">
           <MapPin className="inline h-4 w-4 mr-1" />
-          Ciudad
+          Ciudad / Barrio
         </label>
-        <input
+        <select
           id="plan-city"
-          type="text"
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          placeholder="Buenos Aires"
           required
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
-        />
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-300 bg-white"
+        >
+          {CABA_BARRIOS.map((b) => (
+            <option key={b} value={b}>{b}</option>
+          ))}
+        </select>
       </div>
 
       <div>

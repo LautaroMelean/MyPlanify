@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { MapPin, LogOut, Compass, Heart, Sparkles, Map, Settings, Menu, X, Bell, Tag, Search, CalendarDays, LayoutDashboard } from 'lucide-react'
+import { MapPin, LogOut, Compass, Heart, Sparkles, Map, Settings, Menu, X, Bell, Tag, Search, CalendarDays, LayoutDashboard, Clock } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useLogout } from '@/hooks/useAuth'
 import { useUnreadCount } from '@/hooks/useNotifications'
@@ -46,7 +46,7 @@ export default function Navbar() {
     }
   }
 
-  const isActive = (to: string) => location.pathname === to
+  const isActive = (to: string) => location.pathname === to || (to !== '/' && location.pathname.startsWith(to))
 
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm">
@@ -203,18 +203,11 @@ export default function Navbar() {
               isActive('/notificaciones') ? 'bg-primary-50 text-primary-600' : 'text-gray-700 hover:bg-gray-50'
             }`}
           >
-            <span className="relative">
-              <Bell className="h-4 w-4" />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center">
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
-              )}
-            </span>
+            <Bell className="h-4 w-4" />
             Notificaciones
             {unreadCount > 0 && (
               <span className="ml-auto bg-red-100 text-red-600 text-xs font-bold px-1.5 py-0.5 rounded-full">
-                {unreadCount}
+                {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
           </Link>
@@ -225,7 +218,7 @@ export default function Navbar() {
               isActive('/recordatorios') ? 'bg-primary-50 text-primary-600' : 'text-gray-700 hover:bg-gray-50'
             }`}
           >
-            <Bell className="h-4 w-4" />
+            <Clock className="h-4 w-4" />
             Recordatorios
           </Link>
           <Link
