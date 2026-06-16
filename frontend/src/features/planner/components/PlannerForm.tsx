@@ -11,10 +11,10 @@ interface Props {
 export function PlannerForm({ onSubmit, isLoading }: Props) {
   const today = new Date().toISOString().split('T')[0]
 
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState(today)
   const [budget, setBudget] = useState('')
   const [peopleCount, setPeopleCount] = useState('2')
-  const [city, setCity] = useState('')
+  const [city, setCity] = useState('Buenos Aires')
 
   const isValid = date && city && Number(budget) >= 0
 

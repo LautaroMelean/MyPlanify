@@ -21,6 +21,8 @@ function makePlace(overrides: Partial<Place> = {}): Place {
     website: '',
     image_url: '',
     price_level: 0,
+    latitude: null,
+    longitude: null,
     source: 'osm',
     is_active: true,
     avg_rating: null,

@@ -11,10 +11,18 @@ describe('PlannerForm', () => {
     expect(screen.getByLabelText(/Cantidad de personas/i)).toBeInTheDocument()
   })
 
-  it('submit button is disabled without date or city', () => {
+  it('submit button is enabled by default (date and city pre-filled)', () => {
     renderWithProviders(<PlannerForm onSubmit={vi.fn()} isLoading={false} />)
     const btn = screen.getByRole('button', { name: /Generar itinerario/i })
-    expect(btn).toBeDisabled()
+    expect(btn).not.toBeDisabled()
+  })
+
+  it('submit button is disabled when city is cleared', async () => {
+    renderWithProviders(<PlannerForm onSubmit={vi.fn()} isLoading={false} />)
+    fireEvent.change(screen.getByLabelText(/Ciudad/i), { target: { value: '' } })
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Generar itinerario/i })).toBeDisabled()
+    })
   })
 
   it('shows loading text when isLoading is true', () => {
