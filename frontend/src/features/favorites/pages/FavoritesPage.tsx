@@ -1,18 +1,19 @@
-import { Heart, Trash2 } from 'lucide-react'
+import { Heart, Trash2, MapPin, Calendar, Zap } from 'lucide-react'
 import { useFavorites, useRemoveFavorite } from '@/hooks/useFavorites'
 import Loading from '@/components/common/Loading'
 import EmptyState from '@/components/common/EmptyState'
 
+const typeConfig = {
+  event:    { label: 'Evento',     icon: Calendar, border: 'border-l-violet-400', bg: 'bg-violet-50',  text: 'text-violet-600' },
+  place:    { label: 'Lugar',      icon: MapPin,   border: 'border-l-blue-400',   bg: 'bg-blue-50',    text: 'text-blue-600' },
+  activity: { label: 'Actividad',  icon: Zap,      border: 'border-l-amber-400',  bg: 'bg-amber-50',   text: 'text-amber-600' },
+} as const
+
+type FavItemType = keyof typeof typeConfig
+
 export default function FavoritesPage() {
   const { data: favorites = [], isLoading } = useFavorites()
   const remove = useRemoveFavorite()
-
-  const typeLabels = {
-    event: 'Evento',
-    place: 'Lugar',
-    activity: 'Actividad',
-    null: '',
-  }
 
   if (isLoading) return <Loading message="Cargando favoritos..." />
 
@@ -31,27 +32,36 @@ export default function FavoritesPage() {
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {favorites.map((fav) => (
-            <div
-              key={fav.id}
-              className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center justify-between gap-3"
-            >
-              <div className="min-w-0">
-                <p className="font-medium text-gray-900 truncate">{fav.item_name ?? '—'}</p>
-                <span className="text-xs text-gray-500">
-                  {fav.item_type ? typeLabels[fav.item_type] : ''}
-                </span>
-              </div>
-              <button
-                onClick={() => remove.mutate(fav.id)}
-                disabled={remove.isPending}
-                className="text-gray-400 hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-red-50 flex-shrink-0"
-                aria-label="Eliminar favorito"
+          {favorites.map((fav) => {
+            const config = fav.item_type ? typeConfig[fav.item_type as FavItemType] : null
+            const Icon = config?.icon
+            return (
+              <div
+                key={fav.id}
+                className={`bg-white rounded-xl border border-gray-200 border-l-4 ${config?.border ?? 'border-l-gray-300'} shadow-sm p-4 flex items-center gap-3 hover:shadow-md transition-shadow`}
               >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </div>
-          ))}
+                {Icon && (
+                  <div className={`${config?.bg} rounded-lg w-9 h-9 flex items-center justify-center flex-shrink-0`}>
+                    <Icon className={`h-4 w-4 ${config?.text}`} />
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium text-gray-900 truncate">{fav.item_name ?? '—'}</p>
+                  {config && (
+                    <span className={`text-xs font-medium ${config.text}`}>{config.label}</span>
+                  )}
+                </div>
+                <button
+                  onClick={() => remove.mutate(fav.id)}
+                  disabled={remove.isPending}
+                  className="text-gray-300 hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-red-50 flex-shrink-0"
+                  aria-label="Eliminar favorito"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            )
+          })}
         </div>
       )}
     </div>

@@ -25,12 +25,12 @@ function PromotionCard({ promo }: { promo: Promotion }) {
         )}
         <div className="flex items-center gap-4 mt-3">
           {promo.place_name && (
-            <span className="text-xs text-gray-400 flex items-center gap-1">
+            <span className="text-xs text-gray-500 flex items-center gap-1">
               <MapPin className="h-3 w-3" />
               {promo.place_name}
             </span>
           )}
-          <span className="text-xs text-gray-400 flex items-center gap-1">
+          <span className="text-xs text-gray-500 flex items-center gap-1">
             <Calendar className="h-3 w-3" />
             Hasta {formatDate(promo.end_date)}
           </span>
@@ -59,7 +59,7 @@ export default function PromotionsPage() {
         <EmptyState
           title="Sin promociones activas"
           description="Por el momento no hay promociones disponibles. Volvé más tarde."
-          icon={<Tag className="h-8 w-8 text-gray-400" />}
+          icon={<Tag className="h-8 w-8 text-gray-500" />}
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

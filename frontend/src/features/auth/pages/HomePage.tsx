@@ -178,7 +178,7 @@ export default function HomePage() {
 
       {/* Acciones rápidas */}
       <div>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Más opciones</h2>
+        <h2 className="text-sm font-semibold text-gray-600 mb-3">Más opciones</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {QUICK_ACTIONS.map((a) => (
             <button
