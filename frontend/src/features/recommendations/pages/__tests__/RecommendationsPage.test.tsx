@@ -82,13 +82,13 @@ describe('RecommendationsPage', () => {
     expect(screen.getByText('Bienestar')).toBeInTheDocument()
   })
 
-  it('shows recommendation score', () => {
+  it('shows recommendation score badge', () => {
     vi.mocked(useRecommendations).mockReturnValue({
       data: [makeRecommendation({ score: '92.3' })],
       isLoading: false,
     } as any)
     renderWithProviders(<RecommendationsPage />)
-    expect(screen.getByText('92')).toBeInTheDocument()
+    expect(screen.getByText('Alta coincidencia')).toBeInTheDocument()
   })
 
   it('shows recommendation reason', () => {

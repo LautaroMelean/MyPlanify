@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { MapPin, LogOut, Compass, Heart, Sparkles, Map, Settings, Menu, X, Bell, Tag, Search, CalendarDays, LayoutDashboard, Clock } from 'lucide-react'
+import { MapPin, LogOut, Compass, Heart, Sparkles, Map, Settings, Menu, X, Bell, Search, CalendarDays, LayoutDashboard, Clock, FolderOpen } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useLogout } from '@/hooks/useAuth'
 import { useUnreadCount } from '@/hooks/useNotifications'
@@ -9,12 +9,11 @@ import Button from '@/components/ui/Button'
 import type { UserRole } from '@/types'
 
 const NAV_LINKS = [
-  { to: '/explorar',        label: 'Explorar',       icon: <Compass className="h-4 w-4" /> },
-  { to: '/recomendaciones', label: 'Para vos',        icon: <Sparkles className="h-4 w-4" /> },
   { to: '/planner',         label: 'Planner',         icon: <CalendarDays className="h-4 w-4" /> },
+  { to: '/recomendaciones', label: 'Para vos',        icon: <Sparkles className="h-4 w-4" /> },
+  { to: '/explorar',        label: 'Explorar',        icon: <Compass className="h-4 w-4" /> },
   { to: '/mapa',            label: 'Mapa',            icon: <Map className="h-4 w-4" /> },
   { to: '/favoritos',       label: 'Favoritos',       icon: <Heart className="h-4 w-4" /> },
-  { to: '/promociones',     label: 'Promociones',     icon: <Tag className="h-4 w-4" /> },
 ]
 
 function getDashboardLink(role: UserRole | undefined) {
@@ -210,6 +209,16 @@ export default function Navbar() {
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
+          </Link>
+          <Link
+            to="/mis-planes"
+            onClick={() => setMobileOpen(false)}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              isActive('/mis-planes') ? 'bg-primary-50 text-primary-600' : 'text-gray-700 hover:bg-gray-50'
+            }`}
+          >
+            <FolderOpen className="h-4 w-4" />
+            Mis Planes
           </Link>
           <Link
             to="/recordatorios"

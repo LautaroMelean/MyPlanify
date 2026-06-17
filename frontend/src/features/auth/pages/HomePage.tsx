@@ -1,16 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sparkles, MapPin, Users, DollarSign, ArrowRight, Compass, Map, Heart, TrendingUp, Cloud } from 'lucide-react'
+import { Sparkles, Users, DollarSign, ArrowRight, Compass, Heart, Cloud, CalendarDays, FolderOpen } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useWeather } from '@/hooks/useWeather'
 import { useForecast } from '@/hooks/useForecast'
 import { usePlanner } from '@/hooks/usePlanner'
-import { usePlaces } from '@/hooks/usePlaces'
 import WeatherWidget from '@/components/ui/WeatherWidget'
 import WeatherForecastWidget from '@/components/ui/WeatherForecastWidget'
-import PlaceCard from '@/components/ui/PlaceCard'
 
-// Buenos Aires coords — foco de la app
 const BA = { lat: -34.6037, lon: -58.3816 }
 
 const TODAY = new Date().toISOString().split('T')[0]
@@ -19,10 +16,21 @@ const TODAY_LABEL = new Date().toLocaleDateString('es-AR', {
 })
 
 const QUICK_ACTIONS = [
-  { to: '/explorar',        icon: <Compass className="h-5 w-5 text-blue-600" />,  bg: 'bg-blue-50',   label: 'Explorar' },
-  { to: '/mapa',            icon: <Map className="h-5 w-5 text-green-600" />,     bg: 'bg-green-50',  label: 'Mapa' },
-  { to: '/favoritos',       icon: <Heart className="h-5 w-5 text-red-500" />,     bg: 'bg-red-50',    label: 'Favoritos' },
-  { to: '/recomendaciones', icon: <TrendingUp className="h-5 w-5 text-purple-600" />, bg: 'bg-purple-50', label: 'Para vos' },
+  { to: '/explorar',        icon: <Compass className="h-5 w-5 text-blue-600" />,       bg: 'bg-blue-50',   label: 'Explorar' },
+  { to: '/recomendaciones', icon: <Sparkles className="h-5 w-5 text-purple-600" />,    bg: 'bg-purple-50', label: 'Para vos' },
+  { to: '/mis-planes',      icon: <FolderOpen className="h-5 w-5 text-indigo-600" />,  bg: 'bg-indigo-50', label: 'Mis Planes' },
+  { to: '/favoritos',       icon: <Heart className="h-5 w-5 text-red-500" />,          bg: 'bg-red-50',    label: 'Favoritos' },
+]
+
+const ACTIVITY_SHORTCUTS = [
+  { type: 'gaming',     emoji: '🎮', label: 'Gaming' },
+  { type: 'sports',     emoji: '⚽', label: 'Deportes' },
+  { type: 'cinema',     emoji: '🎬', label: 'Cine' },
+  { type: 'concert',    emoji: '🎵', label: 'Música' },
+  { type: 'museum',     emoji: '🏛️', label: 'Museos' },
+  { type: 'park',       emoji: '🌳', label: 'Parques' },
+  { type: 'restaurant', emoji: '🍽️', label: 'Gastronomía' },
+  { type: 'bar',        emoji: '🍺', label: 'Bares' },
 ]
 
 export default function HomePage() {
@@ -32,7 +40,6 @@ export default function HomePage() {
 
   const { data: weather, isLoading: weatherLoading } = useWeather(BA)
   const { data: forecast, isLoading: forecastLoading } = useForecast(BA)
-  const { data: places = [] } = usePlaces({ city: 'Buenos Aires' })
 
   const [budget, setBudget] = useState('5000')
   const [people, setPeople] = useState('2')
@@ -43,8 +50,6 @@ export default function HomePage() {
       { onSuccess: (plan) => navigate(`/planes/${plan.id}`) },
     )
   }
-
-  const featuredPlaces = places.slice(0, 6)
 
   return (
     <div className="flex flex-col gap-8 pb-8">
@@ -139,6 +144,23 @@ export default function HomePage() {
         </p>
       </div>
 
+      {/* ¿Qué querés hacer? */}
+      <div>
+        <h2 className="text-sm font-semibold text-gray-700 mb-3">¿Qué querés hacer hoy?</h2>
+        <div className="grid grid-cols-4 gap-2">
+          {ACTIVITY_SHORTCUTS.map((s) => (
+            <button
+              key={s.type}
+              onClick={() => navigate('/explorar', { state: { activityType: s.type } })}
+              className="flex flex-col items-center gap-1.5 p-3 bg-white border border-gray-200 rounded-xl hover:border-primary-200 hover:shadow-sm transition-all"
+            >
+              <span className="text-xl">{s.emoji}</span>
+              <span className="text-xs font-medium text-gray-700">{s.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Pronóstico semanal */}
       {(forecastLoading || (forecast && forecast.length > 0)) && (
         <div>
@@ -147,38 +169,12 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Lugares destacados */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-primary-600" />
-            <h2 className="text-sm font-semibold text-gray-700">Lugares en Buenos Aires</h2>
-          </div>
-          <button
-            onClick={() => navigate('/explorar')}
-            className="text-xs text-primary-600 hover:underline flex items-center gap-0.5"
-          >
-            Ver todos <ArrowRight className="h-3 w-3" />
-          </button>
-        </div>
-        {featuredPlaces.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {featuredPlaces.map((place) => (
-              <PlaceCard key={place.id} place={place} />
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-48 bg-gray-100 rounded-xl animate-pulse" />
-            ))}
-          </div>
-        )}
-      </div>
-
       {/* Acciones rápidas */}
       <div>
-        <h2 className="text-sm font-semibold text-gray-600 mb-3">Más opciones</h2>
+        <h2 className="text-sm font-semibold text-gray-600 mb-3">
+          <CalendarDays className="inline h-4 w-4 mr-1 text-gray-400" />
+          Más opciones
+        </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {QUICK_ACTIONS.map((a) => (
             <button

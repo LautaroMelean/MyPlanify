@@ -50,35 +50,7 @@ export default function PlannerPage() {
         </div>
       </div>
 
-      {/* 5-day forecast */}
-      {(coords || forecastLoading) && (
-        <div>
-          <h2 className="text-sm font-semibold text-gray-600 mb-2">Pronóstico de la semana</h2>
-          <WeatherForecastWidget
-            forecast={forecast}
-            isLoading={forecastLoading}
-            highlightDate={selectedDate}
-          />
-        </div>
-      )}
-
-      {/* Surprise button */}
-      <div className="flex flex-col items-center gap-2 p-5 bg-gradient-to-r from-primary-50 to-purple-50 rounded-xl border border-primary-100">
-        <p className="text-sm text-gray-600 font-medium">¿No sabés qué hacer? Dejalo en nuestras manos</p>
-        <button
-          onClick={handleSurprise}
-          disabled={surprise.isPending}
-          className="flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-sm transition-colors disabled:opacity-60"
-        >
-          <Sparkles className="h-5 w-5" />
-          {surprise.isPending ? 'Armando algo especial...' : '¡Sorprendeme!'}
-        </button>
-        {surprise.isError && (
-          <p className="text-xs text-red-500">Error al generar el plan. Intentá de nuevo.</p>
-        )}
-      </div>
-
-      {/* Plan form */}
+      {/* Plan form + result */}
       <div className="grid md:grid-cols-2 gap-6">
         <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
           <h2 className="text-base font-semibold text-gray-800 mb-4">Configurar plan</h2>
@@ -129,10 +101,40 @@ export default function PlannerPage() {
         </div>
       </div>
 
-      {/* Inspire Feed */}
-      <div className="border-t border-gray-100 pt-6">
-        <InspireFeed />
+      {/* Surprise button */}
+      <div className="flex flex-col items-center gap-2 p-5 bg-gradient-to-r from-primary-50 to-purple-50 rounded-xl border border-primary-100">
+        <p className="text-sm text-gray-600 font-medium">¿No sabés qué hacer? Dejalo en nuestras manos</p>
+        <button
+          onClick={handleSurprise}
+          disabled={surprise.isPending}
+          className="flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-sm transition-colors disabled:opacity-60"
+        >
+          <Sparkles className="h-5 w-5" />
+          {surprise.isPending ? 'Armando algo especial...' : '¡Sorprendeme!'}
+        </button>
+        {surprise.isError && (
+          <p className="text-xs text-red-500">Error al generar el plan. Intentá de nuevo.</p>
+        )}
       </div>
+
+      {/* 5-day forecast */}
+      {(coords || forecastLoading) && (
+        <div>
+          <h2 className="text-sm font-semibold text-gray-600 mb-2">Pronóstico de la semana</h2>
+          <WeatherForecastWidget
+            forecast={forecast}
+            isLoading={forecastLoading}
+            highlightDate={selectedDate}
+          />
+        </div>
+      )}
+
+      {/* Inspire Feed — only when no plan has been generated yet */}
+      {!currentPlan && (
+        <div className="border-t border-gray-100 pt-6">
+          <InspireFeed />
+        </div>
+      )}
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { MapPin, Activity, Calendar, TrendingUp, Navigation, Filter, X, Globe } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { usePlaces } from '@/hooks/usePlaces'
 import { useActivities } from '@/hooks/useActivities'
 import { useEvents } from '@/hooks/useEvents'
@@ -43,14 +43,16 @@ interface ActivityFilters { category?: string; indoor?: boolean; outdoor?: boole
 interface EventFilters { category?: string; date_from?: string; date_to?: string; free?: boolean }
 
 export default function ExplorePage() {
-  const [tab, setTab] = useState<Tab>('lugares')
+  const location = useLocation()
+  const initialType = (location.state as { activityType?: string } | null)?.activityType
+  const [tab, setTab] = useState<Tab>('actividades')
   const [search, setSearch] = useState('')
   const [showFilters, setShowFilters] = useState(false)
   const navigate = useNavigate()
 
   // Per-tab filter state
   const [placeFilters, setPlaceFilters] = useState<PlaceFilters>({})
-  const [activityFilters, setActivityFilters] = useState<ActivityFilters>({})
+  const [activityFilters, setActivityFilters] = useState<ActivityFilters>(() => ({ type: initialType }))
   const [eventFilters, setEventFilters] = useState<EventFilters>({})
   const [nearbyCoords, setNearbyCoords] = useState<{ lat: number; lon: number } | null>(null)
   const [geoLoading, setGeoLoading] = useState(false)
@@ -175,22 +177,12 @@ export default function ExplorePage() {
       {/* Filter panel */}
       {showFilters && tab === 'lugares' && (
         <FilterPanel onClose={() => setShowFilters(false)}>
-          <FilterRow label="Ciudad">
-            <input
-              type="text"
-              value={placeFilters.city ?? ''}
-              onChange={(e) => setPlaceFilters((f) => ({ ...f, city: e.target.value || undefined }))}
-              placeholder="ej. Buenos Aires"
-              className="filter-input"
-            />
-          </FilterRow>
           <FilterRow label="Categoría">
             <input
               type="text"
               value={placeFilters.category ?? ''}
               onChange={(e) => setPlaceFilters((f) => ({ ...f, category: e.target.value || undefined }))}
               placeholder="ej. cafe, museo"
-              className="filter-input"
             />
           </FilterRow>
           <FilterRow label="Tipo de cocina">
@@ -199,7 +191,6 @@ export default function ExplorePage() {
               value={placeFilters.cuisine ?? ''}
               onChange={(e) => setPlaceFilters((f) => ({ ...f, cuisine: e.target.value || undefined }))}
               placeholder="ej. pizza, sushi"
-              className="filter-input"
             />
           </FilterRow>
           <div className="flex flex-wrap gap-4">
@@ -236,7 +227,6 @@ export default function ExplorePage() {
               value={activityFilters.category ?? ''}
               onChange={(e) => setActivityFilters((f) => ({ ...f, category: e.target.value || undefined }))}
               placeholder="ej. música, deportes"
-              className="filter-input"
             />
           </FilterRow>
           <div className="flex flex-wrap gap-4">
@@ -273,7 +263,6 @@ export default function ExplorePage() {
               value={eventFilters.category ?? ''}
               onChange={(e) => setEventFilters((f) => ({ ...f, category: e.target.value || undefined }))}
               placeholder="ej. festival, teatro"
-              className="filter-input"
             />
           </FilterRow>
           <FilterRow label="Desde">
@@ -281,7 +270,6 @@ export default function ExplorePage() {
               type="date"
               value={eventFilters.date_from ?? ''}
               onChange={(e) => setEventFilters((f) => ({ ...f, date_from: e.target.value || undefined }))}
-              className="filter-input"
             />
           </FilterRow>
           <FilterRow label="Hasta">
@@ -289,7 +277,6 @@ export default function ExplorePage() {
               type="date"
               value={eventFilters.date_to ?? ''}
               onChange={(e) => setEventFilters((f) => ({ ...f, date_to: e.target.value || undefined }))}
-              className="filter-input"
             />
           </FilterRow>
           <CheckFilter
@@ -531,9 +518,8 @@ function FilterPanel({ children, onClose }: { children: React.ReactNode; onClose
 
 function FilterRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 [&_input]:w-full [&_input]:border [&_input]:border-gray-200 [&_input]:rounded-lg [&_input]:px-2.5 [&_input]:py-1.5 [&_input]:text-sm [&_input]:bg-white [&_input]:outline-none [&_input:focus]:border-primary-400 [&_input:focus]:ring-2 [&_input:focus]:ring-primary-100">
       <label className="text-xs font-medium text-gray-600">{label}</label>
-      <style>{`.filter-input { border: 1px solid #e5e7eb; border-radius: 8px; padding: 6px 10px; font-size: 0.875rem; outline: none; background: white; } .filter-input:focus { border-color: #818cf8; box-shadow: 0 0 0 2px rgba(129,140,248,0.2); }`}</style>
       {children}
     </div>
   )

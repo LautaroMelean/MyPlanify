@@ -62,7 +62,7 @@ export default function AppRoutes() {
         <Route path="/events/:id"      element={<ProtectedRoute><EventDetail /></ProtectedRoute>} />
         <Route path="/places/:id"      element={<ProtectedRoute><PlaceDetail /></ProtectedRoute>} />
         <Route path="/activities/:id"  element={<ProtectedRoute><ActivityDetail /></ProtectedRoute>} />
-        <Route path="/search"          element={<SearchResultsPage />} />
+        <Route path="/search"          element={<ProtectedRoute><SearchResultsPage /></ProtectedRoute>} />
         <Route path="/planner"               element={<ProtectedRoute><PlannerPage /></ProtectedRoute>} />
         <Route path="/mis-planes"            element={<ProtectedRoute><MyPlansPage /></ProtectedRoute>} />
         <Route path="/planes/:id"            element={<ProtectedRoute><PlanDetailPage /></ProtectedRoute>} />

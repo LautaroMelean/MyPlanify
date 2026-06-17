@@ -26,6 +26,7 @@ export default function RecommendationsPage() {
         setCoords(BA_COORDS)
         setUsingGeo(false)
       },
+      { timeout: 5000, maximumAge: 60000 },
     )
   }, [])
 
@@ -86,9 +87,16 @@ function getReasonLabels(breakdown: ScoreBreakdown): string[] {
   return labels.slice(0, 3)
 }
 
+function getScoreBadge(score: number) {
+  if (score >= 70) return { label: 'Alta coincidencia', className: 'bg-green-100 text-green-700' }
+  if (score >= 50) return { label: 'Buena opción', className: 'bg-primary-100 text-primary-700' }
+  return { label: 'Sugerido', className: 'bg-gray-100 text-gray-600' }
+}
+
 function RecommendationCard({ rec }: { rec: Recommendation }) {
   const navigate = useNavigate()
   const score = Math.round(parseFloat(rec.score))
+  const badge = getScoreBadge(score)
 
   const name =
     rec.activity_detail?.name ??
@@ -141,10 +149,9 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
             </span>
           )}
         </div>
-        <div className="flex flex-col items-center flex-shrink-0">
-          <span className="text-lg font-bold text-primary-600">{score}</span>
-          <span className="text-xs text-gray-400">pts</span>
-        </div>
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${badge.className}`}>
+          {badge.label}
+        </span>
       </div>
 
       {reasonLabels.length > 0 && (
