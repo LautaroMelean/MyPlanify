@@ -209,6 +209,8 @@ export interface Recommendation {
     min_budget: string
     indoor: boolean
     outdoor: boolean
+    address: string
+    city: string
   } | null
   event_detail: {
     id: string
@@ -217,11 +219,15 @@ export interface Recommendation {
     start_date: string
     price: string
     image_url: string
+    place_name: string
+    place_address: string
+    place_city: string
   } | null
   place_detail: {
     id: string
     name: string
     category: string
+    address: string
     city: string
     price_level: number
     image_url: string

@@ -93,6 +93,20 @@ function getScoreBadge(score: number) {
   return { label: 'Sugerido', className: 'bg-gray-100 text-gray-600' }
 }
 
+function buildLocation(rec: Recommendation): { street: string; city: string } {
+  if (rec.item_type === 'activity' && rec.activity_detail) {
+    return { street: rec.activity_detail.address, city: rec.activity_detail.city }
+  }
+  if (rec.item_type === 'event' && rec.event_detail) {
+    const street = rec.event_detail.place_address || rec.event_detail.place_name
+    return { street, city: rec.event_detail.place_city }
+  }
+  if (rec.item_type === 'place' && rec.place_detail) {
+    return { street: rec.place_detail.address, city: rec.place_detail.city }
+  }
+  return { street: '', city: '' }
+}
+
 function RecommendationCard({ rec }: { rec: Recommendation }) {
   const navigate = useNavigate()
   const score = Math.round(parseFloat(rec.score))
@@ -109,6 +123,8 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
     rec.event_detail?.category ??
     rec.place_detail?.category ??
     ''
+
+  const { street, city } = buildLocation(rec)
 
   const itemId = rec.activity ?? rec.event ?? rec.place ?? ''
 
@@ -137,16 +153,25 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
       onKeyDown={(e) => e.key === 'Enter' && itemId && navigate(detailPath)}
     >
       <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
             {icon}
             <span>{typeLabel}</span>
           </div>
           <h3 className="font-semibold text-gray-900 truncate">{name}</h3>
           {category && (
-            <span className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full mt-0.5 inline-block">
               {category}
             </span>
+          )}
+          {(street || city) && (
+            <div className="flex items-start gap-1 mt-1.5">
+              <MapPin className="h-3.5 w-3.5 text-gray-400 flex-shrink-0 mt-0.5" />
+              <span className="text-xs text-gray-500 leading-snug">
+                {street && <span className="block">{street}</span>}
+                {city && <span className="block text-gray-400">{city}</span>}
+              </span>
+            </div>
           )}
         </div>
         <span className={`text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${badge.className}`}>

@@ -37,6 +37,8 @@ function makeRecommendation(overrides: Partial<Recommendation> = {}): Recommenda
       min_budget: '0',
       indoor: true,
       outdoor: false,
+      address: 'Av. Corrientes 1234',
+      city: 'Buenos Aires',
     },
     event_detail: null,
     place_detail: null,

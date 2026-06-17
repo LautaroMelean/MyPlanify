@@ -39,12 +39,15 @@ class RecommendationSerializer(serializers.ModelSerializer):
             "min_budget": str(a.min_budget),
             "indoor": a.indoor,
             "outdoor": a.outdoor,
+            "address": a.address or "",
+            "city": a.city or "",
         }
 
     def get_event_detail(self, obj):
         if not obj.event_id:
             return None
         e = obj.event
+        place = e.place  # already select_related in services.py
         return {
             "id": str(e.id),
             "title": e.title,
@@ -52,6 +55,9 @@ class RecommendationSerializer(serializers.ModelSerializer):
             "start_date": e.start_date,
             "price": str(e.price),
             "image_url": e.image_url,
+            "place_name": place.name if place else "",
+            "place_address": place.address if place else "",
+            "place_city": place.city if place else "",
         }
 
     def get_place_detail(self, obj):
@@ -62,7 +68,8 @@ class RecommendationSerializer(serializers.ModelSerializer):
             "id": str(p.id),
             "name": p.name,
             "category": p.category,
-            "city": p.city,
+            "address": p.address or "",
+            "city": p.city or "",
             "price_level": p.price_level,
             "image_url": p.image_url,
             "latitude": float(p.latitude) if p.latitude else None,
