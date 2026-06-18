@@ -183,6 +183,7 @@ export default function MapPage() {
             onChange={(e) => setCityQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && searchCity()}
             placeholder="Buscar ciudad... (ej: Córdoba, Rosario)"
+            aria-label="Buscar ciudad"
             className="w-full pl-9 pr-3 py-2 border border-gray-200 bg-gray-100 text-gray-800 rounded-lg text-sm focus:outline-none focus:border-primary-500/50 focus:ring-2 focus:ring-primary-500/20 placeholder:text-gray-500"
           />
         </div>
@@ -208,7 +209,7 @@ export default function MapPage() {
 
       {userPos && !searchedCity && <WeatherWidget weather={weather} />}
 
-      <div className="rounded-xl overflow-hidden border border-gray-200/50 shadow-glass-sm" style={{ height: '65vh' }}>
+      <div className="rounded-xl overflow-hidden border border-gray-200/30 shadow-glass-sm" style={{ height: '65vh' }}>
         <MapContainer
           center={mapCenter}
           zoom={13}
@@ -252,8 +253,12 @@ export default function MapPage() {
           return (
             <div
               key={place.id}
-              className={`flex items-center gap-3 bg-white rounded-xl border border-gray-200 p-3 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all ${isInternal ? 'cursor-pointer' : ''}`}
+              className={`flex items-center gap-3 bg-white rounded-xl border border-gray-200 p-3 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 ${isInternal ? 'cursor-pointer' : ''}`}
               onClick={() => isInternal && navigate(`/places/${place.id}`)}
+              role={isInternal ? 'button' : undefined}
+              tabIndex={isInternal ? 0 : undefined}
+              aria-label={isInternal ? place.name : undefined}
+              onKeyDown={isInternal ? (e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/places/${place.id}`) : undefined}
             >
               <div className="bg-primary-500/10 rounded-lg p-2 flex-shrink-0">
                 <MapPin className="h-4 w-4 text-primary-600" />

@@ -195,7 +195,7 @@ export default function PlaceDetail() {
 
       {/* Map */}
       {hasCoords && (
-        <div className="rounded-xl overflow-hidden border border-gray-200/50" style={{ height: '200px' }}>
+        <div className="rounded-xl overflow-hidden border border-gray-200/30" style={{ height: '200px' }}>
           <MapContainer center={center} zoom={15} style={{ height: '100%', width: '100%' }}>
             <TileLayer
               attribution='&copy; OpenStreetMap'

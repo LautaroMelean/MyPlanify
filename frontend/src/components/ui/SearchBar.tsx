@@ -5,6 +5,7 @@ interface SearchBarProps {
   onChange: (value: string) => void
   placeholder?: string
   className?: string
+  'aria-label'?: string
 }
 
 export default function SearchBar({
@@ -12,6 +13,7 @@ export default function SearchBar({
   onChange,
   placeholder = 'Buscar...',
   className = '',
+  'aria-label': ariaLabel,
 }: SearchBarProps) {
   return (
     <div className={`relative ${className}`}>
@@ -21,6 +23,7 @@ export default function SearchBar({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        aria-label={ariaLabel ?? placeholder}
         className="w-full pl-9 pr-8 py-2 rounded-lg border border-gray-200 text-sm text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/50 bg-gray-100 transition-all"
       />
       {value && (
