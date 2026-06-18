@@ -1,4 +1,5 @@
 import { Tag, MapPin, Calendar, Percent } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { usePromotions } from '@/hooks/usePromotions'
 import Loading from '@/components/common/Loading'
 import EmptyState from '@/components/common/EmptyState'
@@ -9,8 +10,12 @@ function formatDate(iso: string) {
 }
 
 function PromotionCard({ promo }: { promo: Promotion }) {
+  const navigate = useNavigate()
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all">
+    <div
+      className="bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer"
+      onClick={() => navigate(`/places/${promo.place}`)}
+    >
       <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-4 py-3 flex items-center justify-between">
         <span className="text-white font-bold text-xl flex items-center gap-1">
           <Percent className="h-5 w-5" />
@@ -25,7 +30,7 @@ function PromotionCard({ promo }: { promo: Promotion }) {
         )}
         <div className="flex items-center gap-4 mt-3">
           {promo.place_name && (
-            <span className="text-xs text-gray-500 flex items-center gap-1">
+            <span className="text-xs text-primary-600 flex items-center gap-1 font-medium">
               <MapPin className="h-3 w-3" />
               {promo.place_name}
             </span>
