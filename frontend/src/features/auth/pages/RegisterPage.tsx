@@ -6,6 +6,7 @@ import { useRegister } from '@/hooks/useAuth'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Card from '@/components/ui/Card'
+import { AlertTriangle } from 'lucide-react'
 
 const registerSchema = z
   .object({
@@ -59,9 +60,10 @@ export default function RegisterPage() {
         />
 
         {register_.isError && (
-          <p className="text-sm text-red-400 text-center">
+          <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 rounded-xl p-3">
+            <AlertTriangle className="h-4 w-4 flex-shrink-0" />
             {(register_.error as any)?.response?.data?.error?.message ?? 'Error al registrarse. Intentá de nuevo.'}
-          </p>
+          </div>
         )}
 
         <Button type="submit" isLoading={register_.isPending} className="w-full mt-2">

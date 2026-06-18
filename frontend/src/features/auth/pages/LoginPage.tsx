@@ -6,6 +6,7 @@ import { useLogin } from '@/hooks/useAuth'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Card from '@/components/ui/Card'
+import { AlertTriangle } from 'lucide-react'
 
 const loginSchema = z.object({
   email: z.string().email('Ingresá un correo electrónico válido'),
@@ -46,9 +47,10 @@ export default function LoginPage() {
         />
 
         {login.isError && (
-          <p className="text-sm text-red-400 text-center">
+          <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 rounded-xl p-3">
+            <AlertTriangle className="h-4 w-4 flex-shrink-0" />
             {(login.error as any)?.response?.data?.error?.message ?? 'Error al ingresar. Intentá de nuevo.'}
-          </p>
+          </div>
         )}
 
         <Button type="submit" isLoading={login.isPending} className="w-full mt-2">
