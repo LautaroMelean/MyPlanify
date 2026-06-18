@@ -40,7 +40,7 @@ describe('MyPlansPage', () => {
     } as unknown as ReturnType<typeof useMyPlansModule.useMyPlans>)
 
     renderWithProviders(<MyPlansPage />)
-    expect(screen.getByText(/Cargando planes/i)).toBeInTheDocument()
+    expect(screen.getByTestId('plans-skeleton')).toBeInTheDocument()
   })
 
   it('shows list of plans', async () => {

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CalendarDays, Trash2, Globe, Lock, Plus, Loader2 } from 'lucide-react'
+import { CalendarDays, Trash2, Globe, Lock, Plus } from 'lucide-react'
 import { useMyPlans } from '@/hooks/useMyPlans'
 import { useDeletePlan } from '@/hooks/usePlanItem'
 import Button from '@/components/ui/Button'
@@ -20,9 +20,16 @@ export default function MyPlansPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-48 gap-2 text-gray-500 text-sm">
-        <Loader2 className="h-5 w-5 animate-spin" />
-        Cargando planes...
+      <div className="max-w-3xl mx-auto px-4 py-8" data-testid="plans-skeleton">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-7 w-7 rounded-full bg-gray-200/20 animate-pulse" />
+          <div className="h-7 w-32 bg-gray-200/20 rounded animate-pulse" />
+        </div>
+        <div className="space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-16 bg-white rounded-xl border border-gray-200 shadow-glass-sm animate-pulse" />
+          ))}
+        </div>
       </div>
     )
   }

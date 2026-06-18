@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Globe, Lock, Copy, Loader2, CalendarDays } from 'lucide-react'
+import { ArrowLeft, Globe, Lock, Copy, CalendarDays } from 'lucide-react'
 import { usePlan } from '@/hooks/usePlan'
 import { useRemovePlanItem, useUpdatePlan, useUpdatePlanItem, useClonePlan } from '@/hooks/usePlanItem'
 import { useForecast } from '@/hooks/useForecast'
@@ -38,9 +38,23 @@ export default function PlanDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-48 gap-2 text-gray-500 text-sm">
-        <Loader2 className="h-5 w-5 animate-spin" />
-        Cargando plan...
+      <div className="max-w-3xl mx-auto px-4 py-8 space-y-6 animate-pulse">
+        <div className="h-4 w-16 bg-gray-200/20 rounded" />
+        <div className="flex items-start justify-between">
+          <div className="space-y-2">
+            <div className="h-6 w-48 bg-gray-200/20 rounded" />
+            <div className="h-4 w-32 bg-gray-200/20 rounded" />
+          </div>
+          <div className="flex gap-2">
+            <div className="h-8 w-20 bg-gray-200/20 rounded-lg" />
+            <div className="h-8 w-20 bg-gray-200/20 rounded-lg" />
+          </div>
+        </div>
+        <div className="space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-20 bg-white rounded-xl border border-gray-200 shadow-glass-sm" />
+          ))}
+        </div>
       </div>
     )
   }
