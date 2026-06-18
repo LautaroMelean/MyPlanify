@@ -59,11 +59,12 @@ export default function Navbar() {
           </Link>
 
           {isAuthenticated && (
-            <nav className="hidden md:flex items-center gap-1">
+            <nav aria-label="Navegación principal" className="hidden md:flex items-center gap-1">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
+                  aria-current={isActive(link.to) ? 'page' : undefined}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                     isActive(link.to)
                       ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm'
@@ -77,6 +78,7 @@ export default function Navbar() {
               {dashboardLink && (
                 <Link
                   to={dashboardLink.to}
+                  aria-current={isActive(dashboardLink.to) ? 'page' : undefined}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                     isActive(dashboardLink.to)
                       ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm'
@@ -171,7 +173,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {isAuthenticated && mobileOpen && (
-        <div className="md:hidden border-t border-white/5 px-4 py-3 flex flex-col gap-1" style={{ background: 'rgba(7,6,15,0.95)', backdropFilter: 'blur(20px)' }}>
+        <nav aria-label="Menú móvil" className="md:hidden border-t border-white/5 px-4 py-3 flex flex-col gap-1" style={{ background: 'rgba(7,6,15,0.95)', backdropFilter: 'blur(20px)' }}>
           {/* Mobile search */}
           <form onSubmit={(e) => { e.preventDefault(); const q = searchQuery.trim(); if (q) { navigate(`/search?q=${encodeURIComponent(q)}`); setSearchQuery(''); setMobileOpen(false) } }} className="mb-2">
             <div className="relative">
@@ -263,7 +265,7 @@ export default function Navbar() {
             <LogOut className="h-4 w-4" />
             Cerrar sesión
           </button>
-        </div>
+        </nav>
       )}
     </header>
   )
