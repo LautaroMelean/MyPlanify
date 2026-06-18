@@ -1,10 +1,11 @@
-import { useParams } from 'react-router-dom'
-import { MapPin } from 'lucide-react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { MapPin, Sparkles } from 'lucide-react'
 import { usePublicPlan } from '@/hooks/usePlan'
 import { ItineraryView } from '../components/ItineraryView'
 
 export default function PlanPublicPage() {
   const { slug } = useParams<{ slug: string }>()
+  const navigate = useNavigate()
   const { data: plan, isLoading, isError } = usePublicPlan(slug ?? '')
 
   if (isLoading) {
@@ -45,6 +46,19 @@ export default function PlanPublicPage() {
         ) : (
           <ItineraryView plan={plan} readonly />
         )}
+
+        <div className="mt-10 p-5 bg-gradient-to-r from-violet-900/50 to-primary-900/40 rounded-2xl border border-primary-400/20 text-center">
+          <Sparkles className="h-6 w-6 text-primary-500 mx-auto mb-2" />
+          <p className="text-sm font-semibold text-gray-800 mb-1">¿Te gustó este plan?</p>
+          <p className="text-xs text-gray-500 mb-3">Creá el tuyo gratis en Planify — planes personalizados en segundos.</p>
+          <button
+            onClick={() => navigate('/register')}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 shadow-neon-sm transition-all"
+          >
+            <Sparkles className="h-4 w-4" />
+            Crear mi plan gratis
+          </button>
+        </div>
       </main>
     </div>
   )

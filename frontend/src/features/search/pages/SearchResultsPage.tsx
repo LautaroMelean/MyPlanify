@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { Search, MapPin, Calendar, Zap, DollarSign } from 'lucide-react'
 import { useSearch } from '@/hooks/useSearch'
 import Loading from '@/components/common/Loading'
+import EmptyState from '@/components/common/EmptyState'
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('es-AR', {
@@ -182,20 +183,21 @@ export default function SearchResultsPage() {
           )}
 
           {total === 0 && query && (
-            <div className="text-center py-16 text-gray-400">
-              <Search className="h-12 w-12 mx-auto mb-3 opacity-30" />
-              <p className="font-medium">Sin resultados para "{query}"</p>
-              <p className="text-sm mt-1">Intentá con otra palabra clave</p>
-            </div>
+            <EmptyState
+              title={`Sin resultados para "${query}"`}
+              description="Intentá con otra palabra clave o revisá la ortografía."
+              icon={<Search className="h-10 w-10" />}
+            />
           )}
         </div>
       )}
 
       {!query && (
-        <div className="text-center py-16 text-gray-400">
-          <Search className="h-12 w-12 mx-auto mb-3 opacity-30" />
-          <p className="font-medium">Ingresá algo para buscar</p>
-        </div>
+        <EmptyState
+          title="Buscá lo que quieras"
+          description="Ingresá el nombre de un lugar, actividad o evento para encontrarlo."
+          icon={<Search className="h-10 w-10" />}
+        />
       )}
     </div>
   )

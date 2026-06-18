@@ -26,8 +26,8 @@ export default function EventCard({ event }: EventCardProps) {
         {event.image_url ? (
           <img src={event.image_url} alt={event.title} className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
         ) : (
-          <div className="w-full h-40 bg-indigo-50 flex items-center justify-center">
-            <Calendar className="h-10 w-10 text-indigo-300" />
+          <div className="w-full h-40 bg-indigo-500/10 flex items-center justify-center">
+            <Calendar className="h-10 w-10 text-indigo-400" />
           </div>
         )}
       </div>
