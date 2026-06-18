@@ -364,10 +364,12 @@ export default function ExplorePage() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-gray-200 overflow-x-auto">
+      <div role="tablist" className="flex gap-1 border-b border-gray-200 overflow-x-auto">
         {tabs.map((t) => (
           <button
             key={t.id}
+            role="tab"
+            aria-selected={tab === t.id}
             onClick={() => { setTab(t.id); setShowFilters(false) }}
             className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
               tab === t.id

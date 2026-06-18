@@ -65,7 +65,7 @@ export default function EventDetail() {
       </button>
 
       {event.image_url && (
-        <img src={event.image_url} alt={event.title} className="w-full h-56 object-cover rounded-xl" />
+        <img src={event.image_url} alt={event.title} className="w-full h-56 object-cover rounded-xl" decoding="async" />
       )}
 
       <div className="flex items-start justify-between gap-4">

@@ -58,7 +58,7 @@ export default function PlaceDetail() {
       </button>
 
       {place.image_url && (
-        <img src={place.image_url} alt={place.name} className="w-full h-56 object-cover rounded-xl" />
+        <img src={place.image_url} alt={place.name} className="w-full h-56 object-cover rounded-xl" decoding="async" />
       )}
 
       <div className="flex items-start justify-between gap-4">
