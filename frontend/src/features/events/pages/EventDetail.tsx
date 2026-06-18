@@ -145,8 +145,12 @@ export default function EventDetail() {
         )}
         {event.place_name && (
           <div
-            className={`flex items-center gap-3 bg-gray-100 rounded-xl p-3 border col-span-full sm:col-span-1 ${event.place ? 'border-gray-200/30 cursor-pointer hover:border-primary-500/30 transition-all' : 'border-gray-200/30'}`}
+            className={`flex items-center gap-3 bg-gray-100 rounded-xl p-3 border col-span-full sm:col-span-1 ${event.place ? 'border-gray-200/30 cursor-pointer hover:border-primary-500/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40' : 'border-gray-200/30'}`}
             onClick={() => event.place && navigate(`/places/${event.place}`)}
+            role={event.place ? 'button' : undefined}
+            tabIndex={event.place ? 0 : undefined}
+            aria-label={event.place ? `Ver lugar: ${event.place_name}` : undefined}
+            onKeyDown={event.place ? (e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/places/${event.place}`) : undefined}
           >
             <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" />
             <div>
@@ -166,6 +170,7 @@ export default function EventDetail() {
               type="datetime-local"
               value={reminderDate}
               onChange={(e) => setReminderDate(e.target.value)}
+              aria-label="Fecha y hora del recordatorio"
               className="flex-1 text-sm border border-gray-200 bg-gray-100 text-gray-800 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
             />
             <Button
