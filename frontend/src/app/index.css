@@ -61,6 +61,10 @@
   .page-enter {
     animation: pageEnter 0.2s ease-out;
   }
+
+  .neon-pulse {
+    animation: neonPulse 2s ease-in-out infinite;
+  }
 }
 
 @keyframes pageEnter {

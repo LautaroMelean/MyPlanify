@@ -60,7 +60,7 @@ export default function ActivityDetail() {
       )}
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
           <DollarSign className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div>
             <p className="text-xs text-gray-500">Presupuesto</p>
@@ -71,7 +71,7 @@ export default function ActivityDetail() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
           <Users className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div>
             <p className="text-xs text-gray-500">Personas</p>
@@ -83,7 +83,7 @@ export default function ActivityDetail() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
           <Tag className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div>
             <p className="text-xs text-gray-500">Modalidad</p>
@@ -96,7 +96,7 @@ export default function ActivityDetail() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
           <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div className="min-w-0">
             <p className="text-xs text-gray-500">Ciudad</p>

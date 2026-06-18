@@ -44,7 +44,7 @@ export function ActivityStatsCard({ stats }: Props) {
         </p>
       ) : (
         <>
-          <div className="grid grid-cols-3 divide-x divide-gray-200/30 border border-gray-200/30 rounded-lg mb-4">
+          <div className="grid grid-cols-3 divide-x divide-gray-200/30 border border-gray-200/30 rounded-xl mb-4">
             <StatItem
               icon={<CheckCircle className="h-5 w-5" />}
               label="Planes completados"

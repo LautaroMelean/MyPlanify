@@ -45,7 +45,7 @@ export default function BusinessDashboardPage() {
         ) : (
           <div className="space-y-2">
             {places.map(place => (
-              <div key={place.id} onClick={() => navigate(`/places/${place.id}`)} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all cursor-pointer">
+              <div key={place.id} onClick={() => navigate(`/places/${place.id}`)} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all cursor-pointer">
                 <div className="flex items-center gap-3">
                   <Building2 className="h-4 w-4 text-gray-400" />
                   <div>
@@ -69,7 +69,7 @@ export default function BusinessDashboardPage() {
         ) : (
           <div className="space-y-2">
             {promotions.map(promo => (
-              <div key={promo.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-glass-sm">
+              <div key={promo.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm">
                 <div>
                   <p className="text-sm font-medium text-gray-900">{promo.title}</p>
                   <p className="text-xs text-gray-500">{promo.place_name}</p>

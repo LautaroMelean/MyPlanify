@@ -58,7 +58,7 @@ export default function OrganizerDashboardPage() {
         ) : (
           <div className="space-y-2">
             {events.map(event => (
-              <div key={event.id} onClick={() => navigate(`/events/${event.id}`)} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all cursor-pointer">
+              <div key={event.id} onClick={() => navigate(`/events/${event.id}`)} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all cursor-pointer">
                 <div>
                   <p className="text-sm font-medium text-gray-900">{event.title}</p>
                   <p className="text-xs text-gray-500">

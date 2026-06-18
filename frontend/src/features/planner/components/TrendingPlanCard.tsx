@@ -49,7 +49,7 @@ export function TrendingPlanCard({ plan, onUseAsBase }: Props) {
 
       <button
         onClick={() => onUseAsBase(plan)}
-        className="mt-3 w-full text-xs font-medium text-primary-600 hover:text-primary-700 border border-primary-400/30 hover:bg-primary-500/10 rounded-lg py-1.5 transition-colors"
+        className="mt-3 w-full text-xs font-medium text-primary-600 hover:text-primary-700 border border-primary-400/30 hover:bg-primary-500/10 rounded-xl py-1.5 transition-colors"
       >
         Usar como base
       </button>

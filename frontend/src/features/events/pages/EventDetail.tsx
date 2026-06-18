@@ -84,7 +84,7 @@ export default function EventDetail() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
           <Calendar className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div>
             <p className="text-xs text-gray-500">Inicio</p>
@@ -92,7 +92,7 @@ export default function EventDetail() {
           </div>
         </div>
         {event.end_date && (
-          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
             <Clock className="h-5 w-5 text-primary-600 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-500">Fin</p>
@@ -100,7 +100,7 @@ export default function EventDetail() {
             </div>
           </div>
         )}
-        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
           <DollarSign className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div>
             <p className="text-xs text-gray-500">Precio</p>
@@ -108,7 +108,7 @@ export default function EventDetail() {
           </div>
         </div>
         {event.minimum_age > 0 && (
-          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
             <Users className="h-5 w-5 text-primary-600 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-500">Edad mínima</p>
@@ -118,7 +118,7 @@ export default function EventDetail() {
         )}
         {event.place_name && (
           <div
-            className={`flex items-center gap-3 bg-gray-100 rounded-xl p-3 col-span-full sm:col-span-1 ${event.place ? 'cursor-pointer hover:bg-gray-100/80 hover:border hover:border-primary-500/20 transition-all' : ''}`}
+            className={`flex items-center gap-3 bg-gray-100 rounded-xl p-3 border col-span-full sm:col-span-1 ${event.place ? 'border-gray-200/30 cursor-pointer hover:border-primary-500/30 transition-all' : 'border-gray-200/30'}`}
             onClick={() => event.place && navigate(`/places/${event.place}`)}
           >
             <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" />

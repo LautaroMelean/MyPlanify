@@ -138,7 +138,7 @@ export default function PlaceDetail() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
           <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div className="min-w-0">
             <p className="text-xs text-gray-500">Dirección</p>
@@ -146,7 +146,7 @@ export default function PlaceDetail() {
           </div>
         </div>
         {place.phone && (
-          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
             <Phone className="h-5 w-5 text-primary-600 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-500">Teléfono</p>
@@ -155,7 +155,7 @@ export default function PlaceDetail() {
           </div>
         )}
         {place.website && (
-          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
             <Globe className="h-5 w-5 text-primary-600 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-500">Sitio web</p>

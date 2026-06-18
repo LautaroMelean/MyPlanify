@@ -74,7 +74,7 @@ export default function PlannerPage() {
           )}
 
           {planner.isError && (
-            <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+            <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm">
               Error al generar el plan. Intentá de nuevo.
             </div>
           )}

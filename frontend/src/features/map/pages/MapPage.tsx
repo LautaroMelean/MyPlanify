@@ -183,10 +183,10 @@ export default function MapPage() {
       </div>
 
       {locError && (
-        <p className="text-sm text-red-400 bg-red-500/10 px-3 py-2 rounded-lg">{locError}</p>
+        <p className="text-sm text-red-400 bg-red-500/10 px-3 py-2 rounded-xl">{locError}</p>
       )}
       {cityError && (
-        <p className="text-sm text-red-400 bg-red-500/10 px-3 py-2 rounded-lg">{cityError}</p>
+        <p className="text-sm text-red-400 bg-red-500/10 px-3 py-2 rounded-xl">{cityError}</p>
       )}
 
       {userPos && !searchedCity && <WeatherWidget weather={weather} />}
@@ -235,7 +235,7 @@ export default function MapPage() {
           return (
             <div
               key={place.id}
-              className={`flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-3 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all ${isInternal ? 'cursor-pointer' : ''}`}
+              className={`flex items-center gap-3 bg-white rounded-xl border border-gray-200 p-3 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all ${isInternal ? 'cursor-pointer' : ''}`}
               onClick={() => isInternal && navigate(`/places/${place.id}`)}
             >
               <div className="bg-primary-500/10 rounded-lg p-2 flex-shrink-0">
