@@ -50,7 +50,7 @@ export function PlannerForm({ onSubmit, isLoading }: Props) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="plan-date" className="block text-sm font-medium text-gray-600 mb-1">
-          <Calendar className="inline h-4 w-4 mr-1" />
+          <Calendar className="inline h-4 w-4 mr-1" aria-hidden="true" />
           Fecha del plan
         </label>
         <input
@@ -66,7 +66,7 @@ export function PlannerForm({ onSubmit, isLoading }: Props) {
 
       <div>
         <label htmlFor="plan-city" className="block text-sm font-medium text-gray-600 mb-1">
-          <MapPin className="inline h-4 w-4 mr-1" />
+          <MapPin className="inline h-4 w-4 mr-1" aria-hidden="true" />
           Ciudad / Barrio
         </label>
         <select
@@ -84,7 +84,7 @@ export function PlannerForm({ onSubmit, isLoading }: Props) {
 
       <div>
         <label htmlFor="plan-budget" className="block text-sm font-medium text-gray-600 mb-1">
-          <DollarSign className="inline h-4 w-4 mr-1" />
+          <DollarSign className="inline h-4 w-4 mr-1" aria-hidden="true" />
           Presupuesto total (ARS)
         </label>
         <input
@@ -105,7 +105,7 @@ export function PlannerForm({ onSubmit, isLoading }: Props) {
 
       <div>
         <label htmlFor="plan-people" className="block text-sm font-medium text-gray-600 mb-1">
-          <Users className="inline h-4 w-4 mr-1" />
+          <Users className="inline h-4 w-4 mr-1" aria-hidden="true" />
           Cantidad de personas
         </label>
         <input
