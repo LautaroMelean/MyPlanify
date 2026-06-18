@@ -2,7 +2,6 @@ import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Search, MapPin, Calendar, Zap, DollarSign } from 'lucide-react'
 import { useSearch } from '@/hooks/useSearch'
-import Loading from '@/components/common/Loading'
 import EmptyState from '@/components/common/EmptyState'
 
 function formatDate(iso: string) {
@@ -64,7 +63,19 @@ export default function SearchResultsPage() {
         </p>
       )}
 
-      {isLoading && <Loading />}
+      {isLoading && (
+        <div data-testid="search-skeleton" className="space-y-3 animate-pulse">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-4 p-3 bg-white rounded-xl border border-gray-200 shadow-glass-sm">
+              <div className="h-14 w-14 rounded-lg bg-gray-200/20 flex-shrink-0" />
+              <div className="space-y-1.5 flex-1">
+                <div className="h-4 w-2/3 bg-gray-200/20 rounded" />
+                <div className="h-3 w-1/3 bg-gray-200/20 rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {!isLoading && data && (
         <div className="space-y-8">

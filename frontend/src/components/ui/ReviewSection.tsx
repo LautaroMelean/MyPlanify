@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Star, Trash2 } from 'lucide-react'
 import { useReviews, useCreateReview, useDeleteReview } from '@/hooks/useReviews'
 import { useAuthStore } from '@/store/authStore'
-import Loading from '@/components/common/Loading'
 import Button from '@/components/ui/Button'
 import type { ReviewEntityType } from '@/types'
 
@@ -83,7 +82,25 @@ export default function ReviewSection({ entityType, entityId }: Props) {
     await deleteMutation.mutateAsync()
   }
 
-  if (isLoading) return <Loading message="Cargando reseñas..." />
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-4 animate-pulse">
+        <div className="h-6 w-24 bg-gray-200/20 rounded" />
+        {Array.from({ length: 2 }).map((_, i) => (
+          <div key={i} className="bg-white rounded-xl p-4 border border-gray-200 space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-full bg-gray-200/20" />
+              <div className="space-y-1">
+                <div className="h-3 w-24 bg-gray-200/20 rounded" />
+                <div className="h-3 w-16 bg-gray-200/20 rounded" />
+              </div>
+            </div>
+            <div className="h-3 w-full bg-gray-200/20 rounded" />
+          </div>
+        ))}
+      </div>
+    )
+  }
 
   const { rating, my_review, reviews } = data ?? { rating: { average: 0, count: 0 }, my_review: null, reviews: [] }
 

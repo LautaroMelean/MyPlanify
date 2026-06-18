@@ -27,7 +27,7 @@ describe('SearchResultsPage', () => {
     } as unknown as ReturnType<typeof useSearchModule.useSearch>)
 
     render(<SearchResultsPage />, { wrapper })
-    expect(screen.getByText(/cargando/i)).toBeInTheDocument()
+    expect(screen.getByTestId('search-skeleton')).toBeInTheDocument()
   })
 
   it('shows results when data arrives', async () => {
