@@ -87,9 +87,9 @@ export default function EventDetail() {
       <title>{event.title} | Planify</title>
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm w-fit"
+        className="flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm w-fit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded"
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Volver
       </button>
 
@@ -118,7 +118,7 @@ export default function EventDetail() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
-          <Calendar className="h-5 w-5 text-primary-600 flex-shrink-0" />
+          <Calendar className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
           <div>
             <p className="text-xs text-gray-500">Inicio</p>
             <p className="text-sm font-medium text-gray-900">{formatDate(event.start_date)}</p>
@@ -126,7 +126,7 @@ export default function EventDetail() {
         </div>
         {event.end_date && (
           <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
-            <Clock className="h-5 w-5 text-primary-600 flex-shrink-0" />
+            <Clock className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
             <div>
               <p className="text-xs text-gray-500">Fin</p>
               <p className="text-sm font-medium text-gray-900">{formatDate(event.end_date)}</p>
@@ -134,7 +134,7 @@ export default function EventDetail() {
           </div>
         )}
         <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
-          <DollarSign className="h-5 w-5 text-primary-600 flex-shrink-0" />
+          <DollarSign className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
           <div>
             <p className="text-xs text-gray-500">Precio</p>
             <p className="text-sm font-medium text-gray-900">{price === 0 ? 'Gratis' : `$${event.price}`}</p>
@@ -142,7 +142,7 @@ export default function EventDetail() {
         </div>
         {event.minimum_age > 0 && (
           <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
-            <Users className="h-5 w-5 text-primary-600 flex-shrink-0" />
+            <Users className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
             <div>
               <p className="text-xs text-gray-500">Edad mínima</p>
               <p className="text-sm font-medium text-gray-900">+{event.minimum_age} años</p>
@@ -158,7 +158,7 @@ export default function EventDetail() {
             aria-label={event.place ? `Ver lugar: ${event.place_name}` : undefined}
             onKeyDown={event.place ? (e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/places/${event.place}`) : undefined}
           >
-            <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" />
+            <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
             <div>
               <p className="text-xs text-gray-500">Lugar</p>
               <p className={`text-sm font-medium ${event.place ? 'text-primary-600 hover:underline' : 'text-gray-900'}`}>{event.place_name}</p>

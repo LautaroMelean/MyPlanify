@@ -65,7 +65,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
 
         {activity.address && (
           <div className="flex items-start gap-1 mt-1.5">
-            <MapPin className="h-3.5 w-3.5 text-gray-400 flex-shrink-0 mt-0.5" />
+            <MapPin className="h-3.5 w-3.5 text-gray-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
             <span className="text-xs text-gray-500 leading-snug">
               <span className="block">{activity.address}</span>
               {activity.city && <span className="block text-gray-400">{activity.city}</span>}
@@ -81,24 +81,24 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
 
         <div className="flex flex-wrap gap-2 mt-3">
           <span className="text-xs text-gray-500 flex items-center gap-1">
-            <DollarSign className="h-3 w-3" />
+            <DollarSign className="h-3 w-3" aria-hidden="true" />
             {isFree(activity.min_budget) ? 'Gratis' : `Desde $${Math.round(parseFloat(String(activity.min_budget))).toLocaleString('es-AR')}`}
           </span>
           {activity.min_people > 1 && (
             <span className="text-xs text-gray-500 flex items-center gap-1">
-              <Users className="h-3 w-3" />
+              <Users className="h-3 w-3" aria-hidden="true" />
               {activity.min_people}+ personas
             </span>
           )}
           {activity.indoor && (
             <span className="text-xs text-gray-500 flex items-center gap-1">
-              <Home className="h-3 w-3" />
+              <Home className="h-3 w-3" aria-hidden="true" />
               Interior
             </span>
           )}
           {activity.outdoor && (
             <span className="text-xs text-gray-500 flex items-center gap-1">
-              <Cloud className="h-3 w-3" />
+              <Cloud className="h-3 w-3" aria-hidden="true" />
               Exterior
             </span>
           )}

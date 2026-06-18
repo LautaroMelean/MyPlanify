@@ -72,9 +72,9 @@ export default function PlaceDetail() {
       <title>{place.name} | Planify</title>
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm w-fit"
+        className="flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm w-fit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded"
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Volver
       </button>
 
@@ -91,7 +91,7 @@ export default function PlaceDetail() {
             </span>
             {place.price_level > 0 && (
               <span className="text-xs text-gray-500 flex items-center gap-0.5">
-                <DollarSign className="h-3 w-3" />
+                <DollarSign className="h-3 w-3" aria-hidden="true" />
                 {priceLabels[place.price_level]}
               </span>
             )}
@@ -110,7 +110,7 @@ export default function PlaceDetail() {
           <h2 className="text-sm font-semibold text-gray-600 mb-3">Información del lugar</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-sm">
             <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-gray-400 flex-shrink-0" />
+              <Clock className="h-4 w-4 text-gray-400 flex-shrink-0" aria-hidden="true" />
               <span className="text-gray-500">Horario:</span>
               <span className="text-gray-800 truncate">
                 {place.opening_hours || 'Sin información'}
@@ -130,28 +130,28 @@ export default function PlaceDetail() {
             )}
             {place.fee !== null && (
               <div className="flex items-center gap-2">
-                <Ticket className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                <Ticket className="h-4 w-4 text-gray-400 flex-shrink-0" aria-hidden="true" />
                 <span className="text-gray-500">Entrada:</span>
                 <span className="text-gray-800">{place.fee ? 'Paga' : 'Gratuita'}</span>
               </div>
             )}
             {place.outdoor_seating !== null && (
               <div className="flex items-center gap-2">
-                <TreePine className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                <TreePine className="h-4 w-4 text-gray-400 flex-shrink-0" aria-hidden="true" />
                 <span className="text-gray-500">Terraza:</span>
                 <span className="text-gray-800">{place.outdoor_seating ? 'Sí' : 'No'}</span>
               </div>
             )}
             {place.internet_access !== null && (
               <div className="flex items-center gap-2">
-                <Wifi className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                <Wifi className="h-4 w-4 text-gray-400 flex-shrink-0" aria-hidden="true" />
                 <span className="text-gray-500">Wifi:</span>
                 <span className="text-gray-800">{place.internet_access ? 'Disponible' : 'No'}</span>
               </div>
             )}
             {place.wheelchair && (
               <div className="flex items-center gap-2">
-                <Accessibility className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                <Accessibility className="h-4 w-4 text-gray-400 flex-shrink-0" aria-hidden="true" />
                 <span className="text-gray-500">Acceso:</span>
                 <span className="text-gray-800">
                   {place.wheelchair === 'yes' ? 'Apto' : place.wheelchair === 'limited' ? 'Limitado' : 'No apto'}
@@ -164,7 +164,7 @@ export default function PlaceDetail() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
-          <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" />
+          <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
           <div className="min-w-0">
             <p className="text-xs text-gray-500">Dirección</p>
             <p className="text-sm font-medium text-gray-900 truncate">{place.address}, {place.city}</p>
@@ -172,7 +172,7 @@ export default function PlaceDetail() {
         </div>
         {place.phone && (
           <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
-            <Phone className="h-5 w-5 text-primary-600 flex-shrink-0" />
+            <Phone className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
             <div>
               <p className="text-xs text-gray-500">Teléfono</p>
               <a href={`tel:${place.phone}`} className="text-sm font-medium text-primary-600 hover:underline">
@@ -183,11 +183,11 @@ export default function PlaceDetail() {
         )}
         {place.website && (
           <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
-            <Globe className="h-5 w-5 text-primary-600 flex-shrink-0" />
+            <Globe className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
             <div>
               <p className="text-xs text-gray-500">Sitio web</p>
               <a href={place.website} target="_blank" rel="noopener noreferrer"
-                className="text-sm font-medium text-primary-600 hover:underline truncate block">
+                className="text-sm font-medium text-primary-600 hover:underline truncate block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-500/40 rounded">
                 {place.website}
               </a>
             </div>
@@ -197,7 +197,12 @@ export default function PlaceDetail() {
 
       {/* Map */}
       {hasCoords && (
-        <div className="rounded-xl overflow-hidden border border-gray-200/30" style={{ height: '200px' }}>
+        <div
+          className="rounded-xl overflow-hidden border border-gray-200/30"
+          style={{ height: '200px' }}
+          role="region"
+          aria-label={`Mapa de ${place.name}`}
+        >
           <MapContainer center={center} zoom={15} style={{ height: '100%', width: '100%' }}>
             <TileLayer
               attribution='&copy; OpenStreetMap'
@@ -239,7 +244,7 @@ export default function PlaceDetail() {
               <button
                 key={e.id}
                 onClick={() => navigate(`/events/${e.id}`)}
-                className="flex items-center justify-between bg-white rounded-xl p-3 border border-gray-200 shadow-glass-sm hover:border-primary-500/40 hover:shadow-neon-sm transition-all text-left"
+                className="flex items-center justify-between bg-white rounded-xl p-3 border border-gray-200 shadow-glass-sm hover:border-primary-500/40 hover:shadow-neon-sm transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
               >
                 <p className="text-sm font-medium text-gray-900">{e.title}</p>
                 <span className="text-xs text-gray-400 flex-shrink-0 ml-3">

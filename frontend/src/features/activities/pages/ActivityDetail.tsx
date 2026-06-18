@@ -60,9 +60,9 @@ export default function ActivityDetail() {
       <title>{activity.name} | Planify</title>
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm w-fit"
+        className="flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm w-fit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded"
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Volver
       </button>
 
@@ -87,7 +87,7 @@ export default function ActivityDetail() {
 
       <div className="grid grid-cols-2 gap-3">
         <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
-          <DollarSign className="h-5 w-5 text-primary-600 flex-shrink-0" />
+          <DollarSign className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
           <div>
             <p className="text-xs text-gray-500">Presupuesto</p>
             <p className="text-sm font-medium text-gray-900">
@@ -98,7 +98,7 @@ export default function ActivityDetail() {
         </div>
 
         <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
-          <Users className="h-5 w-5 text-primary-600 flex-shrink-0" />
+          <Users className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
           <div>
             <p className="text-xs text-gray-500">Personas</p>
             <p className="text-sm font-medium text-gray-900">
@@ -110,7 +110,7 @@ export default function ActivityDetail() {
         </div>
 
         <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
-          <Tag className="h-5 w-5 text-primary-600 flex-shrink-0" />
+          <Tag className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
           <div>
             <p className="text-xs text-gray-500">Modalidad</p>
             <p className="text-sm font-medium text-gray-900">
@@ -123,7 +123,7 @@ export default function ActivityDetail() {
         </div>
 
         <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30">
-          <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" />
+          <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
           <div className="min-w-0">
             <p className="text-xs text-gray-500">Ciudad</p>
             <p className="text-sm font-medium text-gray-900 truncate">{activity.city || 'Buenos Aires'}</p>

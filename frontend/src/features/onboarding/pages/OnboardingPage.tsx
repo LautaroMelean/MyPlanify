@@ -48,7 +48,7 @@ export default function OnboardingPage() {
     <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-8">
       <title>¿Qué te gusta? | Planify</title>
       <div className="text-center">
-        <div className="w-14 h-14 bg-primary-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="w-14 h-14 bg-primary-500/10 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
           <Sparkles className="h-7 w-7 text-primary-600" />
         </div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">¿Qué te gusta hacer?</h1>
@@ -66,18 +66,18 @@ export default function OnboardingPage() {
               key={opt.value}
               onClick={() => toggle(opt.value)}
               aria-pressed={isSelected}
-              className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+              className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 ${
                 isSelected
                   ? 'border-primary-500 bg-primary-500/10 text-primary-600 shadow-neon-sm'
                   : 'border-gray-200 bg-white text-gray-600 shadow-glass-sm hover:border-primary-400/50 hover:shadow-neon-sm hover:bg-white/5'
               }`}
             >
               {isSelected && (
-                <span className="absolute top-2 right-2 bg-primary-500 rounded-full p-0.5">
+                <span className="absolute top-2 right-2 bg-primary-500 rounded-full p-0.5" aria-hidden="true">
                   <Check className="h-3 w-3 text-white" />
                 </span>
               )}
-              <span className="text-3xl">{opt.emoji}</span>
+              <span className="text-3xl" aria-hidden="true">{opt.emoji}</span>
               <span className="text-sm font-medium">{opt.label}</span>
             </button>
           )

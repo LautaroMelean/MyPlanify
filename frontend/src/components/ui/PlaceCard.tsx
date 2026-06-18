@@ -24,9 +24,9 @@ export default function PlaceCard({ place }: PlaceCardProps) {
     >
       <div className="overflow-hidden h-40">
         {place.image_url ? (
-          <img src={place.image_url} alt={place.name} className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+          <img src={place.image_url} alt="" className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
         ) : (
-          <div className="w-full h-40 bg-primary-500/10 flex items-center justify-center">
+          <div className="w-full h-40 bg-primary-500/10 flex items-center justify-center" aria-hidden="true">
             <MapPin className="h-10 w-10 text-primary-300" />
           </div>
         )}
@@ -36,7 +36,7 @@ export default function PlaceCard({ place }: PlaceCardProps) {
           <div className="min-w-0">
             <h3 className="font-semibold text-gray-900 truncate">{place.name}</h3>
             <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
-              <MapPin className="h-3 w-3 flex-shrink-0" />
+              <MapPin className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
               {place.city}
             </p>
           </div>
@@ -64,19 +64,19 @@ export default function PlaceCard({ place }: PlaceCardProps) {
             )}
             {place.outdoor_seating && (
               <span className="text-xs bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full flex items-center gap-0.5">
-                <TreePine className="h-3 w-3" />
+                <TreePine className="h-3 w-3" aria-hidden="true" />
                 Con terraza
               </span>
             )}
             {place.fee === false && (
               <span className="text-xs bg-blue-500/15 text-blue-400 px-2 py-0.5 rounded-full flex items-center gap-0.5">
-                <Ticket className="h-3 w-3" />
+                <Ticket className="h-3 w-3" aria-hidden="true" />
                 Entrada libre
               </span>
             )}
             {place.internet_access && (
               <span className="text-xs bg-violet-500/15 text-violet-400 px-2 py-0.5 rounded-full flex items-center gap-0.5">
-                <Wifi className="h-3 w-3" />
+                <Wifi className="h-3 w-3" aria-hidden="true" />
                 Wifi
               </span>
             )}
@@ -98,7 +98,7 @@ export default function PlaceCard({ place }: PlaceCardProps) {
             )}
             {place.price_level > 0 && (
               <span className="text-xs text-gray-500 flex items-center gap-0.5">
-                <DollarSign className="h-3 w-3" />
+                <DollarSign className="h-3 w-3" aria-hidden="true" />
                 {priceLabels[place.price_level] ?? ''}
               </span>
             )}

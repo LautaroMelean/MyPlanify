@@ -28,9 +28,9 @@ export default function EventCard({ event }: EventCardProps) {
     >
       <div className="overflow-hidden h-40">
         {event.image_url ? (
-          <img src={event.image_url} alt={event.title} className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+          <img src={event.image_url} alt="" className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
         ) : (
-          <div className="w-full h-40 bg-indigo-500/10 flex items-center justify-center">
+          <div className="w-full h-40 bg-indigo-500/10 flex items-center justify-center" aria-hidden="true">
             <Calendar className="h-10 w-10 text-indigo-400" />
           </div>
         )}
@@ -40,7 +40,7 @@ export default function EventCard({ event }: EventCardProps) {
           <div className="min-w-0">
             <h3 className="font-semibold text-gray-900 truncate">{event.title}</h3>
             <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
-              <Calendar className="h-3 w-3 flex-shrink-0" />
+              <Calendar className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
               {formatDate(event.start_date)}
             </p>
           </div>
@@ -62,7 +62,7 @@ export default function EventCard({ event }: EventCardProps) {
               <RatingBadge average={event.avg_rating} count={event.review_count} />
             )}
             <span className="text-xs text-gray-500 flex items-center gap-0.5">
-              <DollarSign className="h-3 w-3" />
+              <DollarSign className="h-3 w-3" aria-hidden="true" />
               {parseFloat(event.price) === 0 ? 'Gratis' : `$${Math.round(parseFloat(event.price)).toLocaleString('es-AR')}`}
             </span>
           </div>
@@ -70,7 +70,7 @@ export default function EventCard({ event }: EventCardProps) {
 
         {event.place_name && (
           <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
-            <MapPin className="h-3 w-3" />
+            <MapPin className="h-3 w-3" aria-hidden="true" />
             {event.place_name}
           </p>
         )}
