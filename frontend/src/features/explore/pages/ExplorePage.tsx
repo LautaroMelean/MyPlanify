@@ -10,7 +10,6 @@ import PlaceCard from '@/components/ui/PlaceCard'
 import ActivityCard from '@/components/ui/ActivityCard'
 import EventCard from '@/components/ui/EventCard'
 import SearchBar from '@/components/ui/SearchBar'
-import Loading from '@/components/common/Loading'
 import EmptyState from '@/components/common/EmptyState'
 
 type Tab = 'lugares' | 'actividades' | 'eventos' | 'cerca'
@@ -452,7 +451,12 @@ export default function ExplorePage() {
             </div>
           )}
 
-          {geoLoading && <Loading message="Obteniendo tu ubicación..." />}
+          {geoLoading && (
+            <p className="text-sm text-gray-500 flex items-center gap-2 animate-pulse py-2">
+              <Navigation className="h-4 w-4 text-primary-600" />
+              Obteniendo tu ubicación…
+            </p>
+          )}
 
           {nearbyCoords && (
             <>

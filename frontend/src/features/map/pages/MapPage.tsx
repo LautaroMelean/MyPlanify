@@ -6,7 +6,6 @@ import { usePlaces } from '@/hooks/usePlaces'
 import { useWeather } from '@/hooks/useWeather'
 import { useExternalPlaces } from '@/hooks/useExternalPlaces'
 import { geocodingService } from '@/services/geocodingService'
-import Loading from '@/components/common/Loading'
 import Button from '@/components/ui/Button'
 import WeatherWidget from '@/components/ui/WeatherWidget'
 import 'leaflet/dist/leaflet.css'
@@ -128,7 +127,24 @@ export default function MapPage() {
     }
   }, [])
 
-  if (isLoading) return <Loading message="Cargando mapa..." fullPage />
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-4 h-full animate-pulse">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <div className="h-6 w-6 bg-gray-200/20 rounded-full" />
+              <div className="h-7 w-16 bg-gray-200/20 rounded" />
+            </div>
+            <div className="h-4 w-40 bg-gray-200/20 rounded" />
+          </div>
+        </div>
+        <div className="flex-1 bg-gray-200/10 rounded-xl border border-gray-200/30 flex items-center justify-center min-h-[400px]">
+          <MapPin className="h-12 w-12 text-gray-400/20" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-4 h-full">

@@ -19,8 +19,12 @@ export default function EventCard({ event }: EventCardProps) {
 
   return (
     <div
-      className="group bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer"
+      className="group bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
       onClick={() => navigate(`/events/${event.id}`)}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/events/${event.id}`)}
+      role="button"
+      tabIndex={0}
+      aria-label={event.title}
     >
       <div className="overflow-hidden h-40">
         {event.image_url ? (

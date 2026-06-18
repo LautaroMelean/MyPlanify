@@ -38,8 +38,12 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
 
   return (
     <div
-      className="bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer"
+      className="bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
       onClick={() => navigate(`/activities/${activity.id}`)}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/activities/${activity.id}`)}
+      role="button"
+      tabIndex={0}
+      aria-label={activity.name}
     >
       <div className={`h-2 bg-gradient-to-r ${gradient}`} />
       <div className="p-4">
