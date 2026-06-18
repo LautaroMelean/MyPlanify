@@ -53,7 +53,7 @@ describe('WeatherForecastWidget', () => {
     const { container } = render(
       <WeatherForecastWidget forecast={forecast} isLoading={false} highlightDate="2026-06-17" />
     )
-    const highlighted = container.querySelector('.bg-indigo-50')
+    const highlighted = container.querySelector('.shadow-neon-sm')
     expect(highlighted).toBeInTheDocument()
   })
 })

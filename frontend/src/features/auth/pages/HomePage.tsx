@@ -16,10 +16,10 @@ const TODAY_LABEL = new Date().toLocaleDateString('es-AR', {
 })
 
 const QUICK_ACTIONS = [
-  { to: '/explorar',        icon: <Compass className="h-5 w-5 text-blue-600" />,       bg: 'bg-blue-50',   label: 'Explorar' },
-  { to: '/recomendaciones', icon: <Sparkles className="h-5 w-5 text-purple-600" />,    bg: 'bg-purple-50', label: 'Para vos' },
-  { to: '/mis-planes',      icon: <FolderOpen className="h-5 w-5 text-indigo-600" />,  bg: 'bg-indigo-50', label: 'Mis Planes' },
-  { to: '/favoritos',       icon: <Heart className="h-5 w-5 text-red-500" />,          bg: 'bg-red-50',    label: 'Favoritos' },
+  { to: '/explorar',        icon: <Compass className="h-5 w-5 text-electric-cyan" />,  bg: 'bg-cyan-500/10',   label: 'Explorar' },
+  { to: '/recomendaciones', icon: <Sparkles className="h-5 w-5 text-primary-600" />,   bg: 'bg-primary-500/10', label: 'Para vos' },
+  { to: '/mis-planes',      icon: <FolderOpen className="h-5 w-5 text-violet-400" />,  bg: 'bg-violet-500/10', label: 'Mis Planes' },
+  { to: '/favoritos',       icon: <Heart className="h-5 w-5 text-pink-400" />,         bg: 'bg-pink-500/10',   label: 'Favoritos' },
 ]
 
 const ACTIVITY_SHORTCUTS = [
@@ -74,7 +74,7 @@ export default function HomePage() {
       </div>
 
       {/* HERO — generar plan */}
-      <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-6 text-white shadow-lg">
+      <div className="bg-gradient-to-br from-violet-900 via-purple-900 to-indigo-900 rounded-2xl p-6 text-white shadow-neon ring-1 ring-violet-500/30">
         <div className="flex items-center gap-2 mb-1">
           <Sparkles className="h-5 w-5 text-yellow-300" />
           <span className="text-sm font-semibold text-indigo-200">Plan inteligente</span>
@@ -113,7 +113,7 @@ export default function HomePage() {
         <button
           onClick={handleGeneratePlan}
           disabled={planner.isPending}
-          className="w-full flex items-center justify-center gap-2 bg-white text-indigo-700 font-bold py-3 rounded-xl hover:bg-indigo-50 transition-colors disabled:opacity-60 shadow-sm"
+          className="w-full flex items-center justify-center gap-2 bg-primary-600 text-white font-bold py-3 rounded-xl hover:bg-primary-700 transition-all disabled:opacity-60 shadow-neon hover:shadow-neon"
         >
           {planner.isPending ? (
             <>
@@ -152,7 +152,7 @@ export default function HomePage() {
             <button
               key={s.type}
               onClick={() => navigate('/explorar', { state: { activityType: s.type } })}
-              className="flex flex-col items-center gap-1.5 p-3 bg-white border border-gray-200 rounded-xl hover:border-primary-200 hover:shadow-sm transition-all"
+              className="flex flex-col items-center gap-1.5 p-3 bg-white border border-gray-200 rounded-xl hover:border-primary-500/40 hover:shadow-neon-sm transition-all"
             >
               <span className="text-xl">{s.emoji}</span>
               <span className="text-xs font-medium text-gray-700">{s.label}</span>
@@ -180,7 +180,7 @@ export default function HomePage() {
             <button
               key={a.to}
               onClick={() => navigate(a.to)}
-              className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-3 hover:shadow-sm hover:border-primary-200 transition-all text-left"
+              className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-3 hover:shadow-neon-sm hover:border-primary-500/40 transition-all text-left"
             >
               <div className={`${a.bg} rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0`}>
                 {a.icon}

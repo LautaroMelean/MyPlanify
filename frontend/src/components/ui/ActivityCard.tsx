@@ -38,7 +38,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
 
   return (
     <div
-      className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-all cursor-pointer"
+      className="bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer"
       onClick={() => navigate(`/activities/${activity.id}`)}
     >
       <div className={`h-2 bg-gradient-to-r ${gradient}`} />

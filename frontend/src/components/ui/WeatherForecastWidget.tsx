@@ -47,9 +47,9 @@ export default function WeatherForecastWidget({
         return (
           <div
             key={day.date}
-            className={`flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 rounded-xl border transition-colors ${
+            className={`flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 rounded-xl border transition-all ${
               isHighlighted
-                ? 'bg-indigo-50 border-indigo-300 ring-1 ring-indigo-300'
+                ? 'bg-primary-500/10 border-primary-500/50 shadow-neon-sm'
                 : 'bg-white border-gray-200'
             }`}
           >
@@ -64,8 +64,8 @@ export default function WeatherForecastWidget({
             <span
               className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                 day.is_outdoor_friendly
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-100 text-gray-500'
+                  ? 'bg-green-500/15 text-green-400'
+                  : 'bg-gray-300/10 text-gray-500'
               }`}
             >
               {day.is_outdoor_friendly ? 'Ideal' : 'Adentro'}

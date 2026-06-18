@@ -19,7 +19,7 @@ export default function EventCard({ event }: EventCardProps) {
 
   return (
     <div
-      className="group bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-all cursor-pointer"
+      className="group bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer"
       onClick={() => navigate(`/events/${event.id}`)}
     >
       <div className="overflow-hidden h-40">

@@ -307,13 +307,13 @@ export default function ExplorePage() {
                   <button
                     key={p.id}
                     onClick={() => navigate(`/places/${p.id}`)}
-                    className="flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow text-left"
+                    className="flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left"
                   >
                     {p.image_url ? (
                       <img src={p.image_url} alt={p.name} className="w-full h-24 object-cover" />
                     ) : (
-                      <div className="w-full h-24 bg-primary-50 flex items-center justify-center">
-                        <MapPin className="h-8 w-8 text-primary-300" />
+                      <div className="w-full h-24 bg-primary-100/40 flex items-center justify-center">
+                        <MapPin className="h-8 w-8 text-primary-500" />
                       </div>
                     )}
                     <div className="p-2">
@@ -337,13 +337,13 @@ export default function ExplorePage() {
                   <button
                     key={e.id}
                     onClick={() => navigate(`/events/${e.id}`)}
-                    className="flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow text-left"
+                    className="flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left"
                   >
                     {e.image_url ? (
                       <img src={e.image_url} alt={e.title} className="w-full h-24 object-cover" />
                     ) : (
-                      <div className="w-full h-24 bg-indigo-50 flex items-center justify-center">
-                        <Calendar className="h-8 w-8 text-indigo-300" />
+                      <div className="w-full h-24 bg-primary-100/40 flex items-center justify-center">
+                        <Calendar className="h-8 w-8 text-primary-500" />
                       </div>
                     )}
                     <div className="p-2">
@@ -397,10 +397,10 @@ export default function ExplorePage() {
                   ...f,
                   type: f.type === chip.type ? undefined : chip.type,
                 }))}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap border transition-colors flex-shrink-0 ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap border transition-all flex-shrink-0 ${
                   activityFilters.type === chip.type
-                    ? 'bg-primary-600 text-white border-primary-600'
-                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary-300 hover:text-primary-700'
+                    ? 'bg-primary-600 text-white border-primary-500 shadow-neon-sm'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary-500/40 hover:text-primary-600'
                 }`}
               >
                 <span>{chip.emoji}</span>
@@ -504,7 +504,7 @@ function TabContent({
 
 function FilterPanel({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
   return (
-    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col gap-4">
+    <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <span className="text-sm font-semibold text-gray-700">Filtros avanzados</span>
         <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
@@ -518,7 +518,7 @@ function FilterPanel({ children, onClose }: { children: React.ReactNode; onClose
 
 function FilterRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-1 [&_input]:w-full [&_input]:border [&_input]:border-gray-200 [&_input]:rounded-lg [&_input]:px-2.5 [&_input]:py-1.5 [&_input]:text-sm [&_input]:bg-white [&_input]:outline-none [&_input:focus]:border-primary-400 [&_input:focus]:ring-2 [&_input:focus]:ring-primary-100">
+    <div className="flex flex-col gap-1 [&_input]:w-full [&_input]:border [&_input]:border-gray-200 [&_input]:rounded-lg [&_input]:px-2.5 [&_input]:py-1.5 [&_input]:text-sm [&_input]:bg-gray-100 [&_input]:text-gray-700 [&_input]:outline-none [&_input:focus]:border-primary-500/50 [&_input:focus]:ring-2 [&_input:focus]:ring-primary-500/20">
       <label className="text-xs font-medium text-gray-600">{label}</label>
       {children}
     </div>

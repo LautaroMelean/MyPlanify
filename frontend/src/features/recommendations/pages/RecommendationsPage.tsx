@@ -88,9 +88,9 @@ function getReasonLabels(breakdown: ScoreBreakdown): string[] {
 }
 
 function getScoreBadge(score: number) {
-  if (score >= 70) return { label: 'Alta coincidencia', className: 'bg-green-100 text-green-700' }
-  if (score >= 50) return { label: 'Buena opción', className: 'bg-primary-100 text-primary-700' }
-  return { label: 'Sugerido', className: 'bg-gray-100 text-gray-600' }
+  if (score >= 70) return { label: 'Alta coincidencia', className: 'bg-green-500/15 text-green-400' }
+  if (score >= 50) return { label: 'Buena opción', className: 'bg-primary-500/15 text-primary-600' }
+  return { label: 'Sugerido', className: 'bg-gray-300/10 text-gray-500' }
 }
 
 function buildLocation(rec: Recommendation): { street: string; city: string } {
@@ -146,7 +146,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
 
   return (
     <div
-      className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-white rounded-xl border border-gray-200 shadow-glass-sm p-4 flex flex-col gap-3 hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer"
       onClick={() => itemId && navigate(detailPath)}
       role="button"
       tabIndex={0}
@@ -180,7 +180,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
       </div>
 
       {/* Price / date meta */}
-      <div className="flex items-center gap-3 text-xs text-gray-500 border-t border-gray-50 pt-2">
+      <div className="flex items-center gap-3 text-xs text-gray-500 border-t border-gray-200/50 pt-2">
         {rec.item_type === 'activity' && rec.activity_detail && (
           <span className="flex items-center gap-1">
             <DollarSign className="h-3.5 w-3.5 flex-shrink-0" />
@@ -216,7 +216,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
           <p className="text-xs font-medium text-gray-500">Te lo recomendamos porque:</p>
           {reasonLabels.map((label) => (
             <div key={label} className="flex items-center gap-1.5 text-xs text-gray-600">
-              <CheckCircle className="h-3.5 w-3.5 text-green-500 flex-shrink-0" />
+              <CheckCircle className="h-3.5 w-3.5 text-green-400 flex-shrink-0" />
               {label}
             </div>
           ))}

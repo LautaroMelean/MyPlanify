@@ -15,7 +15,7 @@ export default function PlaceCard({ place }: PlaceCardProps) {
 
   return (
     <div
-      className="group bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-all cursor-pointer"
+      className="group bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer"
       onClick={() => navigate(`/places/${place.id}`)}
     >
       <div className="overflow-hidden h-40">
@@ -49,29 +49,29 @@ export default function PlaceCard({ place }: PlaceCardProps) {
         {(place.is_open_now !== null || place.outdoor_seating || place.fee === false || place.internet_access) && (
           <div className="flex flex-wrap gap-1 mt-2">
             {place.is_open_now === true && (
-              <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+              <span className="text-xs bg-green-500/15 text-green-400 px-2 py-0.5 rounded-full font-medium">
                 Abierto ahora
               </span>
             )}
             {place.is_open_now === false && (
-              <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium">
+              <span className="text-xs bg-red-500/15 text-red-400 px-2 py-0.5 rounded-full font-medium">
                 Cerrado
               </span>
             )}
             {place.outdoor_seating && (
-              <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+              <span className="text-xs bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full flex items-center gap-0.5">
                 <TreePine className="h-3 w-3" />
                 Con terraza
               </span>
             )}
             {place.fee === false && (
-              <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+              <span className="text-xs bg-blue-500/15 text-blue-400 px-2 py-0.5 rounded-full flex items-center gap-0.5">
                 <Ticket className="h-3 w-3" />
                 Entrada libre
               </span>
             )}
             {place.internet_access && (
-              <span className="text-xs bg-violet-50 text-violet-700 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+              <span className="text-xs bg-violet-500/15 text-violet-400 px-2 py-0.5 rounded-full flex items-center gap-0.5">
                 <Wifi className="h-3 w-3" />
                 Wifi
               </span>

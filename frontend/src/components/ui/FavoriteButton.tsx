@@ -40,10 +40,10 @@ export default function FavoriteButton({ itemId, itemType, className = '' }: Fav
       onClick={toggle}
       disabled={isLoading}
       aria-label={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-      className={`p-1.5 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50 flex-shrink-0 ${className}`}
+      className={`p-1.5 rounded-full hover:bg-pink-500/10 transition-colors disabled:opacity-50 flex-shrink-0 ${className}`}
     >
       <Heart
-        className={`h-5 w-5 transition-colors ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'}`}
+        className={`h-5 w-5 transition-colors ${isFavorite ? 'fill-pink-500 text-pink-500' : 'text-gray-400 hover:text-pink-400'}`}
       />
     </button>
   )

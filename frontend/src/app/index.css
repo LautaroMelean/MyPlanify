@@ -8,7 +8,15 @@
   }
 
   body {
-    @apply font-sans text-gray-900 bg-gray-50 antialiased;
+    @apply font-sans antialiased;
+    background-color: #07060f;
+    color: #c6c3de;
+    /* Ambient neon glows floating in the background */
+    background-image:
+      radial-gradient(ellipse 70% 55% at 12% 38%, rgba(139, 92, 246, 0.1) 0%, transparent 100%),
+      radial-gradient(ellipse 50% 45% at 82% 18%, rgba(0, 212, 245, 0.06) 0%, transparent 100%),
+      radial-gradient(ellipse 55% 50% at 58% 88%, rgba(168, 85, 247, 0.07) 0%, transparent 100%);
+    background-attachment: fixed;
   }
 
   * {
@@ -16,7 +24,32 @@
   }
 
   ::selection {
-    @apply bg-primary-100 text-primary-900;
+    background-color: rgba(139, 92, 246, 0.35);
+    color: #f0eeff;
+  }
+
+  /* Dark neon scrollbar */
+  ::-webkit-scrollbar        { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track  { background: #07060f; }
+  ::-webkit-scrollbar-thumb  { background: #2e2b4a; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #504c72; }
+}
+
+@layer components {
+  /* Glass navbar — stronger blur, neon underline */
+  .glass-nav {
+    background: rgba(7, 6, 15, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.12);
+  }
+
+  /* Neon gradient logo/heading text */
+  .neon-text {
+    background: linear-gradient(135deg, #a78bfa 0%, #00d4f5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
 
@@ -31,12 +64,19 @@
 }
 
 @keyframes pageEnter {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes neonPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(139, 92, 246, 0.3); }
+  50%       { box-shadow: 0 0 24px rgba(139, 92, 246, 0.65), 0 0 48px rgba(139, 92, 246, 0.2); }
+}
+
+/* ── Glowmorph: every bg-white panel becomes a dark glass surface ── */
+/* Outside @layer so this cascades after all Tailwind utilities       */
+.bg-white {
+  background-color: rgba(14, 12, 30, 0.82) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }

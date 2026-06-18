@@ -48,13 +48,13 @@ export default function Navbar() {
   const isActive = (to: string) => location.pathname === to || (to !== '/' && location.pathname.startsWith(to))
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm">
+    <header className="sticky top-0 z-30 glass-nav">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
 
         {/* Logo + desktop nav */}
         <div className="flex items-center gap-6">
-          <Link to="/" className="flex items-center gap-2 font-bold text-primary-600 text-xl flex-shrink-0">
-            <MapPin className="h-6 w-6" />
+          <Link to="/" className="flex items-center gap-2 font-bold text-xl flex-shrink-0 neon-text">
+            <MapPin className="h-6 w-6 text-primary-600" />
             Planify
           </Link>
 
@@ -64,10 +64,10 @@ export default function Navbar() {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                     isActive(link.to)
-                      ? 'bg-primary-50 text-primary-600'
-                      : 'text-gray-600 hover:bg-gray-100'
+                      ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm'
+                      : 'text-gray-600 hover:text-gray-800 hover:bg-white/5'
                   }`}
                 >
                   {link.icon}
@@ -77,10 +77,10 @@ export default function Navbar() {
               {dashboardLink && (
                 <Link
                   to={dashboardLink.to}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                     isActive(dashboardLink.to)
-                      ? 'bg-primary-50 text-primary-600'
-                      : 'text-gray-600 hover:bg-gray-100'
+                      ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm'
+                      : 'text-gray-600 hover:text-gray-800 hover:bg-white/5'
                   }`}
                 >
                   {dashboardLink.icon}
@@ -94,13 +94,13 @@ export default function Navbar() {
         {/* Search bar */}
         <form onSubmit={handleSearch} className="hidden md:flex items-center">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar lugares, eventos..."
-              className="pl-9 pr-4 py-1.5 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:bg-white w-56 transition-all"
+              className="pl-9 pr-4 py-1.5 text-sm border border-white/10 rounded-lg bg-white/5 text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary-500/50 focus:border-primary-500/30 focus:bg-white/8 w-56 transition-all"
             />
           </div>
         </form>
@@ -111,19 +111,19 @@ export default function Navbar() {
             <>
               <Link
                 to="/notificaciones"
-                className={`hidden sm:flex relative p-1.5 rounded-lg transition-colors ${isActive('/notificaciones') ? 'text-primary-600 bg-primary-50' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`}
+                className={`hidden sm:flex relative p-1.5 rounded-lg transition-all ${isActive('/notificaciones') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-500 hover:text-gray-700 hover:bg-white/5'}`}
                 aria-label="Notificaciones"
               >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-0.5">
+                  <span className="absolute -top-0.5 -right-0.5 bg-primary-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-0.5">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
               </Link>
               <Link
                 to="/configuracion"
-                className={`hidden sm:flex p-1.5 rounded-lg transition-colors ${isActive('/configuracion') ? 'text-primary-600 bg-primary-50' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`}
+                className={`hidden sm:flex p-1.5 rounded-lg transition-all ${isActive('/configuracion') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-500 hover:text-gray-700 hover:bg-white/5'}`}
                 aria-label="Configuración"
               >
                 <Settings className="h-5 w-5" />
@@ -147,7 +147,7 @@ export default function Navbar() {
               </Button>
               {/* Mobile hamburger */}
               <button
-                className="md:hidden p-1.5 rounded-lg text-gray-500 hover:bg-gray-100"
+                className="md:hidden p-1.5 rounded-lg text-gray-500 hover:bg-white/5 transition-colors"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label="Menú"
               >
@@ -156,7 +156,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link to="/login" className="text-sm text-gray-600 hover:text-primary-600 font-medium">
+              <Link to="/login" className="text-sm text-gray-600 hover:text-primary-600 font-medium transition-colors">
                 Ingresar
               </Link>
               <Button size="sm" onClick={() => navigate('/register')}>
@@ -169,14 +169,14 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {isAuthenticated && mobileOpen && (
-        <div className="md:hidden border-t border-gray-200 bg-white px-4 py-3 flex flex-col gap-1">
+        <div className="md:hidden border-t border-white/5 px-4 py-3 flex flex-col gap-1" style={{ background: 'rgba(7,6,15,0.95)', backdropFilter: 'blur(20px)' }}>
           {NAV_LINKS.map((link) => (
             <Link
               key={link.to}
               to={link.to}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                isActive(link.to) ? 'bg-primary-50 text-primary-600' : 'text-gray-700 hover:bg-gray-50'
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                isActive(link.to) ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-700 hover:bg-white/5'
               }`}
             >
               {link.icon}
@@ -187,8 +187,8 @@ export default function Navbar() {
             <Link
               to={dashboardLink.to}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                isActive(dashboardLink.to) ? 'bg-primary-50 text-primary-600' : 'text-gray-700 hover:bg-gray-50'
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                isActive(dashboardLink.to) ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-700 hover:bg-white/5'
               }`}
             >
               {dashboardLink.icon}
@@ -198,14 +198,14 @@ export default function Navbar() {
           <Link
             to="/notificaciones"
             onClick={() => setMobileOpen(false)}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-              isActive('/notificaciones') ? 'bg-primary-50 text-primary-600' : 'text-gray-700 hover:bg-gray-50'
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              isActive('/notificaciones') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-700 hover:bg-white/5'
             }`}
           >
             <Bell className="h-4 w-4" />
             Notificaciones
             {unreadCount > 0 && (
-              <span className="ml-auto bg-red-100 text-red-600 text-xs font-bold px-1.5 py-0.5 rounded-full">
+              <span className="ml-auto bg-primary-500/20 text-primary-600 text-xs font-bold px-1.5 py-0.5 rounded-full">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
@@ -213,8 +213,8 @@ export default function Navbar() {
           <Link
             to="/mis-planes"
             onClick={() => setMobileOpen(false)}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-              isActive('/mis-planes') ? 'bg-primary-50 text-primary-600' : 'text-gray-700 hover:bg-gray-50'
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              isActive('/mis-planes') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-700 hover:bg-white/5'
             }`}
           >
             <FolderOpen className="h-4 w-4" />
@@ -223,8 +223,8 @@ export default function Navbar() {
           <Link
             to="/recordatorios"
             onClick={() => setMobileOpen(false)}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-              isActive('/recordatorios') ? 'bg-primary-50 text-primary-600' : 'text-gray-700 hover:bg-gray-50'
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              isActive('/recordatorios') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-700 hover:bg-white/5'
             }`}
           >
             <Clock className="h-4 w-4" />
@@ -233,8 +233,8 @@ export default function Navbar() {
           <Link
             to="/configuracion"
             onClick={() => setMobileOpen(false)}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-              isActive('/configuracion') ? 'bg-primary-50 text-primary-600' : 'text-gray-700 hover:bg-gray-50'
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              isActive('/configuracion') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-700 hover:bg-white/5'
             }`}
           >
             <Settings className="h-4 w-4" />
@@ -242,7 +242,7 @@ export default function Navbar() {
           </Link>
           <button
             onClick={() => { logout.mutate(); setMobileOpen(false) }}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors"
           >
             <LogOut className="h-4 w-4" />
             Cerrar sesión
