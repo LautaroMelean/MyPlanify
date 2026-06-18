@@ -20,7 +20,7 @@ export default function PlaceCard({ place }: PlaceCardProps) {
     >
       <div className="overflow-hidden h-40">
         {place.image_url ? (
-          <img src={place.image_url} alt={place.name} className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
+          <img src={place.image_url} alt={place.name} className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
         ) : (
           <div className="w-full h-40 bg-primary-500/10 flex items-center justify-center">
             <MapPin className="h-10 w-10 text-primary-300" />

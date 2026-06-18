@@ -52,7 +52,7 @@ export default function FavoritesPage() {
             return (
               <div
                 key={fav.id}
-                className={`bg-white rounded-xl border border-gray-200 border-l-4 ${config?.border ?? 'border-l-gray-300'} shadow-glass-sm p-4 flex items-center gap-3 hover:shadow-neon-sm hover:border-r-primary-500/20 transition-all ${url ? 'cursor-pointer' : ''}`}
+                className={`bg-white rounded-xl border border-gray-200 border-l-4 ${config?.border ?? 'border-l-gray-300'} shadow-glass-sm p-4 flex items-center gap-3 hover:shadow-neon-sm transition-all ${url ? 'cursor-pointer' : ''}`}
                 onClick={() => url && navigate(url)}
               >
                 {Icon && (

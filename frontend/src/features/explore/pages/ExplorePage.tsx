@@ -313,7 +313,7 @@ export default function ExplorePage() {
                     className="group flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left"
                   >
                     {p.image_url ? (
-                      <img src={p.image_url} alt={p.name} className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" />
+                      <img src={p.image_url} alt={p.name} className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                     ) : (
                       <div className="w-full h-24 bg-primary-100/40 flex items-center justify-center">
                         <MapPin className="h-8 w-8 text-primary-500" />
@@ -343,7 +343,7 @@ export default function ExplorePage() {
                     className="group flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left"
                   >
                     {e.image_url ? (
-                      <img src={e.image_url} alt={e.title} className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" />
+                      <img src={e.image_url} alt={e.title} className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                     ) : (
                       <div className="w-full h-24 bg-primary-100/40 flex items-center justify-center">
                         <Calendar className="h-8 w-8 text-primary-500" />

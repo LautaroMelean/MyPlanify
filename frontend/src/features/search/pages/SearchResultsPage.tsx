@@ -83,7 +83,7 @@ export default function SearchResultsPage() {
                     className="flex items-center gap-4 p-3 bg-white rounded-xl border border-gray-200 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left w-full"
                   >
                     {place.image_url ? (
-                      <img src={place.image_url} alt={place.name} className="h-14 w-14 rounded-lg object-cover flex-shrink-0" />
+                      <img src={place.image_url} alt={place.name} className="h-14 w-14 rounded-lg object-cover flex-shrink-0" loading="lazy" />
                     ) : (
                       <div className="h-14 w-14 rounded-lg bg-primary-500/10 flex items-center justify-center flex-shrink-0">
                         <MapPin className="h-6 w-6 text-primary-300" />
@@ -163,7 +163,7 @@ export default function SearchResultsPage() {
                     className="flex items-center gap-4 p-3 bg-white rounded-xl border border-gray-200 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left w-full"
                   >
                     {event.image_url ? (
-                      <img src={event.image_url} alt={event.title} className="h-14 w-14 rounded-lg object-cover flex-shrink-0" />
+                      <img src={event.image_url} alt={event.title} className="h-14 w-14 rounded-lg object-cover flex-shrink-0" loading="lazy" />
                     ) : (
                       <div className="h-14 w-14 rounded-lg bg-primary-500/10 flex items-center justify-center flex-shrink-0">
                         <Calendar className="h-6 w-6 text-primary-300" />
