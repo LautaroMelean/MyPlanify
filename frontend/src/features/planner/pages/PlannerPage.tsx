@@ -86,7 +86,7 @@ export default function PlannerPage() {
                 <h2 className="text-base font-semibold text-gray-800">{currentPlan.title}</h2>
                 <button
                   onClick={() => navigate(`/planes/${currentPlan.id}`)}
-                  className="text-xs text-primary-600 hover:underline"
+                  className="text-xs text-primary-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded"
                 >
                   Ver detalle →
                 </button>
@@ -117,7 +117,7 @@ export default function PlannerPage() {
         <button
           onClick={handleSurprise}
           disabled={surprise.isPending}
-          className="flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-neon transition-all disabled:opacity-60"
+          className="flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-neon transition-all disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
         >
           <Sparkles className="h-5 w-5" />
           {surprise.isPending ? 'Armando algo especial...' : '¡Sorprendeme!'}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Star, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { useReviews, useCreateReview, useDeleteReview } from '@/hooks/useReviews'
 import { useAuthStore } from '@/store/authStore'
 import Button from '@/components/ui/Button'
@@ -39,10 +40,11 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
 function StarDisplay({ value, size = 'sm' }: { value: number; size?: 'sm' | 'md' }) {
   const cls = size === 'md' ? 'h-5 w-5' : 'h-4 w-4'
   return (
-    <div className="flex gap-0.5">
+    <div className="flex gap-0.5" role="img" aria-label={`${value} de 5 estrellas`}>
       {[1, 2, 3, 4, 5].map((n) => (
         <Star
           key={n}
+          aria-hidden="true"
           className={`${cls} ${n <= value ? 'fill-amber-400 text-amber-400' : 'text-gray-400/30'}`}
         />
       ))}
@@ -53,10 +55,13 @@ function StarDisplay({ value, size = 'sm' }: { value: number; size?: 'sm' | 'md'
 export function RatingBadge({ average, count }: { average: number; count: number }) {
   if (count === 0) return null
   return (
-    <div className="flex items-center gap-1.5">
-      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-      <span className="text-sm font-semibold text-gray-900">{average.toFixed(1)}</span>
-      <span className="text-xs text-gray-500">({count})</span>
+    <div
+      className="flex items-center gap-1.5"
+      aria-label={`${average.toFixed(1)} de 5 (${count} ${count === 1 ? 'reseña' : 'reseñas'})`}
+    >
+      <Star className="h-4 w-4 fill-amber-400 text-amber-400" aria-hidden="true" />
+      <span className="text-sm font-semibold text-gray-900" aria-hidden="true">{average.toFixed(1)}</span>
+      <span className="text-xs text-gray-500" aria-hidden="true">({count})</span>
     </div>
   )
 }
@@ -74,14 +79,24 @@ export default function ReviewSection({ entityType, entityId }: Props) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (stars === 0) return
-    await createMutation.mutateAsync({ stars, text })
-    setStars(0)
-    setText('')
-    setShowForm(false)
+    try {
+      await createMutation.mutateAsync({ stars, text })
+      setStars(0)
+      setText('')
+      setShowForm(false)
+      toast.success('Reseña publicada')
+    } catch {
+      toast.error('No se pudo publicar la reseña')
+    }
   }
 
   const handleDelete = async () => {
-    await deleteMutation.mutateAsync()
+    try {
+      await deleteMutation.mutateAsync()
+      toast.success('Reseña eliminada')
+    } catch {
+      toast.error('No se pudo eliminar la reseña')
+    }
   }
 
   if (isLoading) {
@@ -133,6 +148,7 @@ export default function ReviewSection({ entityType, entityId }: Props) {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Contá tu experiencia (opcional)..."
+            aria-label="Contá tu experiencia (opcional)"
             rows={3}
             maxLength={1000}
             className="w-full rounded-lg border border-gray-200 bg-gray-100 px-3 py-2 text-sm text-gray-800 placeholder-gray-500 focus:border-primary-500/50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 resize-none transition-all"
@@ -161,7 +177,7 @@ export default function ReviewSection({ entityType, entityId }: Props) {
             <button
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
-              className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0"
+              className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40 rounded disabled:opacity-50"
               aria-label="Eliminar reseña"
             >
               <Trash2 className="h-4 w-4" />

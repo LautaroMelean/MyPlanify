@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Globe, Lock, Copy, CalendarDays } from 'lucide-react'
+import { toast } from 'sonner'
 import { usePlan } from '@/hooks/usePlan'
 import { useRemovePlanItem, useUpdatePlan, useUpdatePlanItem, useClonePlan } from '@/hooks/usePlanItem'
 import { useForecast } from '@/hooks/useForecast'
@@ -180,7 +181,10 @@ export default function PlanDetailPage() {
       ) : (
         <ItineraryView
           plan={plan}
-          onRemoveItem={(itemId) => removeItem.mutate(itemId)}
+          onRemoveItem={(itemId) => removeItem.mutate(itemId, {
+            onSuccess: () => toast.success('Ítem eliminado del plan'),
+            onError: () => toast.error('No se pudo eliminar el ítem'),
+          })}
           onFeedbackItem={setFeedbackItem}
           onSaveNote={handleSaveNote}
           onReorderItem={handleReorder}

@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Settings, Lock, AlertTriangle, CheckCircle } from 'lucide-react'
+import { Settings, Lock, AlertTriangle } from 'lucide-react'
+import { toast } from 'sonner'
 import apiClient from '@/lib/axios'
 import Card from '@/components/ui/Card'
 import Input from '@/components/ui/Input'
@@ -22,7 +23,6 @@ const passwordSchema = z
 type PasswordForm = z.infer<typeof passwordSchema>
 
 export default function ConfiguracionPage() {
-  const [success, setSuccess] = useState(false)
   const [apiError, setApiError] = useState('')
 
   const {
@@ -34,11 +34,10 @@ export default function ConfiguracionPage() {
 
   const onSubmit = async (data: PasswordForm) => {
     setApiError('')
-    setSuccess(false)
     try {
       await apiClient.post('/users/me/change-password/', data)
-      setSuccess(true)
       reset()
+      toast.success('Contraseña cambiada correctamente')
     } catch (err: any) {
       setApiError(
         err?.response?.data?.error?.message ?? 'Error al cambiar la contraseña. Verificá tu contraseña actual.',
@@ -93,16 +92,9 @@ export default function ConfiguracionPage() {
           />
 
           {apiError && (
-            <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 rounded-xl p-3">
-              <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+            <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 rounded-xl p-3" role="alert">
+              <AlertTriangle className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
               {apiError}
-            </div>
-          )}
-
-          {success && (
-            <div className="flex items-center gap-2 text-green-400 text-sm bg-green-500/10 rounded-xl p-3">
-              <CheckCircle className="h-4 w-4 flex-shrink-0" />
-              Contraseña cambiada correctamente.
             </div>
           )}
 

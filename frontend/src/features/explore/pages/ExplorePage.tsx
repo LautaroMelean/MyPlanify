@@ -166,13 +166,15 @@ export default function ExplorePage() {
           />
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
+            aria-expanded={showFilters}
+            aria-label={`Filtros${activeFilterCount > 0 ? ` (${activeFilterCount} activos)` : ''}`}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 ${
               showFilters || activeFilterCount > 0
                 ? 'border-primary-400/50 bg-primary-500/10 text-primary-600'
                 : 'border-gray-200 text-gray-600 hover:bg-white/5'
             }`}
           >
-            <Filter className="h-4 w-4" />
+            <Filter className="h-4 w-4" aria-hidden="true" />
             Filtros
             {activeFilterCount > 0 && (
               <span className="bg-primary-600 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
@@ -221,7 +223,7 @@ export default function ExplorePage() {
           </div>
           <button
             onClick={() => setPlaceFilters({})}
-            className="text-xs text-red-500 hover:underline self-start"
+            className="text-xs text-red-500 hover:underline self-start focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-500/40 rounded"
           >
             Limpiar filtros
           </button>
@@ -257,7 +259,7 @@ export default function ExplorePage() {
           </div>
           <button
             onClick={() => setActivityFilters({})}
-            className="text-xs text-red-500 hover:underline self-start"
+            className="text-xs text-red-500 hover:underline self-start focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-500/40 rounded"
           >
             Limpiar filtros
           </button>
@@ -295,7 +297,7 @@ export default function ExplorePage() {
           />
           <button
             onClick={() => setEventFilters({})}
-            className="text-xs text-red-500 hover:underline self-start"
+            className="text-xs text-red-500 hover:underline self-start focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-500/40 rounded"
           >
             Limpiar filtros
           </button>
@@ -415,7 +417,7 @@ export default function ExplorePage() {
                     : 'bg-white text-gray-600 border-gray-200 hover:border-primary-500/40 hover:text-primary-600'
                 }`}
               >
-                <span>{chip.emoji}</span>
+                <span aria-hidden="true">{chip.emoji}</span>
                 {chip.label}
               </button>
             ))}
@@ -452,7 +454,7 @@ export default function ExplorePage() {
               )}
               <button
                 onClick={requestGeolocation}
-                className="px-5 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 shadow-neon-sm transition-all"
+                className="px-5 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 shadow-neon-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
               >
                 Usar mi ubicación
               </button>
@@ -487,9 +489,9 @@ export default function ExplorePage() {
                 </div>
                 <button
                   onClick={() => setNearbyCoords(null)}
-                  className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1"
+                  className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded"
                 >
-                  <X className="h-3 w-3" /> Cambiar ubicación
+                  <X className="h-3 w-3" aria-hidden="true" /> Cambiar ubicación
                 </button>
               </div>
               <TabContent isLoading={nearbyPlaces.isLoading && externalNearby.isLoading} isEmpty={nearbyAll.length === 0}>
