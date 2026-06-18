@@ -64,7 +64,7 @@ describe('FavoritesPage', () => {
       isLoading: false,
     } as any)
     renderWithProviders(<FavoritesPage />)
-    expect(screen.getAllByRole('button', { name: /eliminar favorito/i })).toHaveLength(2)
+    expect(screen.getAllByRole('button', { name: /^Eliminar/i })).toHaveLength(2)
   })
 
   it('calls removeFavorite with correct id on delete click', () => {
@@ -75,8 +75,11 @@ describe('FavoritesPage', () => {
       isLoading: false,
     } as any)
     renderWithProviders(<FavoritesPage />)
-    fireEvent.click(screen.getByRole('button', { name: /eliminar favorito/i }))
-    expect(mockMutate).toHaveBeenCalledWith('fav-42')
+    fireEvent.click(screen.getByRole('button', { name: /^Eliminar/i }))
+    expect(mockMutate).toHaveBeenCalledWith('fav-42', expect.objectContaining({
+      onSuccess: expect.any(Function),
+      onError: expect.any(Function),
+    }))
   })
 
   it('shows page heading', () => {

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Bell, Trash2, Calendar } from 'lucide-react'
+import { toast } from 'sonner'
 import { useReminders, useRemoveReminder } from '@/hooks/useReminders'
 import EmptyState from '@/components/common/EmptyState'
 import Button from '@/components/ui/Button'
@@ -21,7 +22,10 @@ function ReminderItem({ reminder }: { reminder: Reminder }) {
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation()
     if (confirming) {
-      remove.mutate(reminder.id)
+      remove.mutate(reminder.id, {
+        onSuccess: () => toast.success('Recordatorio eliminado'),
+        onError: () => toast.error('No se pudo eliminar el recordatorio'),
+      })
     } else {
       setConfirming(true)
     }

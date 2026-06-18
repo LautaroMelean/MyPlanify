@@ -1,5 +1,6 @@
 import { Heart, Trash2, MapPin, Calendar, Zap, ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { useFavorites, useRemoveFavorite } from '@/hooks/useFavorites'
 import EmptyState from '@/components/common/EmptyState'
 import type { Favorite } from '@/types'
@@ -89,10 +90,16 @@ export default function FavoritesPage() {
                 </div>
                 {url && <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />}
                 <button
-                  onClick={(e) => { e.stopPropagation(); remove.mutate(fav.id) }}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    remove.mutate(fav.id, {
+                      onSuccess: () => toast.success(`${fav.item_name ?? 'Favorito'} eliminado`),
+                      onError: () => toast.error('No se pudo eliminar el favorito'),
+                    })
+                  }}
                   disabled={remove.isPending}
-                  className="text-gray-300 hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-red-500/10 flex-shrink-0"
-                  aria-label="Eliminar favorito"
+                  className="text-gray-300 hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-red-500/10 flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40"
+                  aria-label={`Eliminar ${fav.item_name ?? 'favorito'}`}
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>

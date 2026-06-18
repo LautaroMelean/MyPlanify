@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { Calendar, DollarSign, MapPin, Users, ArrowLeft, Clock } from 'lucide-react'
+import { toast } from 'sonner'
 import { useEvent } from '@/hooks/useEvents'
 import { usePromotions } from '@/hooks/usePromotions'
 import { useCreateReminder } from '@/hooks/useReminders'
@@ -72,8 +73,13 @@ export default function EventDetail() {
 
   const handleReminder = async () => {
     if (!reminderDate) return
-    await createReminder.mutateAsync({ eventId: event.id, reminderDate })
-    setReminderDate('')
+    try {
+      await createReminder.mutateAsync({ eventId: event.id, reminderDate })
+      setReminderDate('')
+      toast.success('Recordatorio creado')
+    } catch {
+      toast.error('No se pudo crear el recordatorio')
+    }
   }
 
   return (

@@ -91,7 +91,10 @@ describe('RemindersPage', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /eliminar/i }))
     fireEvent.click(screen.getByRole('button', { name: /confirmar/i }))
-    expect(mockMutate).toHaveBeenCalledWith('rem-1')
+    expect(mockMutate).toHaveBeenCalledWith('rem-1', expect.objectContaining({
+      onSuccess: expect.any(Function),
+      onError: expect.any(Function),
+    }))
   })
 
   it('shows page heading', () => {
