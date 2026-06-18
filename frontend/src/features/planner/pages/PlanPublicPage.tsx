@@ -41,7 +41,7 @@ export default function PlanPublicPage() {
         <p className="text-sm text-gray-500 max-w-xs">Este plan no existe o no está disponible de forma pública.</p>
         <button
           onClick={() => navigate('/register')}
-          className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 shadow-neon-sm transition-all"
+          className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 shadow-neon-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
         >
           <Sparkles className="h-4 w-4" />
           Crear mi propio plan
@@ -82,7 +82,7 @@ export default function PlanPublicPage() {
           <p className="text-xs text-gray-500 mb-3">Creá el tuyo gratis en Planify — planes personalizados en segundos.</p>
           <button
             onClick={() => navigate('/register')}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 shadow-neon-sm transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 shadow-neon-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
           >
             <Sparkles className="h-4 w-4" />
             Crear mi plan gratis

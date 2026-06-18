@@ -49,7 +49,8 @@ export function TrendingPlanCard({ plan, onUseAsBase }: Props) {
 
       <button
         onClick={() => onUseAsBase(plan)}
-        className="mt-3 w-full text-xs font-medium text-primary-600 hover:text-primary-700 border border-primary-400/30 hover:bg-primary-500/10 rounded-xl py-1.5 transition-colors"
+        aria-label={`Usar como base: ${plan.title}`}
+        className="mt-3 w-full text-xs font-medium text-primary-600 hover:text-primary-700 border border-primary-400/30 hover:bg-primary-500/10 rounded-xl py-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
       >
         Usar como base
       </button>
