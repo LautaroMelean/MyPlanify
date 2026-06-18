@@ -85,7 +85,7 @@ export default function HomePage() {
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="flex flex-col gap-1">
             <label htmlFor="home-budget" className="text-xs text-indigo-200 flex items-center gap-1">
-              <DollarSign className="h-3 w-3" /> Presupuesto (ARS)
+              <DollarSign className="h-3 w-3" aria-hidden="true" /> Presupuesto (ARS)
             </label>
             <input
               id="home-budget"
@@ -99,7 +99,7 @@ export default function HomePage() {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="home-people" className="text-xs text-indigo-200 flex items-center gap-1">
-              <Users className="h-3 w-3" /> Personas
+              <Users className="h-3 w-3" aria-hidden="true" /> Personas
             </label>
             <input
               id="home-people"
@@ -116,18 +116,18 @@ export default function HomePage() {
         <button
           onClick={handleGeneratePlan}
           disabled={planner.isPending}
-          className="w-full flex items-center justify-center gap-2 bg-primary-600 text-white font-bold py-3 rounded-xl hover:bg-primary-700 transition-all disabled:opacity-60 shadow-neon hover:shadow-neon"
+          className="w-full flex items-center justify-center gap-2 bg-primary-600 text-white font-bold py-3 rounded-xl hover:bg-primary-700 transition-all disabled:opacity-60 shadow-neon hover:shadow-neon focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
         >
           {planner.isPending ? (
             <>
-              <span className="animate-spin h-4 w-4 border-2 border-indigo-400 border-t-transparent rounded-full" />
+              <span className="animate-spin h-4 w-4 border-2 border-indigo-400 border-t-transparent rounded-full" aria-hidden="true" />
               Armando tu plan...
             </>
           ) : (
             <>
-              <Sparkles className="h-4 w-4" />
+              <Sparkles className="h-4 w-4" aria-hidden="true" />
               Generame un plan para hoy
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </>
           )}
         </button>
@@ -140,7 +140,7 @@ export default function HomePage() {
 
         <p className="text-xs text-indigo-300 text-center mt-2">
           También podés ir al{' '}
-          <button onClick={() => navigate('/planner')} className="underline hover:text-white">
+          <button onClick={() => navigate('/planner')} className="underline hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/50 rounded">
             planner completo
           </button>{' '}
           para elegir la fecha
@@ -175,7 +175,7 @@ export default function HomePage() {
       {/* Acciones rápidas */}
       <div>
         <h2 className="text-sm font-semibold text-gray-600 mb-3">
-          <CalendarDays className="inline h-4 w-4 mr-1 text-gray-400" />
+          <CalendarDays className="inline h-4 w-4 mr-1 text-gray-400" aria-hidden="true" />
           Más opciones
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -185,7 +185,7 @@ export default function HomePage() {
               onClick={() => navigate(a.to)}
               className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-3 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/40 transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
             >
-              <div className={`${a.bg} rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0`}>
+              <div className={`${a.bg} rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0`} aria-hidden="true">
                 {a.icon}
               </div>
               <span className="text-sm font-medium text-gray-600">{a.label}</span>

@@ -67,14 +67,14 @@ export default function RecommendationsPage() {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary-600" />
+            <Sparkles className="h-6 w-6 text-primary-600" aria-hidden="true" />
             Para vos
           </h1>
           <p className="text-gray-500 text-sm">
             Recomendaciones personalizadas basadas en tus preferencias.
           </p>
           <div className="flex items-center gap-1.5 mt-1">
-            <Navigation className="h-3.5 w-3.5 text-primary-500" />
+            <Navigation className="h-3.5 w-3.5 text-primary-500" aria-hidden="true" />
             <span className="text-xs text-primary-600 font-medium">
               {usingGeo ? 'Usando tu ubicación actual' : 'Usando Buenos Aires como referencia'}
             </span>
@@ -154,9 +154,9 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
   const itemId = rec.activity ?? rec.event ?? rec.place ?? ''
 
   const icon =
-    rec.item_type === 'activity' ? <Activity className="h-4 w-4" /> :
-    rec.item_type === 'event' ? <Calendar className="h-4 w-4" /> :
-    <MapPin className="h-4 w-4" />
+    rec.item_type === 'activity' ? <Activity className="h-4 w-4" aria-hidden="true" /> :
+    rec.item_type === 'event' ? <Calendar className="h-4 w-4" aria-hidden="true" /> :
+    <MapPin className="h-4 w-4" aria-hidden="true" />
 
   const typeLabel =
     rec.item_type === 'activity' ? 'Actividad' :
@@ -192,7 +192,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
           )}
           {(street || city) && (
             <div className="flex items-start gap-1 mt-1.5">
-              <MapPin className="h-3.5 w-3.5 text-gray-400 flex-shrink-0 mt-0.5" />
+              <MapPin className="h-3.5 w-3.5 text-gray-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
               <span className="text-xs text-gray-500 leading-snug">
                 {street && <span className="block">{street}</span>}
                 {city && <span className="block text-gray-400">{city}</span>}
@@ -209,7 +209,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
       <div className="flex items-center gap-3 text-xs text-gray-500 border-t border-gray-200/50 pt-2">
         {rec.item_type === 'activity' && rec.activity_detail && (
           <span className="flex items-center gap-1">
-            <DollarSign className="h-3.5 w-3.5 flex-shrink-0" />
+            <DollarSign className="h-3.5 w-3.5 flex-shrink-0" aria-hidden="true" />
             {(rec.activity_detail.is_free || parseFloat(rec.activity_detail.min_budget) === 0)
               ? 'Gratis'
               : `Desde $${Math.round(parseFloat(rec.activity_detail.min_budget)).toLocaleString('es-AR')}`}
@@ -218,7 +218,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
         {rec.item_type === 'event' && rec.event_detail && (
           <>
             <span className="flex items-center gap-1">
-              <Calendar className="h-3.5 w-3.5 flex-shrink-0" />
+              <Calendar className="h-3.5 w-3.5 flex-shrink-0" aria-hidden="true" />
               {new Date(rec.event_detail.start_date).toLocaleDateString('es-AR', {
                 weekday: 'short', day: 'numeric', month: 'short',
               })}
@@ -242,7 +242,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
           <p className="text-xs font-medium text-gray-500">Te lo recomendamos porque:</p>
           {reasonLabels.map((label) => (
             <div key={label} className="flex items-center gap-1.5 text-xs text-gray-600">
-              <CheckCircle className="h-3.5 w-3.5 text-green-400 flex-shrink-0" />
+              <CheckCircle className="h-3.5 w-3.5 text-green-400 flex-shrink-0" aria-hidden="true" />
               {label}
             </div>
           ))}

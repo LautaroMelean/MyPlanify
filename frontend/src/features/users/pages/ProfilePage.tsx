@@ -141,10 +141,10 @@ export default function ProfilePage() {
                 <button
                   onClick={() => handleRemove(pref.id)}
                   disabled={removePref.isPending}
-                  className="hover:text-red-500 transition-colors"
+                  className="hover:text-red-500 transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-500/40 rounded"
                   aria-label={`Quitar ${pref.value}`}
                 >
-                  <X className="h-3.5 w-3.5" />
+                  <X className="h-3.5 w-3.5" aria-hidden="true" />
                 </button>
               </div>
             ))}

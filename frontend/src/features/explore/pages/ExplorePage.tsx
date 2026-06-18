@@ -110,10 +110,10 @@ export default function ExplorePage() {
   const showTrending = !search && tab !== 'cerca'
 
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
-    { id: 'lugares', label: 'Lugares', icon: <MapPin className="h-4 w-4" /> },
-    { id: 'actividades', label: 'Actividades', icon: <Activity className="h-4 w-4" /> },
-    { id: 'eventos', label: 'Eventos', icon: <Calendar className="h-4 w-4" /> },
-    { id: 'cerca', label: 'Cerca de mí', icon: <Navigation className="h-4 w-4" /> },
+    { id: 'lugares', label: 'Lugares', icon: <MapPin className="h-4 w-4" aria-hidden="true" /> },
+    { id: 'actividades', label: 'Actividades', icon: <Activity className="h-4 w-4" aria-hidden="true" /> },
+    { id: 'eventos', label: 'Eventos', icon: <Calendar className="h-4 w-4" aria-hidden="true" /> },
+    { id: 'cerca', label: 'Cerca de mí', icon: <Navigation className="h-4 w-4" aria-hidden="true" /> },
   ]
 
   const requestGeolocation = useCallback(() => {
@@ -318,12 +318,13 @@ export default function ExplorePage() {
                   <button
                     key={p.id}
                     onClick={() => navigate(`/places/${p.id}`)}
-                    className="group flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left"
+                    aria-label={p.name}
+                    className="group flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
                   >
                     {p.image_url ? (
-                      <img src={p.image_url} alt={p.name} className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                      <img src={p.image_url} alt="" className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                     ) : (
-                      <div className="w-full h-24 bg-primary-100/40 flex items-center justify-center">
+                      <div className="w-full h-24 bg-primary-100/40 flex items-center justify-center" aria-hidden="true">
                         <MapPin className="h-8 w-8 text-primary-500" />
                       </div>
                     )}
@@ -348,12 +349,13 @@ export default function ExplorePage() {
                   <button
                     key={e.id}
                     onClick={() => navigate(`/events/${e.id}`)}
-                    className="group flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left"
+                    aria-label={e.title}
+                    className="group flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
                   >
                     {e.image_url ? (
-                      <img src={e.image_url} alt={e.title} className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                      <img src={e.image_url} alt="" className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                     ) : (
-                      <div className="w-full h-24 bg-primary-100/40 flex items-center justify-center">
+                      <div className="w-full h-24 bg-primary-100/40 flex items-center justify-center" aria-hidden="true">
                         <Calendar className="h-8 w-8 text-primary-500" />
                       </div>
                     )}

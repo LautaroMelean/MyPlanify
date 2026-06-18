@@ -80,9 +80,15 @@ export default function MyPlansPage() {
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-semibold text-gray-800 truncate">{plan.title}</h3>
                   {plan.is_public ? (
-                    <Globe className="h-3.5 w-3.5 text-green-500 flex-shrink-0" aria-label="Público" />
+                    <>
+                      <Globe className="h-3.5 w-3.5 text-green-500 flex-shrink-0" aria-hidden="true" />
+                      <span className="sr-only">Público</span>
+                    </>
                   ) : (
-                    <Lock className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" aria-label="Privado" />
+                    <>
+                      <Lock className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" aria-hidden="true" />
+                      <span className="sr-only">Privado</span>
+                    </>
                   )}
                 </div>
                 <p className="text-xs text-gray-500 mt-0.5">
@@ -93,12 +99,12 @@ export default function MyPlansPage() {
               <button
                 onClick={(e) => handleDelete(e, plan.id)}
                 onBlur={() => setConfirmingId(null)}
-                className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-all flex-shrink-0 ${
+                className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-all flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40 ${
                   confirmingId === plan.id
                     ? 'bg-red-500/15 text-red-500 border border-red-500/30'
                     : 'text-gray-300 hover:text-red-500 hover:bg-red-500/10'
                 }`}
-                aria-label="Eliminar plan"
+                aria-label={confirmingId === plan.id ? `Confirmar eliminación de ${plan.title}` : `Eliminar plan: ${plan.title}`}
               >
                 <Trash2 className="h-4 w-4" />
                 {confirmingId === plan.id && <span>Confirmar</span>}
