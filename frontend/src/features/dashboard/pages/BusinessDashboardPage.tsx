@@ -79,7 +79,7 @@ export default function BusinessDashboardPage() {
         ) : (
           <div className="space-y-2">
             {places.map(place => (
-              <div key={place.id} onClick={() => navigate(`/places/${place.id}`)} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all cursor-pointer">
+              <div key={place.id} onClick={() => navigate(`/places/${place.id}`)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/places/${place.id}`)} role="button" tabIndex={0} aria-label={place.name} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
                 <div className="flex items-center gap-3">
                   <Building2 className="h-4 w-4 text-gray-400" />
                   <div>

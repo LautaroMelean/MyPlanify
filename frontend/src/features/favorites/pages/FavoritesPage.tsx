@@ -69,8 +69,12 @@ export default function FavoritesPage() {
             return (
               <div
                 key={fav.id}
-                className={`bg-white rounded-xl border border-gray-200 border-l-4 ${config?.border ?? 'border-l-gray-300'} shadow-glass-sm p-4 flex items-center gap-3 hover:shadow-neon-sm transition-all ${url ? 'cursor-pointer' : ''}`}
+                className={`bg-white rounded-xl border border-gray-200 border-l-4 ${config?.border ?? 'border-l-gray-300'} shadow-glass-sm p-4 flex items-center gap-3 hover:shadow-neon-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 ${url ? 'cursor-pointer' : ''}`}
                 onClick={() => url && navigate(url)}
+                role={url ? 'button' : undefined}
+                tabIndex={url ? 0 : undefined}
+                onKeyDown={url ? (e) => (e.key === 'Enter' || e.key === ' ') && navigate(url) : undefined}
+                aria-label={url ? fav.item_name ?? undefined : undefined}
               >
                 {Icon && (
                   <div className={`${config?.bg} rounded-lg w-9 h-9 flex items-center justify-center flex-shrink-0`}>

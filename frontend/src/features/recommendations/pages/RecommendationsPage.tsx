@@ -171,11 +171,12 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
 
   return (
     <div
-      className="bg-white rounded-xl border border-gray-200 shadow-glass-sm p-4 flex flex-col gap-3 hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer"
+      className="bg-white rounded-xl border border-gray-200 shadow-glass-sm p-4 flex flex-col gap-3 hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
       onClick={() => itemId && navigate(detailPath)}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && itemId && navigate(detailPath)}
+      aria-label={name}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && itemId && navigate(detailPath)}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">

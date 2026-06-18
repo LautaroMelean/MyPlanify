@@ -172,6 +172,20 @@ export default function Navbar() {
       {/* Mobile menu */}
       {isAuthenticated && mobileOpen && (
         <div className="md:hidden border-t border-white/5 px-4 py-3 flex flex-col gap-1" style={{ background: 'rgba(7,6,15,0.95)', backdropFilter: 'blur(20px)' }}>
+          {/* Mobile search */}
+          <form onSubmit={(e) => { e.preventDefault(); const q = searchQuery.trim(); if (q) { navigate(`/search?q=${encodeURIComponent(q)}`); setSearchQuery(''); setMobileOpen(false) } }} className="mb-2">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar lugares, eventos..."
+                aria-label="Buscar"
+                className="w-full pl-9 pr-4 py-2 text-sm border border-white/10 rounded-lg bg-white/5 text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary-500/50"
+              />
+            </div>
+          </form>
           {NAV_LINKS.map((link) => (
             <Link
               key={link.to}
