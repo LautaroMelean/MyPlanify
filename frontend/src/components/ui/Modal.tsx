@@ -20,11 +20,14 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' }:
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
+      const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+      document.addEventListener('keydown', handleKey)
+      return () => { document.removeEventListener('keydown', handleKey); document.body.style.overflow = '' }
     } else {
       document.body.style.overflow = ''
     }
     return () => { document.body.style.overflow = '' }
-  }, [isOpen])
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 

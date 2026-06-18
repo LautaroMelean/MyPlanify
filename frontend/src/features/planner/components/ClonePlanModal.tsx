@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 import Button from '@/components/ui/Button'
 
@@ -16,6 +16,13 @@ export function ClonePlanModal({ isOpen, onClose, onConfirm, isLoading, title = 
   const defaultDate = tomorrow.toISOString().split('T')[0]
 
   const [date, setDate] = useState(defaultDate)
+
+  useEffect(() => {
+    if (!isOpen) return
+    const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
