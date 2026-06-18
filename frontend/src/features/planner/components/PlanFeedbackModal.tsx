@@ -74,6 +74,7 @@ export function PlanFeedbackModal({ isOpen, onClose, planId, item }: Props) {
             className="w-full border border-gray-200 bg-gray-100 text-gray-800 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-500/40 placeholder:text-gray-500"
             rows={3}
             placeholder="Comentario opcional..."
+            aria-label="Comentario opcional"
             value={comment}
             onChange={e => setComment(e.target.value)}
             maxLength={1000}

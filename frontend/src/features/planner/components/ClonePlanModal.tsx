@@ -31,20 +31,27 @@ export function ClonePlanModal({ isOpen, onClose, onConfirm, isLoading, title = 
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="clone-modal-title"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+    >
       <div className="bg-white rounded-xl shadow-glass border border-white/10 w-full max-w-sm">
         <div className="flex items-center justify-between p-4 border-b border-gray-200/30">
-          <h2 className="text-base font-semibold text-gray-900">{title}</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <h2 id="clone-modal-title" className="text-base font-semibold text-gray-900">{title}</h2>
+          <button onClick={onClose} aria-label="Cerrar" className="text-gray-400 hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded">
             <X className="h-4 w-4" />
           </button>
         </div>
 
         <div className="p-4">
-          <label className="block text-sm font-medium text-gray-600 mb-1">
+          <label htmlFor="clone-plan-date" className="block text-sm font-medium text-gray-600 mb-1">
             ¿Para qué fecha querés usar este plan?
           </label>
           <input
+            id="clone-plan-date"
             type="date"
             value={date}
             min={defaultDate}
