@@ -94,6 +94,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-6">
+      <title>Notificaciones | Planify</title>
       <div className="flex items-center gap-3">
         <Bell className="h-6 w-6 text-primary-600" />
         <h1 className="text-2xl font-bold text-gray-900">Notificaciones</h1>

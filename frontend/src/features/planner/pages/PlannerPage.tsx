@@ -41,6 +41,7 @@ export default function PlannerPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 space-y-8">
+      <title>Planner | Planify</title>
       {/* Header */}
       <div className="flex items-center gap-3">
         <CalendarDays className="h-7 w-7 text-primary-600" />

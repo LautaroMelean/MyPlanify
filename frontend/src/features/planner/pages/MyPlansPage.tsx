@@ -46,6 +46,7 @@ export default function MyPlansPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
+      <title>Mis planes | Planify</title>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <CalendarDays className="h-7 w-7 text-primary-600" />

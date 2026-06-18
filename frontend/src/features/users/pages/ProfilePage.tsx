@@ -53,6 +53,7 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-2xl mx-auto flex flex-col gap-6">
+      <title>Mi perfil | Planify</title>
       <div className="flex items-center gap-2">
         <User className="h-6 w-6 text-primary-600" />
         <h1 className="text-2xl font-bold text-gray-900">Mi perfil</h1>

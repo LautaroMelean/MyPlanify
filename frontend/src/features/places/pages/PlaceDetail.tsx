@@ -69,6 +69,7 @@ export default function PlaceDetail() {
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-6">
+      <title>{place.name} | Planify</title>
       <button
         onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm w-fit"

@@ -148,6 +148,7 @@ export default function MapPage() {
 
   return (
     <div className="flex flex-col gap-4 h-full">
+      <title>Mapa | Planify</title>
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">

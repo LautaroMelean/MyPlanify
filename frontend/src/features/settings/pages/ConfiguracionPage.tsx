@@ -48,6 +48,7 @@ export default function ConfiguracionPage() {
 
   return (
     <div className="max-w-2xl mx-auto flex flex-col gap-6">
+      <title>Configuración | Planify</title>
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">
           <Settings className="h-6 w-6 text-primary-600" />

@@ -45,6 +45,7 @@ export default function FavoritesPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <title>Mis favoritos | Planify</title>
       <div>
         <div className="flex items-center gap-2 mb-1">
           <Heart className="h-6 w-6 text-primary-600" />

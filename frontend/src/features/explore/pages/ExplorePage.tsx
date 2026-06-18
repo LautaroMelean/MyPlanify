@@ -141,6 +141,7 @@ export default function ExplorePage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <title>Explorar | Planify</title>
       <div>
         <div className="flex items-center gap-2 mb-1">
           <Compass className="h-6 w-6 text-primary-600" />

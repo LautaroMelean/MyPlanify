@@ -71,6 +71,7 @@ export default function PromotionsPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <title>Promociones | Planify</title>
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">
           <Tag className="h-6 w-6 text-primary-600" />

@@ -51,6 +51,7 @@ export default function BusinessDashboardPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
+      <title>Panel de Negocio | Planify</title>
       <div className="flex items-center gap-3 mb-6">
         <Building2 className="h-7 w-7 text-primary-600" />
         <h1 className="text-2xl font-bold text-gray-900">Panel de Negocio</h1>

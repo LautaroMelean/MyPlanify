@@ -63,6 +63,7 @@ export default function RecommendationsPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <title>Para vos | Planify</title>
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">
