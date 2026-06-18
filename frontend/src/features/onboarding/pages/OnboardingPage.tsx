@@ -46,6 +46,7 @@ export default function OnboardingPage() {
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-8">
+      <title>¿Qué te gusta? | Planify</title>
       <div className="text-center">
         <div className="w-14 h-14 bg-primary-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <Sparkles className="h-7 w-7 text-primary-600" />
@@ -64,6 +65,7 @@ export default function OnboardingPage() {
             <button
               key={opt.value}
               onClick={() => toggle(opt.value)}
+              aria-pressed={isSelected}
               className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
                 isSelected
                   ? 'border-primary-500 bg-primary-500/10 text-primary-600 shadow-neon-sm'
