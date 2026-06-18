@@ -15,10 +15,12 @@ function formatDate(iso: string): string {
 }
 
 function ReminderItem({ reminder }: { reminder: Reminder }) {
+  const navigate = useNavigate()
   const remove = useRemoveReminder()
   const [confirming, setConfirming] = useState(false)
 
-  const handleDelete = () => {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation()
     if (confirming) {
       remove.mutate(reminder.id)
     } else {
@@ -27,7 +29,10 @@ function ReminderItem({ reminder }: { reminder: Reminder }) {
   }
 
   return (
-    <div className="flex items-center gap-4 p-4 bg-white rounded-xl border border-gray-200">
+    <div
+      className="flex items-center gap-4 p-4 bg-white rounded-xl border border-gray-200 hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer"
+      onClick={() => navigate(`/events/${reminder.event}`)}
+    >
       <div className="w-10 h-10 bg-primary-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
         <Bell className="h-5 w-5 text-primary-600" />
       </div>

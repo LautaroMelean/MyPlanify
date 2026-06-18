@@ -1,7 +1,16 @@
-import { Heart, Trash2, MapPin, Calendar, Zap } from 'lucide-react'
+import { Heart, Trash2, MapPin, Calendar, Zap, ChevronRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useFavorites, useRemoveFavorite } from '@/hooks/useFavorites'
 import Loading from '@/components/common/Loading'
 import EmptyState from '@/components/common/EmptyState'
+import type { Favorite } from '@/types'
+
+function getFavUrl(fav: Favorite): string | null {
+  if (fav.item_type === 'place' && fav.place) return `/places/${fav.place}`
+  if (fav.item_type === 'activity' && fav.activity) return `/activities/${fav.activity}`
+  if (fav.item_type === 'event' && fav.event) return `/events/${fav.event}`
+  return null
+}
 
 const typeConfig = {
   event:    { label: 'Evento',     icon: Calendar, border: 'border-l-violet-400', bg: 'bg-violet-500/10',  text: 'text-violet-400' },
@@ -12,6 +21,7 @@ const typeConfig = {
 type FavItemType = keyof typeof typeConfig
 
 export default function FavoritesPage() {
+  const navigate = useNavigate()
   const { data: favorites = [], isLoading } = useFavorites()
   const remove = useRemoveFavorite()
 
@@ -35,10 +45,12 @@ export default function FavoritesPage() {
           {favorites.map((fav) => {
             const config = fav.item_type ? typeConfig[fav.item_type as FavItemType] : null
             const Icon = config?.icon
+            const url = getFavUrl(fav)
             return (
               <div
                 key={fav.id}
-                className={`bg-white rounded-xl border border-gray-200 border-l-4 ${config?.border ?? 'border-l-gray-300'} shadow-glass-sm p-4 flex items-center gap-3 hover:shadow-neon-sm transition-all`}
+                className={`bg-white rounded-xl border border-gray-200 border-l-4 ${config?.border ?? 'border-l-gray-300'} shadow-glass-sm p-4 flex items-center gap-3 hover:shadow-neon-sm hover:border-r-primary-500/20 transition-all ${url ? 'cursor-pointer' : ''}`}
+                onClick={() => url && navigate(url)}
               >
                 {Icon && (
                   <div className={`${config?.bg} rounded-lg w-9 h-9 flex items-center justify-center flex-shrink-0`}>
@@ -51,8 +63,9 @@ export default function FavoritesPage() {
                     <span className={`text-xs font-medium ${config.text}`}>{config.label}</span>
                   )}
                 </div>
+                {url && <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />}
                 <button
-                  onClick={() => remove.mutate(fav.id)}
+                  onClick={(e) => { e.stopPropagation(); remove.mutate(fav.id) }}
                   disabled={remove.isPending}
                   className="text-gray-300 hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-red-500/10 flex-shrink-0"
                   aria-label="Eliminar favorito"

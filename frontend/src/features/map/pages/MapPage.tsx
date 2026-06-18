@@ -229,7 +229,7 @@ export default function MapPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {placesWithCoords.map((place) => (
-          <div key={place.id} className="flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
+          <div key={place.id} className="flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-3 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all">
             <div className="bg-primary-500/10 rounded-lg p-2 flex-shrink-0">
               <MapPin className="h-4 w-4 text-primary-600" />
             </div>

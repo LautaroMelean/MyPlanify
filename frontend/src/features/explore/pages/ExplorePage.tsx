@@ -504,7 +504,7 @@ function TabContent({
 
 function FilterPanel({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-4">
+    <div className="bg-white border border-gray-200/50 rounded-xl p-4 flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <span className="text-sm font-semibold text-gray-700">Filtros avanzados</span>
         <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
@@ -532,7 +532,7 @@ function CheckFilter({ label, checked, onChange }: { label: string; checked: boo
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="rounded border-gray-300 text-primary-600 focus:ring-primary-300"
+        className="rounded border-gray-200 text-primary-600 focus:ring-primary-500/40"
       />
       {label}
     </label>

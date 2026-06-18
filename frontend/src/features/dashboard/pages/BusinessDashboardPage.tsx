@@ -4,7 +4,7 @@ import Loading from '@/components/common/Loading'
 
 function StatCard({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3 shadow-sm">
+    <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3 shadow-glass-sm">
       <div className="p-2 bg-primary-500/10 rounded-lg text-primary-600">{icon}</div>
       <div>
         <p className="text-2xl font-bold text-gray-900">{value}</p>
@@ -43,7 +43,7 @@ export default function BusinessDashboardPage() {
         ) : (
           <div className="space-y-2">
             {places.map(place => (
-              <div key={place.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+              <div key={place.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-glass-sm">
                 <div className="flex items-center gap-3">
                   <Building2 className="h-4 w-4 text-gray-400" />
                   <div>
@@ -67,7 +67,7 @@ export default function BusinessDashboardPage() {
         ) : (
           <div className="space-y-2">
             {promotions.map(promo => (
-              <div key={promo.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+              <div key={promo.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-glass-sm">
                 <div>
                   <p className="text-sm font-medium text-gray-900">{promo.title}</p>
                   <p className="text-xs text-gray-500">{promo.place_name}</p>

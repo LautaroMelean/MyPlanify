@@ -60,7 +60,7 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
   const bgClass = ENTITY_BG[item.entity_type] ?? 'bg-gray-300/10 border-gray-200/50'
 
   return (
-    <div className={`rounded-xl border p-4 shadow-sm group ${bgClass}`}>
+    <div className={`rounded-xl border p-4 shadow-glass-sm group ${bgClass}`}>
       <div className="flex items-start gap-3">
         {/* Reorder buttons */}
         {onReorder && (

@@ -4,7 +4,7 @@ import Loading from '@/components/common/Loading'
 
 function StatCard({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3 shadow-sm">
+    <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3 shadow-glass-sm">
       <div className="p-2 bg-primary-500/10 rounded-lg text-primary-600">{icon}</div>
       <div>
         <p className="text-2xl font-bold text-gray-900">{value}</p>
@@ -56,7 +56,7 @@ export default function OrganizerDashboardPage() {
         ) : (
           <div className="space-y-2">
             {events.map(event => (
-              <div key={event.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+              <div key={event.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-glass-sm">
                 <div>
                   <p className="text-sm font-medium text-gray-900">{event.title}</p>
                   <p className="text-xs text-gray-500">
