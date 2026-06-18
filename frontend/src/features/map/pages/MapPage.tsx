@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import { MapPin, Locate, Search, X } from 'lucide-react'
 import { usePlaces } from '@/hooks/usePlaces'
@@ -40,6 +41,7 @@ function RecenterMap({ center }: { center: [number, number] }) {
 }
 
 export default function MapPage() {
+  const navigate = useNavigate()
   const { data: places = [], isLoading } = usePlaces()
   const [userPos, setUserPos] = useState<[number, number] | null>(null)
   const [mapCenter, setMapCenter] = useState<[number, number]>(BUENOS_AIRES_CENTER)
@@ -164,7 +166,7 @@ export default function MapPage() {
             onChange={(e) => setCityQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && searchCity()}
             placeholder="Buscar ciudad... (ej: Córdoba, Rosario)"
-            className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-200"
+            className="w-full pl-9 pr-3 py-2 border border-gray-200 bg-gray-100 text-gray-800 rounded-lg text-sm focus:outline-none focus:border-primary-500/50 focus:ring-2 focus:ring-primary-500/20 placeholder:text-gray-500"
           />
         </div>
         <Button size="sm" onClick={searchCity} isLoading={citySearching}>
@@ -228,17 +230,27 @@ export default function MapPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {placesWithCoords.map((place) => (
-          <div key={place.id} className="flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-3 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all">
-            <div className="bg-primary-500/10 rounded-lg p-2 flex-shrink-0">
-              <MapPin className="h-4 w-4 text-primary-600" />
+        {placesWithCoords.map((place) => {
+          const isInternal = place.source !== 'osm'
+          return (
+            <div
+              key={place.id}
+              className={`flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-3 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all ${isInternal ? 'cursor-pointer' : ''}`}
+              onClick={() => isInternal && navigate(`/places/${place.id}`)}
+            >
+              <div className="bg-primary-500/10 rounded-lg p-2 flex-shrink-0">
+                <MapPin className="h-4 w-4 text-primary-600" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-medium text-gray-900 text-sm truncate">{place.name}</p>
+                <p className="text-xs text-gray-500">{place.city || '—'} · {place.category}</p>
+              </div>
+              {place.source === 'osm' && (
+                <span className="text-xs text-gray-400 flex-shrink-0">OSM</span>
+              )}
             </div>
-            <div className="min-w-0">
-              <p className="font-medium text-gray-900 text-sm truncate">{place.name}</p>
-              <p className="text-xs text-gray-500">{place.city || '—'} · {place.category}</p>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
