@@ -26,8 +26,8 @@ export default function PlanPublicPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-4 py-4">
+    <div className="min-h-screen">
+      <header className="glass-nav border-b border-gray-200/20 px-4 py-4">
         <div className="max-w-2xl mx-auto flex items-center gap-2">
           <MapPin className="h-5 w-5 text-primary-600" />
           <span className="font-bold text-primary-600 text-lg">Planify</span>

@@ -30,7 +30,7 @@ function NotificationItem({ notification }: { notification: Notification }) {
       className={`flex gap-4 p-4 rounded-xl border transition-colors ${
         notification.read
           ? 'bg-white border-gray-200'
-          : 'bg-primary-50 border-primary-100'
+          : 'bg-primary-500/10 border-primary-400/20'
       }`}
     >
       <div className="mt-0.5 flex-shrink-0">
@@ -52,7 +52,7 @@ function NotificationItem({ notification }: { notification: Notification }) {
         </div>
         <p className="text-sm text-gray-500 mt-0.5">{notification.message}</p>
         <div className="flex items-center justify-between mt-2">
-          <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+          <span className="text-xs text-gray-500 bg-gray-300/10 px-2 py-0.5 rounded-full">
             {TYPE_LABELS[notification.notification_type] ?? notification.notification_type}
           </span>
           {!notification.read && (

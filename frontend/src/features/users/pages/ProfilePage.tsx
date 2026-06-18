@@ -103,14 +103,14 @@ export default function ProfilePage() {
 
         {/* Selector */}
         {adding && (
-          <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="mb-4 p-3 bg-gray-100 rounded-lg border border-gray-200">
             <p className="text-xs text-gray-500 mb-2 font-medium">Elegí qué te interesa:</p>
             <div className="flex flex-wrap gap-2">
               {PREFERENCE_OPTIONS.filter((o) => !existingValues.has(o.value)).map((opt) => (
                 <button
                   key={opt.value}
                   onClick={() => handleAdd(opt.value, opt.category)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full border border-primary-300 text-primary-700 hover:bg-primary-50 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full border border-primary-400/40 text-primary-600 hover:bg-primary-500/10 transition-colors"
                 >
                   <span>{opt.emoji}</span>
                   {opt.label}
@@ -131,7 +131,7 @@ export default function ProfilePage() {
             {preferences.map((pref) => (
               <div
                 key={pref.id}
-                className="flex items-center gap-1.5 px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm font-medium"
+                className="flex items-center gap-1.5 px-3 py-1 bg-primary-500/15 text-primary-600 rounded-full text-sm font-medium"
               >
                 <span className="capitalize">{pref.value}</span>
                 <button

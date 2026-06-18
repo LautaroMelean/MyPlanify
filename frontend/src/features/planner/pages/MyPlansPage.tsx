@@ -56,7 +56,7 @@ export default function MyPlansPage() {
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-primary-300 hover:shadow-md transition-all cursor-pointer"
+              className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all cursor-pointer"
               onClick={() => navigate(`/planes/${plan.id}`)}
             >
               <div className="flex-1 min-w-0">
@@ -75,7 +75,7 @@ export default function MyPlansPage() {
               </div>
               <button
                 onClick={(e) => handleDelete(e, plan.id)}
-                className="p-1.5 text-gray-300 hover:text-red-500 transition-colors flex-shrink-0 rounded-lg hover:bg-red-50"
+                className="p-1.5 text-gray-300 hover:text-red-500 transition-colors flex-shrink-0 rounded-lg hover:bg-red-500/10"
                 aria-label="Eliminar plan"
               >
                 <Trash2 className="h-4 w-4" />

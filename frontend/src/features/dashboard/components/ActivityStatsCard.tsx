@@ -31,7 +31,7 @@ export function ActivityStatsCard({ stats }: Props) {
           <p className="text-xs text-gray-500 mt-0.5">Tu historial de planes en Planify.</p>
         </div>
         {stats.current_streak_weeks > 0 && (
-          <div className="flex items-center gap-1 bg-orange-50 text-orange-600 px-2 py-1 rounded-full text-xs font-semibold">
+          <div className="flex items-center gap-1 bg-orange-500/10 text-orange-400 px-2 py-1 rounded-full text-xs font-semibold">
             <Flame className="h-3.5 w-3.5" />
             {stats.current_streak_weeks} sem. seguidas
           </div>
@@ -44,7 +44,7 @@ export function ActivityStatsCard({ stats }: Props) {
         </p>
       ) : (
         <>
-          <div className="grid grid-cols-3 divide-x divide-gray-100 border border-gray-100 rounded-lg mb-4">
+          <div className="grid grid-cols-3 divide-x divide-gray-200/30 border border-gray-200/30 rounded-lg mb-4">
             <StatItem
               icon={<CheckCircle className="h-5 w-5" />}
               label="Planes completados"
@@ -64,19 +64,19 @@ export function ActivityStatsCard({ stats }: Props) {
 
           <div className="flex flex-wrap gap-2 text-xs">
             {stats.favorite_category && (
-              <span className="flex items-center gap-1 bg-primary-50 text-primary-700 px-2.5 py-1 rounded-full font-medium capitalize">
+              <span className="flex items-center gap-1 bg-primary-500/15 text-primary-600 px-2.5 py-1 rounded-full font-medium capitalize">
                 <Star className="h-3 w-3" />
                 Favorita: {stats.favorite_category}
               </span>
             )}
             {stats.best_streak_weeks > 0 && (
-              <span className="flex items-center gap-1 bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-full font-medium">
+              <span className="flex items-center gap-1 bg-yellow-500/15 text-yellow-400 px-2.5 py-1 rounded-full font-medium">
                 <Trophy className="h-3 w-3" />
                 Mejor racha: {stats.best_streak_weeks} sem.
               </span>
             )}
             {stats.avg_rating_given !== null && (
-              <span className="flex items-center gap-1 bg-gray-50 text-gray-600 px-2.5 py-1 rounded-full font-medium">
+              <span className="flex items-center gap-1 bg-gray-300/10 text-gray-500 px-2.5 py-1 rounded-full font-medium">
                 <Star className="h-3 w-3" />
                 Rating promedio: {stats.avg_rating_given}
               </span>

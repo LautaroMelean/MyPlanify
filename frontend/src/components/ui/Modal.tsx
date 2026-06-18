@@ -36,9 +36,9 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' }:
       aria-label={title}
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
-      <div className={`bg-white rounded-xl shadow-xl w-full ${sizeClasses[size]} max-h-[90vh] overflow-y-auto`}>
+      <div className={`bg-white rounded-xl shadow-glass w-full ${sizeClasses[size]} max-h-[90vh] overflow-y-auto border border-white/10`}>
         {title && (
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200/30">
             <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
             <Button variant="ghost" size="sm" onClick={onClose} aria-label="Cerrar">
               <X className="h-4 w-4" />

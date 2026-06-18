@@ -14,7 +14,7 @@ export function TrendingPlanCard({ plan, onUseAsBase }: Props) {
   })
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-semibold text-gray-900 truncate">{plan.title}</h3>
@@ -49,7 +49,7 @@ export function TrendingPlanCard({ plan, onUseAsBase }: Props) {
 
       <button
         onClick={() => onUseAsBase(plan)}
-        className="mt-3 w-full text-xs font-medium text-primary-600 hover:text-primary-700 border border-primary-200 hover:bg-primary-50 rounded-lg py-1.5 transition-colors"
+        className="mt-3 w-full text-xs font-medium text-primary-600 hover:text-primary-700 border border-primary-400/30 hover:bg-primary-500/10 rounded-lg py-1.5 transition-colors"
       >
         Usar como base
       </button>

@@ -159,8 +159,8 @@ export default function ExplorePage() {
             onClick={() => setShowFilters(!showFilters)}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
               showFilters || activeFilterCount > 0
-                ? 'border-primary-300 bg-primary-50 text-primary-700'
-                : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                ? 'border-primary-400/50 bg-primary-500/10 text-primary-600'
+                : 'border-gray-200 text-gray-600 hover:bg-white/5'
             }`}
           >
             <Filter className="h-4 w-4" />

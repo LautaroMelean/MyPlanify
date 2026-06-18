@@ -181,15 +181,15 @@ export default function MapPage() {
       </div>
 
       {locError && (
-        <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{locError}</p>
+        <p className="text-sm text-red-400 bg-red-500/10 px-3 py-2 rounded-lg">{locError}</p>
       )}
       {cityError && (
-        <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{cityError}</p>
+        <p className="text-sm text-red-400 bg-red-500/10 px-3 py-2 rounded-lg">{cityError}</p>
       )}
 
       {userPos && !searchedCity && <WeatherWidget weather={weather} />}
 
-      <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm" style={{ height: '65vh' }}>
+      <div className="rounded-xl overflow-hidden border border-gray-200/50 shadow-glass-sm" style={{ height: '65vh' }}>
         <MapContainer
           center={mapCenter}
           zoom={13}
@@ -230,7 +230,7 @@ export default function MapPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {placesWithCoords.map((place) => (
           <div key={place.id} className="flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
-            <div className="bg-primary-50 rounded-lg p-2 flex-shrink-0">
+            <div className="bg-primary-500/10 rounded-lg p-2 flex-shrink-0">
               <MapPin className="h-4 w-4 text-primary-600" />
             </div>
             <div className="min-w-0">

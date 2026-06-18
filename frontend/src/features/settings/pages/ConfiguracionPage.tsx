@@ -59,7 +59,7 @@ export default function ConfiguracionPage() {
       {/* Cambiar contraseña */}
       <Card>
         <div className="flex items-center gap-3 mb-5">
-          <div className="bg-primary-50 p-2 rounded-lg">
+          <div className="bg-primary-500/10 p-2 rounded-lg">
             <Lock className="h-5 w-5 text-primary-600" />
           </div>
           <div>
@@ -92,14 +92,14 @@ export default function ConfiguracionPage() {
           />
 
           {apiError && (
-            <div className="flex items-center gap-2 text-red-600 text-sm bg-red-50 rounded-lg p-3">
+            <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 rounded-lg p-3">
               <AlertTriangle className="h-4 w-4 flex-shrink-0" />
               {apiError}
             </div>
           )}
 
           {success && (
-            <div className="text-green-700 text-sm bg-green-50 rounded-lg p-3">
+            <div className="text-green-400 text-sm bg-green-500/10 rounded-lg p-3">
               Contraseña cambiada correctamente.
             </div>
           )}
@@ -113,7 +113,7 @@ export default function ConfiguracionPage() {
       {/* Info de cuenta */}
       <Card>
         <div className="flex items-center gap-3 mb-4">
-          <div className="bg-red-50 p-2 rounded-lg">
+          <div className="bg-red-500/10 p-2 rounded-lg">
             <AlertTriangle className="h-5 w-5 text-red-500" />
           </div>
           <div>

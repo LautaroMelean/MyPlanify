@@ -45,7 +45,7 @@ export default function SearchResultsPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Buscar lugares, actividades, eventos..."
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 text-sm"
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 bg-gray-100 text-gray-800 placeholder:text-gray-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/40 text-sm"
             autoFocus
           />
         </div>
@@ -79,19 +79,19 @@ export default function SearchResultsPage() {
                   <button
                     key={place.id}
                     onClick={() => navigate(`/places/${place.id}`)}
-                    className="flex items-center gap-4 p-3 bg-white rounded-xl border border-gray-200 hover:shadow-sm transition-shadow text-left w-full"
+                    className="flex items-center gap-4 p-3 bg-white rounded-xl border border-gray-200 hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left w-full"
                   >
                     {place.image_url ? (
                       <img src={place.image_url} alt={place.name} className="h-14 w-14 rounded-lg object-cover flex-shrink-0" />
                     ) : (
-                      <div className="h-14 w-14 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0">
+                      <div className="h-14 w-14 rounded-lg bg-primary-500/10 flex items-center justify-center flex-shrink-0">
                         <MapPin className="h-6 w-6 text-primary-300" />
                       </div>
                     )}
                     <div className="min-w-0">
                       <p className="font-medium text-gray-900 truncate">{place.name}</p>
                       <p className="text-xs text-gray-500">{place.city}</p>
-                      <span className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full font-medium">
+                      <span className="text-xs bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full font-medium">
                         {place.category}
                       </span>
                     </div>
@@ -113,9 +113,9 @@ export default function SearchResultsPage() {
                   <button
                     key={activity.id}
                     onClick={() => navigate(`/activities/${activity.id}`)}
-                    className="flex items-center gap-4 p-3 bg-white rounded-xl border border-gray-200 hover:shadow-sm transition-shadow text-left w-full"
+                    className="flex items-center gap-4 p-3 bg-white rounded-xl border border-gray-200 hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left w-full"
                   >
-                    <div className="h-14 w-14 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0">
+                    <div className="h-14 w-14 rounded-lg bg-primary-500/10 flex items-center justify-center flex-shrink-0">
                       <Zap className="h-6 w-6 text-primary-300" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -132,7 +132,7 @@ export default function SearchResultsPage() {
                         </p>
                       ) : null}
                       <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full font-medium">
+                        <span className="text-xs bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full font-medium">
                           {activity.category}
                         </span>
                         <span className="text-xs text-gray-500 flex items-center gap-0.5">
@@ -159,19 +159,19 @@ export default function SearchResultsPage() {
                   <button
                     key={event.id}
                     onClick={() => navigate(`/events/${event.id}`)}
-                    className="flex items-center gap-4 p-3 bg-white rounded-xl border border-gray-200 hover:shadow-sm transition-shadow text-left w-full"
+                    className="flex items-center gap-4 p-3 bg-white rounded-xl border border-gray-200 hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left w-full"
                   >
                     {event.image_url ? (
                       <img src={event.image_url} alt={event.title} className="h-14 w-14 rounded-lg object-cover flex-shrink-0" />
                     ) : (
-                      <div className="h-14 w-14 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0">
+                      <div className="h-14 w-14 rounded-lg bg-primary-500/10 flex items-center justify-center flex-shrink-0">
                         <Calendar className="h-6 w-6 text-primary-300" />
                       </div>
                     )}
                     <div className="min-w-0">
                       <p className="font-medium text-gray-900 truncate">{event.title}</p>
                       <p className="text-xs text-gray-500">{formatDate(event.start_date)}</p>
-                      <span className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full font-medium">
+                      <span className="text-xs bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full font-medium">
                         {event.category}
                       </span>
                     </div>

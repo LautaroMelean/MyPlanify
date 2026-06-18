@@ -24,9 +24,9 @@ const ENTITY_LABELS: Record<string, string> = {
 }
 
 const ENTITY_BG: Record<string, string> = {
-  place:    'bg-blue-50 border-blue-100',
-  activity: 'bg-purple-50 border-purple-100',
-  event:    'bg-green-50 border-green-100',
+  place:    'bg-blue-500/10 border-blue-500/20',
+  activity: 'bg-primary-500/10 border-primary-500/20',
+  event:    'bg-green-500/10 border-green-500/20',
 }
 
 export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder, readonly = false }: Props) {
@@ -57,7 +57,7 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
   }
 
   const entityIcon = ENTITY_ICON[item.entity_type] ?? <MapPin className="h-4 w-4 text-gray-400" />
-  const bgClass = ENTITY_BG[item.entity_type] ?? 'bg-gray-50 border-gray-100'
+  const bgClass = ENTITY_BG[item.entity_type] ?? 'bg-gray-300/10 border-gray-200/50'
 
   return (
     <div className={`rounded-xl border p-4 shadow-sm group ${bgClass}`}>
@@ -93,7 +93,7 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
           {item.entity_name ? (
             <p className="font-semibold text-gray-900 text-sm leading-snug">{item.entity_name}</p>
           ) : (
-            <div className="h-4 w-32 bg-gray-200 rounded animate-pulse mt-0.5" />
+            <div className="h-4 w-32 bg-gray-300/30 rounded animate-pulse mt-0.5" />
           )}
 
           {/* Description toggle */}
@@ -135,7 +135,7 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
             <div
               onClick={() => !readonly && onSaveNote && setEditingNote(true)}
               className={`mt-1.5 text-sm min-h-[1rem] rounded px-1 -mx-1 ${
-                !readonly && onSaveNote ? 'cursor-text hover:bg-black/5 transition-colors' : ''
+                !readonly && onSaveNote ? 'cursor-text hover:bg-white/5 transition-colors' : ''
               } ${item.note ? 'text-gray-700' : 'text-gray-400 italic'}`}
             >
               {item.note || (!readonly && onSaveNote ? 'Agregar nota...' : '')}

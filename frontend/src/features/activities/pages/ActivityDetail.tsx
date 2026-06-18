@@ -44,10 +44,10 @@ export default function ActivityDetail() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{activity.name}</h1>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <span className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full font-medium">
+            <span className="text-xs bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full font-medium">
               {TYPE_LABELS[activity.activity_type] ?? activity.activity_type}
             </span>
-            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">
+            <span className="text-xs bg-gray-300/10 text-gray-500 px-2 py-0.5 rounded-full font-medium">
               {activity.category}
             </span>
           </div>
@@ -60,7 +60,7 @@ export default function ActivityDetail() {
       )}
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
           <DollarSign className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div>
             <p className="text-xs text-gray-500">Presupuesto</p>
@@ -71,7 +71,7 @@ export default function ActivityDetail() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
           <Users className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div>
             <p className="text-xs text-gray-500">Personas</p>
@@ -83,7 +83,7 @@ export default function ActivityDetail() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
           <Tag className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div>
             <p className="text-xs text-gray-500">Modalidad</p>
@@ -96,7 +96,7 @@ export default function ActivityDetail() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
           <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div className="min-w-0">
             <p className="text-xs text-gray-500">Ciudad</p>

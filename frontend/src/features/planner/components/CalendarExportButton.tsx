@@ -84,7 +84,7 @@ export function CalendarExportButton({ plan }: Props) {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+        className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-white/5 hover:text-gray-800 transition-colors"
       >
         <Calendar className="h-4 w-4" />
         Exportar
@@ -94,17 +94,17 @@ export function CalendarExportButton({ plan }: Props) {
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-1 w-52 bg-white border border-gray-200 rounded-xl shadow-lg z-20 py-1">
+          <div className="absolute right-0 mt-1 w-52 bg-white border border-white/10 rounded-xl shadow-glass z-20 py-1">
             <button
               onClick={handleDownloadIcs}
-              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-600 hover:bg-white/5 hover:text-gray-800"
             >
               <Download className="h-4 w-4 text-gray-400" />
               Descargar .ics
             </button>
             <button
               onClick={handleGoogleCalendar}
-              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-600 hover:bg-white/5 hover:text-gray-800"
               disabled={plan.items.length === 0}
             >
               <ExternalLink className="h-4 w-4 text-gray-400" />

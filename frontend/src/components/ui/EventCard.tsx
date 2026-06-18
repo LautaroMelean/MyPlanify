@@ -50,7 +50,7 @@ export default function EventCard({ event }: EventCardProps) {
         )}
 
         <div className="flex items-center justify-between mt-3">
-          <span className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full font-medium">
+          <span className="text-xs bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full font-medium">
             {event.category}
           </span>
           <div className="flex items-center gap-2">

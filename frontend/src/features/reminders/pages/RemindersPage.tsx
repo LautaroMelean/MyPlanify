@@ -28,7 +28,7 @@ function ReminderItem({ reminder }: { reminder: Reminder }) {
 
   return (
     <div className="flex items-center gap-4 p-4 bg-white rounded-xl border border-gray-200">
-      <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center flex-shrink-0">
+      <div className="w-10 h-10 bg-primary-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
         <Bell className="h-5 w-5 text-primary-600" />
       </div>
 
@@ -66,7 +66,7 @@ export default function RemindersPage() {
         <Bell className="h-6 w-6 text-primary-600" />
         <h1 className="text-2xl font-bold text-gray-900">Mis recordatorios</h1>
         {reminders.length > 0 && (
-          <span className="bg-gray-100 text-gray-600 text-xs font-bold px-2 py-0.5 rounded-full">
+          <span className="bg-gray-300/10 text-gray-500 text-xs font-bold px-2 py-0.5 rounded-full">
             {reminders.length}
           </span>
         )}

@@ -22,7 +22,7 @@ export default function PlaceCard({ place }: PlaceCardProps) {
         {place.image_url ? (
           <img src={place.image_url} alt={place.name} className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
         ) : (
-          <div className="w-full h-40 bg-primary-50 flex items-center justify-center">
+          <div className="w-full h-40 bg-primary-500/10 flex items-center justify-center">
             <MapPin className="h-10 w-10 text-primary-300" />
           </div>
         )}
@@ -81,7 +81,7 @@ export default function PlaceCard({ place }: PlaceCardProps) {
 
         <div className="flex items-center justify-between mt-3">
           <div className="flex items-center gap-1">
-            <span className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full font-medium">
+            <span className="text-xs bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full font-medium">
               {place.category}
             </span>
             {place.cuisine && (

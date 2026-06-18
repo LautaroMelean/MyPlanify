@@ -4,9 +4,9 @@ import Loading from '@/components/common/Loading'
 import EmptyState from '@/components/common/EmptyState'
 
 const typeConfig = {
-  event:    { label: 'Evento',     icon: Calendar, border: 'border-l-violet-400', bg: 'bg-violet-50',  text: 'text-violet-600' },
-  place:    { label: 'Lugar',      icon: MapPin,   border: 'border-l-blue-400',   bg: 'bg-blue-50',    text: 'text-blue-600' },
-  activity: { label: 'Actividad',  icon: Zap,      border: 'border-l-amber-400',  bg: 'bg-amber-50',   text: 'text-amber-600' },
+  event:    { label: 'Evento',     icon: Calendar, border: 'border-l-violet-400', bg: 'bg-violet-500/10',  text: 'text-violet-400' },
+  place:    { label: 'Lugar',      icon: MapPin,   border: 'border-l-blue-400',   bg: 'bg-blue-500/10',    text: 'text-blue-400' },
+  activity: { label: 'Actividad',  icon: Zap,      border: 'border-l-amber-400',  bg: 'bg-amber-500/10',   text: 'text-amber-400' },
 } as const
 
 type FavItemType = keyof typeof typeConfig
@@ -38,7 +38,7 @@ export default function FavoritesPage() {
             return (
               <div
                 key={fav.id}
-                className={`bg-white rounded-xl border border-gray-200 border-l-4 ${config?.border ?? 'border-l-gray-300'} shadow-sm p-4 flex items-center gap-3 hover:shadow-md transition-shadow`}
+                className={`bg-white rounded-xl border border-gray-200 border-l-4 ${config?.border ?? 'border-l-gray-300'} shadow-glass-sm p-4 flex items-center gap-3 hover:shadow-neon-sm transition-all`}
               >
                 {Icon && (
                   <div className={`${config?.bg} rounded-lg w-9 h-9 flex items-center justify-center flex-shrink-0`}>
@@ -54,7 +54,7 @@ export default function FavoritesPage() {
                 <button
                   onClick={() => remove.mutate(fav.id)}
                   disabled={remove.isPending}
-                  className="text-gray-300 hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-red-50 flex-shrink-0"
+                  className="text-gray-300 hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-red-500/10 flex-shrink-0"
                   aria-label="Eliminar favorito"
                 >
                   <Trash2 className="h-4 w-4" />

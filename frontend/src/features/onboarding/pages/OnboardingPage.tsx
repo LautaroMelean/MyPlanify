@@ -47,7 +47,7 @@ export default function OnboardingPage() {
   return (
     <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-8">
       <div className="text-center">
-        <div className="w-14 h-14 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="w-14 h-14 bg-primary-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <Sparkles className="h-7 w-7 text-primary-600" />
         </div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">¿Qué te gusta hacer?</h1>
@@ -66,8 +66,8 @@ export default function OnboardingPage() {
               onClick={() => toggle(opt.value)}
               className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
                 isSelected
-                  ? 'border-primary-500 bg-primary-50 text-primary-700'
-                  : 'border-gray-200 bg-white text-gray-700 hover:border-primary-300 hover:bg-gray-50'
+                  ? 'border-primary-500 bg-primary-500/10 text-primary-600 shadow-neon-sm'
+                  : 'border-gray-200 bg-white text-gray-700 hover:border-primary-400/50 hover:bg-white/5'
               }`}
             >
               {isSelected && (

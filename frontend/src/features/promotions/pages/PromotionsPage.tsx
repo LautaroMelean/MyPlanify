@@ -10,7 +10,7 @@ function formatDate(iso: string) {
 
 function PromotionCard({ promo }: { promo: Promotion }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all">
       <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-4 py-3 flex items-center justify-between">
         <span className="text-white font-bold text-xl flex items-center gap-1">
           <Percent className="h-5 w-5" />

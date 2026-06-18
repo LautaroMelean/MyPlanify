@@ -17,10 +17,10 @@ function formatDate(iso: string) {
 }
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  published: { label: 'Publicado',  color: 'bg-green-100 text-green-700' },
-  draft:     { label: 'Borrador',   color: 'bg-gray-100 text-gray-600' },
-  cancelled: { label: 'Cancelado',  color: 'bg-red-100 text-red-600' },
-  finished:  { label: 'Finalizado', color: 'bg-yellow-100 text-yellow-700' },
+  published: { label: 'Publicado',  color: 'bg-green-500/15 text-green-400' },
+  draft:     { label: 'Borrador',   color: 'bg-gray-300/10 text-gray-500' },
+  cancelled: { label: 'Cancelado',  color: 'bg-red-500/15 text-red-400' },
+  finished:  { label: 'Finalizado', color: 'bg-yellow-500/15 text-yellow-400' },
 }
 
 export default function EventDetail() {
@@ -41,7 +41,7 @@ export default function EventDetail() {
     )
   }
 
-  const statusInfo = STATUS_LABELS[event.status] ?? { label: event.status, color: 'bg-gray-100 text-gray-600' }
+  const statusInfo = STATUS_LABELS[event.status] ?? { label: event.status, color: 'bg-gray-300/10 text-gray-500' }
   const price = parseFloat(event.price)
 
   const handleReminder = async () => {
@@ -71,7 +71,7 @@ export default function EventDetail() {
             <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusInfo.color}`}>
               {statusInfo.label}
             </span>
-            <span className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full font-medium">
+            <span className="text-xs bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full font-medium">
               {event.category}
             </span>
           </div>
@@ -84,7 +84,7 @@ export default function EventDetail() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
           <Calendar className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div>
             <p className="text-xs text-gray-500">Inicio</p>
@@ -92,7 +92,7 @@ export default function EventDetail() {
           </div>
         </div>
         {event.end_date && (
-          <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
             <Clock className="h-5 w-5 text-primary-600 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-500">Fin</p>
@@ -100,7 +100,7 @@ export default function EventDetail() {
             </div>
           </div>
         )}
-        <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
           <DollarSign className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div>
             <p className="text-xs text-gray-500">Precio</p>
@@ -108,7 +108,7 @@ export default function EventDetail() {
           </div>
         </div>
         {event.minimum_age > 0 && (
-          <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
             <Users className="h-5 w-5 text-primary-600 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-500">Edad mínima</p>
@@ -117,7 +117,7 @@ export default function EventDetail() {
           </div>
         )}
         {event.place_name && (
-          <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3 col-span-full sm:col-span-1">
+          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 col-span-full sm:col-span-1">
             <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-500">Lugar</p>
@@ -129,14 +129,14 @@ export default function EventDetail() {
 
       {/* Reminder */}
       {event.status === 'published' && (
-        <div className="bg-primary-50 rounded-xl p-4 border border-primary-100">
-          <h2 className="text-sm font-semibold text-primary-800 mb-2">Crear recordatorio</h2>
+        <div className="bg-primary-100/30 rounded-xl p-4 border border-primary-400/20">
+          <h2 className="text-sm font-semibold text-primary-600 mb-2">Crear recordatorio</h2>
           <div className="flex gap-2">
             <input
               type="datetime-local"
               value={reminderDate}
               onChange={(e) => setReminderDate(e.target.value)}
-              className="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="flex-1 text-sm border border-gray-200 bg-gray-100 text-gray-800 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
             />
             <Button
               size="sm"
@@ -156,12 +156,12 @@ export default function EventDetail() {
           <h2 className="text-lg font-semibold text-gray-900 mb-3">Promociones en este lugar</h2>
           <div className="flex flex-col gap-2">
             {promotions.map((p) => (
-              <div key={p.id} className="flex items-center justify-between bg-green-50 rounded-xl p-3 border border-green-100">
+              <div key={p.id} className="flex items-center justify-between bg-green-500/10 rounded-xl p-3 border border-green-500/20">
                 <div>
-                  <p className="text-sm font-semibold text-green-800">{p.title}</p>
-                  <p className="text-xs text-green-600">{p.description}</p>
+                  <p className="text-sm font-semibold text-green-400">{p.title}</p>
+                  <p className="text-xs text-green-400/70">{p.description}</p>
                 </div>
-                <span className="text-green-700 font-bold text-sm flex-shrink-0 ml-3">
+                <span className="text-green-400 font-bold text-sm flex-shrink-0 ml-3">
                   -{p.discount_percentage}%
                 </span>
               </div>

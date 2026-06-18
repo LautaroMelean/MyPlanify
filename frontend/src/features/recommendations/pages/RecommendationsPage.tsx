@@ -160,7 +160,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
           </div>
           <h3 className="font-semibold text-gray-900 truncate">{name}</h3>
           {category && (
-            <span className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full mt-0.5 inline-block">
+            <span className="text-xs bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full mt-0.5 inline-block">
               {category}
             </span>
           )}

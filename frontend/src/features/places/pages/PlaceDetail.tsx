@@ -61,7 +61,7 @@ export default function PlaceDetail() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{place.name}</h1>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <span className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full font-medium">
+            <span className="text-xs bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full font-medium">
               {place.category}
             </span>
             {place.price_level > 0 && (
@@ -81,7 +81,7 @@ export default function PlaceDetail() {
 
       {/* Enriched place info */}
       {(place.opening_hours || place.cuisine || place.fee !== null || place.outdoor_seating !== null || place.internet_access !== null || place.wheelchair) && (
-        <div className="bg-gray-50 rounded-xl p-4">
+        <div className="bg-gray-100 rounded-xl p-4 border border-gray-200/50">
           <h2 className="text-sm font-semibold text-gray-700 mb-3">Información del lugar</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-sm">
             <div className="flex items-center gap-2">
@@ -90,10 +90,10 @@ export default function PlaceDetail() {
               <span className="text-gray-800 truncate">
                 {place.opening_hours || 'Sin información'}
                 {place.is_open_now === true && (
-                  <span className="ml-2 text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">Abierto</span>
+                  <span className="ml-2 text-xs bg-green-500/15 text-green-400 px-1.5 py-0.5 rounded-full">Abierto</span>
                 )}
                 {place.is_open_now === false && (
-                  <span className="ml-2 text-xs bg-red-100 text-red-700 px-1.5 py-0.5 rounded-full">Cerrado</span>
+                  <span className="ml-2 text-xs bg-red-500/15 text-red-400 px-1.5 py-0.5 rounded-full">Cerrado</span>
                 )}
               </span>
             </div>
@@ -138,7 +138,7 @@ export default function PlaceDetail() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+        <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
           <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" />
           <div className="min-w-0">
             <p className="text-xs text-gray-500">Dirección</p>
@@ -146,7 +146,7 @@ export default function PlaceDetail() {
           </div>
         </div>
         {place.phone && (
-          <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
             <Phone className="h-5 w-5 text-primary-600 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-500">Teléfono</p>
@@ -155,7 +155,7 @@ export default function PlaceDetail() {
           </div>
         )}
         {place.website && (
-          <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+          <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
             <Globe className="h-5 w-5 text-primary-600 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-500">Sitio web</p>
@@ -170,7 +170,7 @@ export default function PlaceDetail() {
 
       {/* Map */}
       {hasCoords && (
-        <div className="rounded-xl overflow-hidden border border-gray-200" style={{ height: '200px' }}>
+        <div className="rounded-xl overflow-hidden border border-gray-200/50" style={{ height: '200px' }}>
           <MapContainer center={center} zoom={15} style={{ height: '100%', width: '100%' }}>
             <TileLayer
               attribution='&copy; OpenStreetMap'
@@ -189,12 +189,12 @@ export default function PlaceDetail() {
           <h2 className="text-lg font-semibold text-gray-900 mb-3">Promociones activas</h2>
           <div className="flex flex-col gap-2">
             {promotions.map((p) => (
-              <div key={p.id} className="flex items-center justify-between bg-green-50 rounded-xl p-3 border border-green-100">
+              <div key={p.id} className="flex items-center justify-between bg-green-500/10 rounded-xl p-3 border border-green-500/20">
                 <div>
-                  <p className="text-sm font-semibold text-green-800">{p.title}</p>
-                  {p.description && <p className="text-xs text-green-600">{p.description}</p>}
+                  <p className="text-sm font-semibold text-green-400">{p.title}</p>
+                  {p.description && <p className="text-xs text-green-400/70">{p.description}</p>}
                 </div>
-                <span className="text-green-700 font-bold text-sm flex-shrink-0 ml-3">
+                <span className="text-green-400 font-bold text-sm flex-shrink-0 ml-3">
                   -{p.discount_percentage}%
                 </span>
               </div>
@@ -212,7 +212,7 @@ export default function PlaceDetail() {
               <button
                 key={e.id}
                 onClick={() => navigate(`/events/${e.id}`)}
-                className="flex items-center justify-between bg-white rounded-xl p-3 border border-gray-200 hover:border-primary-300 transition-colors text-left"
+                className="flex items-center justify-between bg-white rounded-xl p-3 border border-gray-200 hover:border-primary-500/40 hover:shadow-neon-sm transition-all text-left"
               >
                 <p className="text-sm font-medium text-gray-900">{e.title}</p>
                 <span className="text-xs text-gray-400 flex-shrink-0 ml-3">
