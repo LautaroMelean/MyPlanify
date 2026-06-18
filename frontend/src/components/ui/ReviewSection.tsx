@@ -143,7 +143,7 @@ export default function ReviewSection({ entityType, entityId }: Props) {
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
               className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0"
-              title="Eliminar reseña"
+              aria-label="Eliminar reseña"
             >
               <Trash2 className="h-4 w-4" />
             </button>

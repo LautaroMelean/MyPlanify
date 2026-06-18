@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CalendarDays, Trash2, Globe, Lock, Plus, Loader2 } from 'lucide-react'
 import { useMyPlans } from '@/hooks/useMyPlans'
@@ -15,6 +16,7 @@ export default function MyPlansPage() {
   const navigate = useNavigate()
   const { data: plans, isLoading } = useMyPlans()
   const deletePlan = useDeletePlan()
+  const [confirmingId, setConfirmingId] = useState<string | null>(null)
 
   if (isLoading) {
     return (
@@ -27,8 +29,11 @@ export default function MyPlansPage() {
 
   const handleDelete = (e: React.MouseEvent, planId: string) => {
     e.stopPropagation()
-    if (window.confirm('¿Eliminás este plan? Esta acción no se puede deshacer.')) {
+    if (confirmingId === planId) {
       deletePlan.mutate(planId)
+      setConfirmingId(null)
+    } else {
+      setConfirmingId(planId)
     }
   }
 
@@ -75,10 +80,16 @@ export default function MyPlansPage() {
               </div>
               <button
                 onClick={(e) => handleDelete(e, plan.id)}
-                className="p-1.5 text-gray-300 hover:text-red-500 transition-colors flex-shrink-0 rounded-lg hover:bg-red-500/10"
+                onBlur={() => setConfirmingId(null)}
+                className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-all flex-shrink-0 ${
+                  confirmingId === plan.id
+                    ? 'bg-red-500/15 text-red-500 border border-red-500/30'
+                    : 'text-gray-300 hover:text-red-500 hover:bg-red-500/10'
+                }`}
                 aria-label="Eliminar plan"
               >
                 <Trash2 className="h-4 w-4" />
+                {confirmingId === plan.id && <span>Confirmar</span>}
               </button>
             </div>
           ))}

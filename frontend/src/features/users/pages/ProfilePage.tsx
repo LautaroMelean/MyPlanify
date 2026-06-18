@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, X } from 'lucide-react'
+import { Plus, X, User } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '@/store/authStore'
 import { usePreferences, useSetPreferences, useRemovePreference } from '@/hooks/usePreferences'
@@ -53,7 +53,10 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-2xl mx-auto flex flex-col gap-6">
-      <h1 className="text-2xl font-bold text-gray-900">Mi perfil</h1>
+      <div className="flex items-center gap-2">
+        <User className="h-6 w-6 text-primary-600" />
+        <h1 className="text-2xl font-bold text-gray-900">Mi perfil</h1>
+      </div>
 
       {/* Datos personales */}
       <Card>

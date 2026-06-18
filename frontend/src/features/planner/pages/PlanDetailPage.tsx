@@ -143,7 +143,7 @@ export default function PlanDetailPage() {
 
       {/* Forecast for plan date (only for future plans) */}
       {plan.date >= new Date().toISOString().slice(0, 10) && coords && (
-        <div className="mb-6 p-4 bg-gray-100 rounded-xl border border-gray-200/50">
+        <div className="mb-6 p-4 bg-gray-100 rounded-xl border border-gray-200/30">
           <h2 className="text-sm font-semibold text-gray-600 mb-2">
             Pronóstico para el {new Date(plan.date + 'T12:00:00').toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
           </h2>
