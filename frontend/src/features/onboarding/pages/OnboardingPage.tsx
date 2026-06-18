@@ -67,7 +67,7 @@ export default function OnboardingPage() {
               className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
                 isSelected
                   ? 'border-primary-500 bg-primary-500/10 text-primary-600 shadow-neon-sm'
-                  : 'border-gray-200 bg-white text-gray-700 hover:border-primary-400/50 hover:bg-white/5'
+                  : 'border-gray-200 bg-white text-gray-600 shadow-glass-sm hover:border-primary-400/50 hover:shadow-neon-sm hover:bg-white/5'
               }`}
             >
               {isSelected && (

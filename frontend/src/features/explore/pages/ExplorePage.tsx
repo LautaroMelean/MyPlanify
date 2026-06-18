@@ -300,14 +300,14 @@ export default function ExplorePage() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <TrendingUp className="h-4 w-4 text-primary-600" />
-                <h2 className="text-sm font-semibold text-gray-700">Lugares más populares</h2>
+                <h2 className="text-sm font-semibold text-gray-600">Lugares más populares</h2>
               </div>
               <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
                 {trending.places.map((p) => (
                   <button
                     key={p.id}
                     onClick={() => navigate(`/places/${p.id}`)}
-                    className="flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left"
+                    className="flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left"
                   >
                     {p.image_url ? (
                       <img src={p.image_url} alt={p.name} className="w-full h-24 object-cover" />
@@ -330,14 +330,14 @@ export default function ExplorePage() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <TrendingUp className="h-4 w-4 text-primary-600" />
-                <h2 className="text-sm font-semibold text-gray-700">Eventos más guardados</h2>
+                <h2 className="text-sm font-semibold text-gray-600">Eventos más guardados</h2>
               </div>
               <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
                 {trending.events.map((e) => (
                   <button
                     key={e.id}
                     onClick={() => navigate(`/events/${e.id}`)}
-                    className="flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left"
+                    className="flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left"
                   >
                     {e.image_url ? (
                       <img src={e.image_url} alt={e.title} className="w-full h-24 object-cover" />
@@ -506,7 +506,7 @@ function FilterPanel({ children, onClose }: { children: React.ReactNode; onClose
   return (
     <div className="bg-white border border-gray-200/50 rounded-xl p-4 flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-semibold text-gray-700">Filtros avanzados</span>
+        <span className="text-sm font-semibold text-gray-600">Filtros avanzados</span>
         <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
           <X className="h-4 w-4" />
         </button>
@@ -518,7 +518,7 @@ function FilterPanel({ children, onClose }: { children: React.ReactNode; onClose
 
 function FilterRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-1 [&_input]:w-full [&_input]:border [&_input]:border-gray-200 [&_input]:rounded-lg [&_input]:px-2.5 [&_input]:py-1.5 [&_input]:text-sm [&_input]:bg-gray-100 [&_input]:text-gray-700 [&_input]:outline-none [&_input:focus]:border-primary-500/50 [&_input:focus]:ring-2 [&_input:focus]:ring-primary-500/20">
+    <div className="flex flex-col gap-1 [&_input]:w-full [&_input]:border [&_input]:border-gray-200 [&_input]:rounded-lg [&_input]:px-2.5 [&_input]:py-1.5 [&_input]:text-sm [&_input]:bg-gray-100 [&_input]:text-gray-800 [&_input]:outline-none [&_input:focus]:border-primary-500/50 [&_input:focus]:ring-2 [&_input:focus]:ring-primary-500/20">
       <label className="text-xs font-medium text-gray-600">{label}</label>
       {children}
     </div>
@@ -527,7 +527,7 @@ function FilterRow({ label, children }: { label: string; children: React.ReactNo
 
 function CheckFilter({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) {
   return (
-    <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-gray-700">
+    <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-gray-600">
       <input
         type="checkbox"
         checked={checked}

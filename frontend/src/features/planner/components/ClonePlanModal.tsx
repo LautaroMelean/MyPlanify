@@ -41,7 +41,7 @@ export function ClonePlanModal({ isOpen, onClose, onConfirm, isLoading, title = 
         </div>
 
         <div className="p-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-600 mb-1">
             ¿Para qué fecha querés usar este plan?
           </label>
           <input

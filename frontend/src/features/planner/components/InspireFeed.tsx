@@ -38,7 +38,7 @@ export function InspireFeed() {
     <div>
       <div className="flex items-center gap-2 mb-3">
         <Sparkles className="h-4 w-4 text-primary-500" />
-        <h2 className="text-sm font-semibold text-gray-700">Inspirate — Planes populares</h2>
+        <h2 className="text-sm font-semibold text-gray-600">Inspirate — Planes populares</h2>
       </div>
 
       {plans.length === 0 ? (

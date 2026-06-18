@@ -108,7 +108,7 @@ export default function ReviewSection({ entityType, entityId }: Props) {
 
       {user && showForm && (
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 bg-gray-100 rounded-xl p-4 border border-gray-200">
-          <p className="text-sm font-medium text-gray-700">Tu calificación</p>
+          <p className="text-sm font-medium text-gray-600">Tu calificación</p>
           <StarPicker value={stars} onChange={setStars} />
           <textarea
             value={text}
@@ -137,7 +137,7 @@ export default function ReviewSection({ entityType, entityId }: Props) {
                 <StarDisplay value={my_review.stars} />
                 <span className="text-xs font-medium text-primary-600">Tu reseña</span>
               </div>
-              {my_review.text && <p className="text-sm text-gray-700">{my_review.text}</p>}
+              {my_review.text && <p className="text-sm text-gray-600">{my_review.text}</p>}
             </div>
             <button
               onClick={handleDelete}

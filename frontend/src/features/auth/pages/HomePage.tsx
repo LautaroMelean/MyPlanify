@@ -146,16 +146,16 @@ export default function HomePage() {
 
       {/* ¿Qué querés hacer? */}
       <div>
-        <h2 className="text-sm font-semibold text-gray-700 mb-3">¿Qué querés hacer hoy?</h2>
+        <h2 className="text-sm font-semibold text-gray-600 mb-3">¿Qué querés hacer hoy?</h2>
         <div className="grid grid-cols-4 gap-2">
           {ACTIVITY_SHORTCUTS.map((s) => (
             <button
               key={s.type}
               onClick={() => navigate('/explorar', { state: { activityType: s.type } })}
-              className="flex flex-col items-center gap-1.5 p-3 bg-white border border-gray-200 rounded-xl hover:border-primary-500/40 hover:shadow-neon-sm transition-all"
+              className="flex flex-col items-center gap-1.5 p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/40 hover:shadow-neon-sm transition-all"
             >
               <span className="text-xl">{s.emoji}</span>
-              <span className="text-xs font-medium text-gray-700">{s.label}</span>
+              <span className="text-xs font-medium text-gray-600">{s.label}</span>
             </button>
           ))}
         </div>
@@ -164,7 +164,7 @@ export default function HomePage() {
       {/* Pronóstico semanal */}
       {(forecastLoading || (forecast && forecast.length > 0)) && (
         <div>
-          <h2 className="text-sm font-semibold text-gray-700 mb-2">Pronóstico de la semana en BA</h2>
+          <h2 className="text-sm font-semibold text-gray-600 mb-2">Pronóstico de la semana en BA</h2>
           <WeatherForecastWidget forecast={forecast} isLoading={forecastLoading} highlightDate={TODAY} />
         </div>
       )}
@@ -180,12 +180,12 @@ export default function HomePage() {
             <button
               key={a.to}
               onClick={() => navigate(a.to)}
-              className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-3 hover:shadow-neon-sm hover:border-primary-500/40 transition-all text-left"
+              className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-3 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/40 transition-all text-left"
             >
               <div className={`${a.bg} rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0`}>
                 {a.icon}
               </div>
-              <span className="text-sm font-medium text-gray-700">{a.label}</span>
+              <span className="text-sm font-medium text-gray-600">{a.label}</span>
             </button>
           ))}
         </div>

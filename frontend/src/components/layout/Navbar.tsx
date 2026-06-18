@@ -130,7 +130,7 @@ export default function Navbar() {
               </Link>
               <button
                 onClick={() => navigate('/perfil')}
-                className="flex items-center gap-2 hover:text-primary-600 text-sm text-gray-700 transition-colors"
+                className="flex items-center gap-2 hover:text-primary-600 text-sm text-gray-600 transition-colors"
               >
                 <Avatar name={user?.full_name} size="sm" src={user?.profile_image || undefined} />
                 <span className="hidden sm:inline">{user?.first_name}</span>
@@ -176,7 +176,7 @@ export default function Navbar() {
               to={link.to}
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                isActive(link.to) ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-700 hover:bg-white/5'
+                isActive(link.to) ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-600 hover:bg-white/5'
               }`}
             >
               {link.icon}
@@ -188,7 +188,7 @@ export default function Navbar() {
               to={dashboardLink.to}
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                isActive(dashboardLink.to) ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-700 hover:bg-white/5'
+                isActive(dashboardLink.to) ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-600 hover:bg-white/5'
               }`}
             >
               {dashboardLink.icon}
@@ -199,7 +199,7 @@ export default function Navbar() {
             to="/notificaciones"
             onClick={() => setMobileOpen(false)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              isActive('/notificaciones') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-700 hover:bg-white/5'
+              isActive('/notificaciones') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-600 hover:bg-white/5'
             }`}
           >
             <Bell className="h-4 w-4" />
@@ -214,7 +214,7 @@ export default function Navbar() {
             to="/mis-planes"
             onClick={() => setMobileOpen(false)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              isActive('/mis-planes') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-700 hover:bg-white/5'
+              isActive('/mis-planes') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-600 hover:bg-white/5'
             }`}
           >
             <FolderOpen className="h-4 w-4" />
@@ -224,7 +224,7 @@ export default function Navbar() {
             to="/recordatorios"
             onClick={() => setMobileOpen(false)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              isActive('/recordatorios') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-700 hover:bg-white/5'
+              isActive('/recordatorios') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-600 hover:bg-white/5'
             }`}
           >
             <Clock className="h-4 w-4" />
@@ -234,7 +234,7 @@ export default function Navbar() {
             to="/configuracion"
             onClick={() => setMobileOpen(false)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              isActive('/configuracion') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-700 hover:bg-white/5'
+              isActive('/configuracion') ? 'text-primary-600 bg-primary-500/10 shadow-neon-sm' : 'text-gray-600 hover:bg-white/5'
             }`}
           >
             <Settings className="h-4 w-4" />

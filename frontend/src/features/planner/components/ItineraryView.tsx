@@ -29,7 +29,7 @@ export function ItineraryView({ plan, onRemoveItem, onFeedbackItem, onSaveNote, 
           <div key={slot}>
             <div className="flex items-center gap-2 mb-3">
               <SlotBadge slot={slot} />
-              <h3 className="text-sm font-semibold text-gray-700">{SLOT_LABELS[slot]}</h3>
+              <h3 className="text-sm font-semibold text-gray-600">{SLOT_LABELS[slot]}</h3>
             </div>
 
             {items.length === 0 ? (

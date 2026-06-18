@@ -158,7 +158,7 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
               onClick={() => !readonly && onSaveNote && setEditingNote(true)}
               className={`mt-1.5 text-sm min-h-[1rem] rounded px-1 -mx-1 ${
                 !readonly && onSaveNote ? 'cursor-text hover:bg-white/5 transition-colors' : ''
-              } ${item.note ? 'text-gray-700' : 'text-gray-400 italic'}`}
+              } ${item.note ? 'text-gray-600' : 'text-gray-400 italic'}`}
             >
               {item.note || (!readonly && onSaveNote ? 'Agregar nota...' : '')}
             </div>

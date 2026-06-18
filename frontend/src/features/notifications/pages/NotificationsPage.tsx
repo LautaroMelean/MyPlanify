@@ -43,7 +43,7 @@ function NotificationItem({ notification }: { notification: Notification }) {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
-          <p className={`text-sm font-semibold ${notification.read ? 'text-gray-700' : 'text-gray-900'}`}>
+          <p className={`text-sm font-semibold ${notification.read ? 'text-gray-600' : 'text-gray-900'}`}>
             {notification.title}
           </p>
           <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0">

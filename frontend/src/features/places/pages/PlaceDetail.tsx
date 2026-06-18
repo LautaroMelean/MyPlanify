@@ -82,7 +82,7 @@ export default function PlaceDetail() {
       {/* Enriched place info */}
       {(place.opening_hours || place.cuisine || place.fee !== null || place.outdoor_seating !== null || place.internet_access !== null || place.wheelchair) && (
         <div className="bg-gray-100 rounded-xl p-4 border border-gray-200/50">
-          <h2 className="text-sm font-semibold text-gray-700 mb-3">Información del lugar</h2>
+          <h2 className="text-sm font-semibold text-gray-600 mb-3">Información del lugar</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-sm">
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-gray-400 flex-shrink-0" />
@@ -212,7 +212,7 @@ export default function PlaceDetail() {
               <button
                 key={e.id}
                 onClick={() => navigate(`/events/${e.id}`)}
-                className="flex items-center justify-between bg-white rounded-xl p-3 border border-gray-200 hover:border-primary-500/40 hover:shadow-neon-sm transition-all text-left"
+                className="flex items-center justify-between bg-white rounded-xl p-3 border border-gray-200 shadow-glass-sm hover:border-primary-500/40 hover:shadow-neon-sm transition-all text-left"
               >
                 <p className="text-sm font-medium text-gray-900">{e.title}</p>
                 <span className="text-xs text-gray-400 flex-shrink-0 ml-3">

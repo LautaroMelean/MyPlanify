@@ -29,7 +29,7 @@ export default function WeatherWidget({ weather }: WeatherWidgetProps) {
     <div className="flex items-center gap-4 bg-white border border-gray-200 rounded-xl px-4 py-3 shadow-glass-sm w-fit">
       <div className="flex items-center gap-2">
         {icon}
-        <span className="text-sm font-medium text-gray-700">{label}</span>
+        <span className="text-sm font-medium text-gray-600">{label}</span>
       </div>
       <div className="h-4 w-px bg-gray-200" />
       <span className="text-lg font-bold text-gray-900">{weather.temperature}°C</span>
