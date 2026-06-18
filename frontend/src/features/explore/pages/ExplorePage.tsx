@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { MapPin, Activity, Calendar, TrendingUp, Navigation, Filter, X, Globe, Compass } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { usePlaces } from '@/hooks/usePlaces'
@@ -57,8 +57,14 @@ export default function ExplorePage() {
   const [geoLoading, setGeoLoading] = useState(false)
   const [geoError, setGeoError] = useState<string | null>(null)
 
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search), 300)
+    return () => clearTimeout(t)
+  }, [search])
+
   const places = usePlaces({
-    name: tab === 'lugares' ? (search || undefined) : undefined,
+    name: tab === 'lugares' ? (debouncedSearch || undefined) : undefined,
     city: tab === 'lugares' ? (placeFilters.city || undefined) : undefined,
     category: tab === 'lugares' ? placeFilters.category : undefined,
     outdoor_seating: tab === 'lugares' ? placeFilters.outdoor_seating : undefined,
@@ -68,7 +74,7 @@ export default function ExplorePage() {
   })
 
   const activities = useActivities({
-    category: tab === 'actividades' ? (activityFilters.category || search || undefined) : undefined,
+    category: tab === 'actividades' ? (activityFilters.category || debouncedSearch || undefined) : undefined,
     indoor: tab === 'actividades' && activityFilters.indoor ? true : undefined,
     outdoor: tab === 'actividades' && activityFilters.outdoor ? true : undefined,
     free: tab === 'actividades' && activityFilters.free ? true : undefined,
@@ -76,7 +82,7 @@ export default function ExplorePage() {
   })
 
   const events = useEvents({
-    category: tab === 'eventos' ? (eventFilters.category || search || undefined) : undefined,
+    category: tab === 'eventos' ? (eventFilters.category || debouncedSearch || undefined) : undefined,
     date_from: tab === 'eventos' ? eventFilters.date_from : undefined,
     date_to: tab === 'eventos' ? eventFilters.date_to : undefined,
     free: tab === 'eventos' && eventFilters.free ? true : undefined,
