@@ -100,6 +100,7 @@ export default function Navbar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar lugares, eventos..."
+              aria-label="Buscar"
               className="pl-9 pr-4 py-1.5 text-sm border border-white/10 rounded-lg bg-white/5 text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary-500/50 focus:border-primary-500/30 focus:bg-white/8 w-56 transition-all"
             />
           </div>
@@ -128,13 +129,13 @@ export default function Navbar() {
               >
                 <Settings className="h-5 w-5" />
               </Link>
-              <button
-                onClick={() => navigate('/perfil')}
+              <Link
+                to="/perfil"
                 className="flex items-center gap-2 hover:text-primary-600 text-sm text-gray-600 transition-colors"
               >
                 <Avatar name={user?.full_name} size="sm" src={user?.profile_image || undefined} />
                 <span className="hidden sm:inline">{user?.first_name}</span>
-              </button>
+              </Link>
               <Button
                 variant="ghost"
                 size="sm"
@@ -150,6 +151,7 @@ export default function Navbar() {
                 className="md:hidden p-1.5 rounded-lg text-gray-500 hover:bg-white/5 transition-colors"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label="Menú"
+                aria-expanded={mobileOpen}
               >
                 {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>

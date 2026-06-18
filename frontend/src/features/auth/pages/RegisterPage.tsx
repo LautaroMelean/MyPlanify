@@ -35,6 +35,7 @@ export default function RegisterPage() {
 
   return (
     <Card className="w-full max-w-sm">
+      <title>Crear cuenta | Planify</title>
       <h1 className="text-2xl font-bold text-gray-900 mb-1">Crear cuenta</h1>
       <p className="text-sm text-gray-500 mb-6">Empezá a descubrir planes con Planify</p>
 
