@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Settings, Lock, AlertTriangle } from 'lucide-react'
+import { Settings, Lock, AlertTriangle, CheckCircle } from 'lucide-react'
 import apiClient from '@/lib/axios'
 import Card from '@/components/ui/Card'
 import Input from '@/components/ui/Input'
@@ -100,7 +100,8 @@ export default function ConfiguracionPage() {
           )}
 
           {success && (
-            <div className="text-green-400 text-sm bg-green-500/10 rounded-xl p-3">
+            <div className="flex items-center gap-2 text-green-400 text-sm bg-green-500/10 rounded-xl p-3">
+              <CheckCircle className="h-4 w-4 flex-shrink-0" />
               Contraseña cambiada correctamente.
             </div>
           )}

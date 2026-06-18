@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { MapPin, Sparkles } from 'lucide-react'
+import { MapPin, Sparkles, CalendarDays } from 'lucide-react'
 import { usePublicPlan } from '@/hooks/usePlan'
 import { ItineraryView } from '../components/ItineraryView'
+import EmptyState from '@/components/common/EmptyState'
 
 export default function PlanPublicPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -10,8 +11,22 @@ export default function PlanPublicPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-gray-500 text-sm">
-        Cargando plan...
+      <div className="min-h-screen animate-pulse">
+        <header className="glass-nav border-b border-gray-200/20 px-4 py-4">
+          <div className="max-w-2xl mx-auto flex items-center gap-2">
+            <div className="h-5 w-5 bg-gray-200/20 rounded-full" />
+            <div className="h-5 w-20 bg-gray-200/20 rounded" />
+          </div>
+        </header>
+        <main className="max-w-2xl mx-auto px-4 py-8 space-y-3">
+          <div className="h-6 w-64 bg-gray-200/20 rounded" />
+          <div className="h-4 w-40 bg-gray-200/20 rounded" />
+          <div className="mt-6 space-y-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-20 bg-white rounded-xl border border-gray-200 shadow-glass-sm" />
+            ))}
+          </div>
+        </main>
       </div>
     )
   }
@@ -37,6 +52,7 @@ export default function PlanPublicPage() {
 
   return (
     <div className="min-h-screen">
+      <title>{plan.title} | Planify</title>
       <header className="glass-nav border-b border-gray-200/20 px-4 py-4">
         <div className="max-w-2xl mx-auto flex items-center gap-2">
           <MapPin className="h-5 w-5 text-primary-600" />
@@ -51,7 +67,11 @@ export default function PlanPublicPage() {
         </p>
 
         {plan.items.length === 0 ? (
-          <p className="text-sm text-gray-500 italic">Este plan no tiene ítems.</p>
+          <EmptyState
+            title="Plan vacío"
+            description="Este plan compartido no tiene actividades todavía."
+            icon={<CalendarDays className="h-10 w-10 text-gray-300" />}
+          />
         ) : (
           <ItineraryView plan={plan} readonly />
         )}

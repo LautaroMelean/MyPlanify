@@ -53,6 +53,7 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
+      <title>Inicio | Planify</title>
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
@@ -83,10 +84,11 @@ export default function HomePage() {
 
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-indigo-200 flex items-center gap-1">
+            <label htmlFor="home-budget" className="text-xs text-indigo-200 flex items-center gap-1">
               <DollarSign className="h-3 w-3" /> Presupuesto (ARS)
             </label>
             <input
+              id="home-budget"
               type="number"
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
@@ -96,10 +98,11 @@ export default function HomePage() {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-indigo-200 flex items-center gap-1">
+            <label htmlFor="home-people" className="text-xs text-indigo-200 flex items-center gap-1">
               <Users className="h-3 w-3" /> Personas
             </label>
             <input
+              id="home-people"
               type="number"
               value={people}
               onChange={(e) => setPeople(e.target.value)}
