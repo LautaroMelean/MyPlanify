@@ -18,10 +18,19 @@ export default function PlanPublicPage() {
 
   if (isError || !plan) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-gray-400 text-sm text-center px-4">
-        <MapPin className="h-12 w-12 mb-3 text-gray-300" />
-        <p className="font-medium">Plan no encontrado</p>
-        <p className="text-xs text-gray-400 mt-1">Este plan no existe o no está disponible de forma pública.</p>
+      <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center gap-4">
+        <div className="p-5 bg-primary-500/10 rounded-2xl border border-primary-400/20">
+          <MapPin className="h-12 w-12 text-primary-400" />
+        </div>
+        <p className="text-lg font-semibold text-gray-800">Plan no encontrado</p>
+        <p className="text-sm text-gray-500 max-w-xs">Este plan no existe o no está disponible de forma pública.</p>
+        <button
+          onClick={() => navigate('/register')}
+          className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 shadow-neon-sm transition-all"
+        >
+          <Sparkles className="h-4 w-4" />
+          Crear mi propio plan
+        </button>
       </div>
     )
   }

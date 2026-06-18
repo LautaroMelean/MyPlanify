@@ -428,13 +428,19 @@ export default function ExplorePage() {
         <div>
           {!nearbyCoords && !geoLoading && (
             <div className="flex flex-col items-center py-16 gap-4">
-              <Navigation className="h-12 w-12 text-primary-300" />
-              <p className="text-gray-600 font-medium">Encontrá lugares a 5 km de vos</p>
-              <p className="text-sm text-gray-400">Necesitamos acceso a tu ubicación</p>
-              {geoError && <p className="text-sm text-red-500">{geoError}</p>}
+              <div className="p-4 bg-primary-500/10 rounded-2xl border border-primary-400/20">
+                <Navigation className="h-12 w-12 text-primary-400" />
+              </div>
+              <p className="text-gray-800 font-semibold">Encontrá lugares a 3 km de vos</p>
+              <p className="text-sm text-gray-500">Necesitamos acceso a tu ubicación para mostrarte lo que hay cerca.</p>
+              {geoError && (
+                <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 rounded-xl px-4 py-2.5">
+                  <span>{geoError}</span>
+                </div>
+              )}
               <button
                 onClick={requestGeolocation}
-                className="px-5 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors"
+                className="px-5 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 shadow-neon-sm transition-all"
               >
                 Usar mi ubicación
               </button>
