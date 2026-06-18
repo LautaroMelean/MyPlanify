@@ -1,5 +1,5 @@
 import { Bell, CheckCheck, Circle } from 'lucide-react'
-import { useNotifications, useMarkNotificationRead } from '@/hooks/useNotifications'
+import { useNotifications, useMarkNotificationRead, useMarkAllNotificationsRead } from '@/hooks/useNotifications'
 import Loading from '@/components/common/Loading'
 import EmptyState from '@/components/common/EmptyState'
 import type { Notification } from '@/types'
@@ -72,6 +72,7 @@ function NotificationItem({ notification }: { notification: Notification }) {
 
 export default function NotificationsPage() {
   const { data: notifications = [], isLoading } = useNotifications()
+  const markAll = useMarkAllNotificationsRead()
 
   if (isLoading) return <Loading />
 
@@ -87,6 +88,15 @@ export default function NotificationsPage() {
           <span className="bg-primary-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
             {unread.length}
           </span>
+        )}
+        {unread.length > 1 && (
+          <button
+            onClick={() => markAll.mutate(unread.map((n) => n.id))}
+            disabled={markAll.isPending}
+            className="ml-auto text-xs text-primary-600 hover:text-primary-700 font-medium disabled:opacity-50"
+          >
+            Marcar todas como leídas
+          </button>
         )}
       </div>
 

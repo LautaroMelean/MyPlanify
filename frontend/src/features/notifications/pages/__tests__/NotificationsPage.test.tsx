@@ -1,13 +1,14 @@
 import { screen, fireEvent } from '@testing-library/react'
 import { renderWithProviders } from '@/test/utils'
 import NotificationsPage from '../NotificationsPage'
-import { useNotifications, useMarkNotificationRead } from '@/hooks/useNotifications'
+import { useNotifications, useMarkNotificationRead, useMarkAllNotificationsRead } from '@/hooks/useNotifications'
 import type { Notification } from '@/types'
 
 vi.mock('@/hooks/useNotifications', () => ({
   useNotifications: vi.fn(),
   useUnreadCount: vi.fn(() => 0),
   useMarkNotificationRead: vi.fn(),
+  useMarkAllNotificationsRead: vi.fn(),
 }))
 
 function makeNotification(overrides: Partial<Notification> = {}): Notification {
@@ -26,6 +27,7 @@ function makeNotification(overrides: Partial<Notification> = {}): Notification {
 beforeEach(() => {
   vi.mocked(useNotifications).mockReturnValue({ data: [], isLoading: false } as any)
   vi.mocked(useMarkNotificationRead).mockReturnValue({ mutate: vi.fn(), isPending: false } as any)
+  vi.mocked(useMarkAllNotificationsRead).mockReturnValue({ mutate: vi.fn(), isPending: false } as any)
 })
 
 describe('NotificationsPage', () => {

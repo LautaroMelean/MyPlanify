@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
-import { X, Star, ChevronUp, ChevronDown, MapPin, Zap, Calendar, Info } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { X, Star, ChevronUp, ChevronDown, MapPin, Zap, Calendar, Info, ExternalLink } from 'lucide-react'
 import type { PlanItem } from '@/types'
 
 interface Props {
@@ -29,11 +30,22 @@ const ENTITY_BG: Record<string, string> = {
   event:    'bg-green-500/10 border-green-500/20',
 }
 
+const ENTITY_PATH: Record<string, string> = {
+  place: '/places',
+  activity: '/activities',
+  event: '/events',
+}
+
 export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder, readonly = false }: Props) {
+  const navigate = useNavigate()
   const [editingNote, setEditingNote] = useState(false)
   const [noteValue, setNoteValue] = useState(item.note)
   const [showDescription, setShowDescription] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const detailPath = item.entity_id && ENTITY_PATH[item.entity_type]
+    ? `${ENTITY_PATH[item.entity_type]}/${item.entity_id}`
+    : null
 
   useEffect(() => {
     if (editingNote && inputRef.current) {
@@ -91,7 +103,17 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
 
           {/* Name — the main thing the user needs to see */}
           {item.entity_name ? (
-            <p className="font-semibold text-gray-900 text-sm leading-snug">{item.entity_name}</p>
+            detailPath ? (
+              <button
+                onClick={() => navigate(detailPath)}
+                className="font-semibold text-gray-900 text-sm leading-snug hover:text-primary-600 flex items-center gap-1 group/link"
+              >
+                {item.entity_name}
+                <ExternalLink className="h-3 w-3 opacity-0 group-hover/link:opacity-60 transition-opacity flex-shrink-0" />
+              </button>
+            ) : (
+              <p className="font-semibold text-gray-900 text-sm leading-snug">{item.entity_name}</p>
+            )
           ) : (
             <div className="h-4 w-32 bg-gray-300/30 rounded animate-pulse mt-0.5" />
           )}
@@ -129,7 +151,7 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
               onKeyDown={handleNoteKeyDown}
               onBlur={commitNote}
               placeholder="Agregar nota..."
-              className="mt-2 w-full text-sm border-b border-primary-300 focus:outline-none bg-transparent pb-0.5"
+              className="mt-2 w-full text-sm border-b border-primary-500/50 focus:outline-none bg-transparent pb-0.5 text-gray-800 placeholder:text-gray-500"
             />
           ) : (
             <div

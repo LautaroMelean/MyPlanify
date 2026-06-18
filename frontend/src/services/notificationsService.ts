@@ -11,4 +11,8 @@ export const notificationsService = {
     const { data } = await apiClient.patch<ApiResponse<Notification>>(`/notifications/${id}/read/`)
     return data.data
   },
+
+  async markAllRead(ids: string[]): Promise<void> {
+    await Promise.all(ids.map((id) => notificationsService.markRead(id)))
+  },
 }

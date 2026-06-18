@@ -135,7 +135,7 @@ export default function ReviewSection({ entityType, entityId }: Props) {
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
                 <StarDisplay value={my_review.stars} />
-                <span className="text-xs font-medium text-primary-700">Tu reseña</span>
+                <span className="text-xs font-medium text-primary-600">Tu reseña</span>
               </div>
               {my_review.text && <p className="text-sm text-gray-700">{my_review.text}</p>}
             </div>
@@ -159,7 +159,7 @@ export default function ReviewSection({ entityType, entityId }: Props) {
               <div key={review.id} className="bg-white rounded-xl p-4 border border-gray-200">
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center text-xs font-semibold text-primary-700">
+                    <div className="h-8 w-8 rounded-full bg-primary-500/15 flex items-center justify-center text-xs font-semibold text-primary-600">
                       {review.user_name[0]?.toUpperCase()}
                     </div>
                     <div>
