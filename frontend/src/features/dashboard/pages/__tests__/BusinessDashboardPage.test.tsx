@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { describe, it, expect, vi } from 'vitest'
 import BusinessDashboardPage from '../BusinessDashboardPage'
 
@@ -23,19 +24,19 @@ vi.mock('@/hooks/useDashboard', () => ({
 
 describe('BusinessDashboardPage', () => {
   it('renders stats cards', () => {
-    render(<BusinessDashboardPage />)
+    render(<MemoryRouter><BusinessDashboardPage /></MemoryRouter>)
     expect(screen.getByText('3')).toBeInTheDocument()
     expect(screen.getByText('4.2')).toBeInTheDocument()
   })
 
   it('renders owned places list', () => {
-    render(<BusinessDashboardPage />)
+    render(<MemoryRouter><BusinessDashboardPage /></MemoryRouter>)
     const matches = screen.getAllByText('Café Central')
     expect(matches.length).toBeGreaterThan(0)
   })
 
   it('renders promotions list', () => {
-    render(<BusinessDashboardPage />)
+    render(<MemoryRouter><BusinessDashboardPage /></MemoryRouter>)
     expect(screen.getByText('Promo verano')).toBeInTheDocument()
     expect(screen.getByText('Activa')).toBeInTheDocument()
   })

@@ -103,7 +103,7 @@ export default function ProfilePage() {
 
         {/* Selector */}
         {adding && (
-          <div className="mb-4 p-3 bg-gray-100 rounded-lg border border-gray-200">
+          <div className="mb-4 p-3 bg-gray-300/5 rounded-xl border border-gray-200/30">
             <p className="text-xs text-gray-500 mb-2 font-medium">Elegí qué te interesa:</p>
             <div className="flex flex-wrap gap-2">
               {PREFERENCE_OPTIONS.filter((o) => !existingValues.has(o.value)).map((opt) => (

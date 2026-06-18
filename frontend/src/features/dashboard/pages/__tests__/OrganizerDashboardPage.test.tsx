@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { describe, it, expect, vi } from 'vitest'
 import OrganizerDashboardPage from '../OrganizerDashboardPage'
 
@@ -24,19 +25,19 @@ vi.mock('@/hooks/useDashboard', () => ({
 
 describe('OrganizerDashboardPage', () => {
   it('renders stats cards', () => {
-    render(<OrganizerDashboardPage />)
+    render(<MemoryRouter><OrganizerDashboardPage /></MemoryRouter>)
     expect(screen.getByText('5')).toBeInTheDocument()
     expect(screen.getByText('3')).toBeInTheDocument()
   })
 
   it('renders event list', () => {
-    render(<OrganizerDashboardPage />)
+    render(<MemoryRouter><OrganizerDashboardPage /></MemoryRouter>)
     expect(screen.getByText('Festival Jazz')).toBeInTheDocument()
     expect(screen.getByText('Publicado')).toBeInTheDocument()
   })
 
   it('shows avg_rating for events', () => {
-    render(<OrganizerDashboardPage />)
+    render(<MemoryRouter><OrganizerDashboardPage /></MemoryRouter>)
     expect(screen.getByText('★ 4.8')).toBeInTheDocument()
   })
 })

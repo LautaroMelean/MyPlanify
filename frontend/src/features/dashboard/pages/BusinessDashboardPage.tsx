@@ -1,4 +1,5 @@
 import { Building2, Tag, Star, MapPin } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useBusinessStats, useOwnedPlaces, useOwnedPromotions } from '@/hooks/useDashboard'
 import Loading from '@/components/common/Loading'
 
@@ -15,6 +16,7 @@ function StatCard({ label, value, icon }: { label: string; value: string | numbe
 }
 
 export default function BusinessDashboardPage() {
+  const navigate = useNavigate()
   const { data: stats, isLoading: statsLoading } = useBusinessStats()
   const { data: places, isLoading: placesLoading } = useOwnedPlaces()
   const { data: promotions, isLoading: promoLoading } = useOwnedPromotions()
@@ -43,7 +45,7 @@ export default function BusinessDashboardPage() {
         ) : (
           <div className="space-y-2">
             {places.map(place => (
-              <div key={place.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-glass-sm">
+              <div key={place.id} onClick={() => navigate(`/places/${place.id}`)} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all cursor-pointer">
                 <div className="flex items-center gap-3">
                   <Building2 className="h-4 w-4 text-gray-400" />
                   <div>
