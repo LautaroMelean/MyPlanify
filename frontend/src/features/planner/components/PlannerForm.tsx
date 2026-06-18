@@ -60,7 +60,7 @@ export function PlannerForm({ onSubmit, isLoading }: Props) {
           min={today}
           onChange={(e) => setDate(e.target.value)}
           required
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
+          className="w-full px-3 py-2 border border-gray-200 bg-gray-100 text-gray-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/50"
         />
       </div>
 
@@ -74,7 +74,7 @@ export function PlannerForm({ onSubmit, isLoading }: Props) {
           value={city}
           onChange={(e) => setCity(e.target.value)}
           required
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-300 bg-white"
+          className="w-full px-3 py-2 border border-gray-200 bg-gray-100 text-gray-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/50"
         >
           {CABA_BARRIOS.map((b) => (
             <option key={b} value={b}>{b}</option>
@@ -94,10 +94,10 @@ export function PlannerForm({ onSubmit, isLoading }: Props) {
           onChange={(e) => setBudget(e.target.value)}
           placeholder="5000"
           min="0"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
+          className="w-full px-3 py-2 border border-gray-200 bg-gray-100 text-gray-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/50"
         />
         {(budget === '' || budget === '0') && (
-          <p className="text-xs text-amber-600 mt-1">
+          <p className="text-xs text-amber-400 mt-1">
             Con presupuesto en $0 solo se incluirán actividades gratuitas.
           </p>
         )}
@@ -115,7 +115,7 @@ export function PlannerForm({ onSubmit, isLoading }: Props) {
           onChange={(e) => setPeopleCount(e.target.value)}
           min="1"
           max="20"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
+          className="w-full px-3 py-2 border border-gray-200 bg-gray-100 text-gray-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/50"
         />
       </div>
 

@@ -59,7 +59,7 @@ export default function RegisterPage() {
         />
 
         {register_.isError && (
-          <p className="text-sm text-red-600 text-center">
+          <p className="text-sm text-red-400 text-center">
             {(register_.error as any)?.response?.data?.error?.message ?? 'Error al registrarse. Intentá de nuevo.'}
           </p>
         )}

@@ -457,7 +457,7 @@ export default function ExplorePage() {
                     </p>
                   )}
                   {!externalNearby.isLoading && externalNearby.data && externalNearby.data.length > 0 && (
-                    <p className="text-xs text-green-600 flex items-center gap-1">
+                    <p className="text-xs text-green-400 flex items-center gap-1">
                       <Globe className="h-3 w-3" /> {externalNearby.data.length} lugares de OpenStreetMap incluidos
                     </p>
                   )}

@@ -64,17 +64,17 @@ export function SharePlanButton({ planId, slug, isPublic, onMakePublic }: Props)
       </Button>
 
       {open && (
-        <div className="absolute right-0 mt-1 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+        <div className="absolute right-0 mt-1 w-48 rounded-xl shadow-glass border border-white/10 bg-white z-10">
           <div className="py-1">
             <button
-              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-600 hover:bg-white/5 hover:text-gray-800"
               onClick={handleCopy}
             >
               <Copy className="h-4 w-4" />
               Copiar link
             </button>
             <button
-              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-600 hover:bg-white/5 hover:text-gray-800"
               onClick={handleWhatsApp}
             >
               <MessageCircle className="h-4 w-4 text-green-500" />

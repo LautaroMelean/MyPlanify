@@ -25,8 +25,8 @@ export function ClonePlanModal({ isOpen, onClose, onConfirm, isLoading, title = 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-sm">
-        <div className="flex items-center justify-between p-4 border-b border-gray-100">
+      <div className="bg-white rounded-xl shadow-glass border border-white/10 w-full max-w-sm">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200/30">
           <h2 className="text-base font-semibold text-gray-900">{title}</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
             <X className="h-4 w-4" />
@@ -42,7 +42,7 @@ export function ClonePlanModal({ isOpen, onClose, onConfirm, isLoading, title = 
             value={date}
             min={defaultDate}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
+            className="w-full border border-gray-200 bg-gray-100 text-gray-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40"
           />
         </div>
 

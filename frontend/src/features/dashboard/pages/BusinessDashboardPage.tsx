@@ -52,7 +52,7 @@ export default function BusinessDashboardPage() {
                   </div>
                 </div>
                 {place.avg_rating != null && (
-                  <span className="text-xs font-medium text-yellow-600">★ {place.avg_rating.toFixed(1)}</span>
+                  <span className="text-xs font-medium text-yellow-400">★ {place.avg_rating.toFixed(1)}</span>
                 )}
               </div>
             ))}

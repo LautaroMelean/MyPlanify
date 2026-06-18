@@ -218,7 +218,7 @@ export default function MapPage() {
                     <p className="text-xs text-gray-400 mt-1">{place.address}</p>
                   )}
                   {place.source === 'osm' && (
-                    <p className="text-xs text-green-600 mt-1">· OpenStreetMap</p>
+                    <p className="text-xs text-green-400/70 mt-1">· OpenStreetMap</p>
                   )}
                 </div>
               </Popup>

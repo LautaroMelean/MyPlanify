@@ -65,9 +65,9 @@ export default function OrganizerDashboardPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   {event.avg_rating != null && (
-                    <span className="text-xs font-medium text-yellow-600">★ {event.avg_rating.toFixed(1)}</span>
+                    <span className="text-xs font-medium text-yellow-400">★ {event.avg_rating.toFixed(1)}</span>
                   )}
-                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${STATUS_COLORS[event.status] ?? 'bg-gray-100 text-gray-500'}`}>
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${STATUS_COLORS[event.status] ?? 'bg-gray-300/10 text-gray-500'}`}>
                     {STATUS_LABELS[event.status] ?? event.status}
                   </span>
                 </div>

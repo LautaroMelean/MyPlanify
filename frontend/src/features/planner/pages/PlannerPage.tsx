@@ -59,8 +59,17 @@ export default function PlannerPage() {
 
         <div>
           {planner.isPending && (
-            <div className="flex items-center justify-center h-40 text-gray-500 text-sm">
-              Generando tu itinerario...
+            <div className="flex flex-col items-center justify-center h-40 gap-3">
+              <div className="flex gap-1.5">
+                {[0, 1, 2].map((i) => (
+                  <div
+                    key={i}
+                    className="w-2.5 h-2.5 rounded-full bg-primary-500 animate-bounce shadow-neon-sm"
+                    style={{ animationDelay: `${i * 0.15}s` }}
+                  />
+                ))}
+              </div>
+              <p className="text-sm text-gray-500">Generando tu itinerario...</p>
             </div>
           )}
 

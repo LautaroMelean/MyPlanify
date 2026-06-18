@@ -7,9 +7,9 @@ const SLOT_LABELS: Record<PlanSlot, string> = {
 }
 
 const SLOT_COLORS: Record<PlanSlot, string> = {
-  morning: 'bg-amber-100 text-amber-800',
-  afternoon: 'bg-blue-100 text-blue-800',
-  evening: 'bg-purple-100 text-purple-800',
+  morning: 'bg-amber-500/15 text-amber-400',
+  afternoon: 'bg-blue-500/15 text-blue-400',
+  evening: 'bg-primary-500/15 text-primary-600',
 }
 
 interface Props {

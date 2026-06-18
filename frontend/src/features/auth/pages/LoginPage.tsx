@@ -46,7 +46,7 @@ export default function LoginPage() {
         />
 
         {login.isError && (
-          <p className="text-sm text-red-600 text-center">
+          <p className="text-sm text-red-400 text-center">
             {(login.error as any)?.response?.data?.error?.message ?? 'Error al ingresar. Intentá de nuevo.'}
           </p>
         )}
