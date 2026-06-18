@@ -1,6 +1,5 @@
 import { Bell, CheckCheck, Circle } from 'lucide-react'
 import { useNotifications, useMarkNotificationRead, useMarkAllNotificationsRead } from '@/hooks/useNotifications'
-import Loading from '@/components/common/Loading'
 import EmptyState from '@/components/common/EmptyState'
 import type { Notification } from '@/types'
 
@@ -74,7 +73,21 @@ export default function NotificationsPage() {
   const { data: notifications = [], isLoading } = useNotifications()
   const markAll = useMarkAllNotificationsRead()
 
-  if (isLoading) return <Loading />
+  if (isLoading) {
+    return (
+      <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-6 animate-pulse">
+        <div className="flex items-center gap-3">
+          <div className="h-6 w-6 bg-gray-200/20 rounded-full" />
+          <div className="h-7 w-36 bg-gray-200/20 rounded" />
+        </div>
+        <div className="flex flex-col gap-2">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="h-20 bg-white rounded-xl border border-gray-200 shadow-glass-sm" />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   const unread = notifications.filter((n) => !n.read)
   const read   = notifications.filter((n) =>  n.read)

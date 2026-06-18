@@ -1,7 +1,6 @@
 import { Heart, Trash2, MapPin, Calendar, Zap, ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useFavorites, useRemoveFavorite } from '@/hooks/useFavorites'
-import Loading from '@/components/common/Loading'
 import EmptyState from '@/components/common/EmptyState'
 import type { Favorite } from '@/types'
 
@@ -25,7 +24,24 @@ export default function FavoritesPage() {
   const { data: favorites = [], isLoading } = useFavorites()
   const remove = useRemoveFavorite()
 
-  if (isLoading) return <Loading message="Cargando favoritos..." />
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-6 animate-pulse">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <div className="h-6 w-6 bg-gray-200/20 rounded-full" />
+            <div className="h-7 w-36 bg-gray-200/20 rounded" />
+          </div>
+          <div className="h-4 w-56 bg-gray-200/20 rounded" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-16 bg-white rounded-xl border border-gray-200 border-l-4 border-l-gray-300/30 shadow-glass-sm" />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-6">

@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { DollarSign, Users, MapPin, ArrowLeft, Tag, Zap } from 'lucide-react'
 import { useActivity } from '@/hooks/useActivities'
-import Loading from '@/components/common/Loading'
 import Button from '@/components/ui/Button'
 import FavoriteButton from '@/components/ui/FavoriteButton'
 import ReviewSection from '@/components/ui/ReviewSection'
@@ -17,7 +16,29 @@ export default function ActivityDetail() {
   const navigate = useNavigate()
   const { data: activity, isLoading, isError } = useActivity(id!)
 
-  if (isLoading) return <Loading />
+  if (isLoading) {
+    return (
+      <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-6 animate-pulse">
+        <div className="h-4 w-12 bg-gray-200/20 rounded" />
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-2">
+            <div className="h-7 w-48 bg-gray-200/20 rounded" />
+            <div className="flex gap-2">
+              <div className="h-5 w-20 bg-gray-200/20 rounded-full" />
+              <div className="h-5 w-16 bg-gray-200/20 rounded-full" />
+            </div>
+          </div>
+          <div className="h-9 w-9 bg-gray-200/20 rounded-full" />
+        </div>
+        <div className="h-16 bg-gray-200/20 rounded" />
+        <div className="grid grid-cols-2 gap-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-16 bg-white rounded-xl border border-gray-200 shadow-glass-sm" />
+          ))}
+        </div>
+      </div>
+    )
+  }
   if (isError || !activity) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[40vh] px-4 text-center gap-4">

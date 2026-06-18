@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Bell, Trash2, Calendar } from 'lucide-react'
 import { useReminders, useRemoveReminder } from '@/hooks/useReminders'
-import Loading from '@/components/common/Loading'
 import EmptyState from '@/components/common/EmptyState'
 import Button from '@/components/ui/Button'
 import type { Reminder } from '@/types'
@@ -63,7 +62,21 @@ export default function RemindersPage() {
   const navigate = useNavigate()
   const { data: reminders = [], isLoading } = useReminders()
 
-  if (isLoading) return <Loading />
+  if (isLoading) {
+    return (
+      <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-6 animate-pulse">
+        <div className="flex items-center gap-3">
+          <div className="h-6 w-6 bg-gray-200/20 rounded-full" />
+          <div className="h-7 w-40 bg-gray-200/20 rounded" />
+        </div>
+        <div className="flex flex-col gap-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-16 bg-white rounded-xl border border-gray-200 shadow-glass-sm" />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-6">

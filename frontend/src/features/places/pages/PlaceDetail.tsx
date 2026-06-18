@@ -5,7 +5,6 @@ import { usePlace } from '@/hooks/usePlaces'
 import { usePromotions } from '@/hooks/usePromotions'
 import ReviewSection from '@/components/ui/ReviewSection'
 import { useEvents } from '@/hooks/useEvents'
-import Loading from '@/components/common/Loading'
 import Button from '@/components/ui/Button'
 import FavoriteButton from '@/components/ui/FavoriteButton'
 import 'leaflet/dist/leaflet.css'
@@ -28,7 +27,28 @@ export default function PlaceDetail() {
   const { data: events = [] } = useEvents(id ? { place: id } : {})
   const placeEvents = events.filter((e) => e.status === 'published')
 
-  if (isLoading) return <Loading />
+  if (isLoading) {
+    return (
+      <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-6 animate-pulse">
+        <div className="h-4 w-12 bg-gray-200/20 rounded" />
+        <div className="h-56 bg-gray-200/20 rounded-xl" />
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-2">
+            <div className="h-7 w-48 bg-gray-200/20 rounded" />
+            <div className="h-5 w-24 bg-gray-200/20 rounded-full" />
+          </div>
+          <div className="h-9 w-9 bg-gray-200/20 rounded-full" />
+        </div>
+        <div className="h-16 bg-gray-200/20 rounded" />
+        <div className="h-28 bg-white rounded-xl border border-gray-200 shadow-glass-sm" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="h-16 bg-white rounded-xl border border-gray-200 shadow-glass-sm" />
+          ))}
+        </div>
+      </div>
+    )
+  }
   if (isError || !place) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[40vh] px-4 text-center gap-4">
