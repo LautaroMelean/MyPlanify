@@ -77,15 +77,23 @@ export default function PlanPublicPage() {
           <ItineraryView plan={plan} readonly />
         )}
 
-        <div className="mt-10 p-5 bg-gradient-to-r from-violet-900/50 to-primary-900/40 rounded-2xl border border-primary-400/20 text-center">
-          <Sparkles className="h-6 w-6 text-primary-500 mx-auto mb-2" />
-          <p className="text-sm font-semibold text-gray-800 mb-1">¿Te gustó este plan?</p>
-          <p className="text-xs text-gray-500 mb-3">Creá el tuyo gratis en Planify — planes personalizados en segundos.</p>
+        <div className="mt-10 p-6 bg-gradient-to-br from-violet-900/50 to-primary-900/40 rounded-2xl border border-primary-400/20 text-center">
+          <Sparkles className="h-6 w-6 text-primary-500 mx-auto mb-2" aria-hidden="true" />
+          <p className="text-base font-bold text-gray-900 mb-1">¿Te gustó este plan?</p>
+          <p className="text-sm text-gray-500 mb-4">Creá el tuyo gratis en Planify — planes personalizados en segundos.</p>
+          <ul className="flex flex-col sm:flex-row gap-2 justify-center mb-4 text-xs text-gray-500">
+            {['Itinerarios IA en segundos', 'Recomendaciones personalizadas', 'Compartí tus planes'].map((feat) => (
+              <li key={feat} className="flex items-center gap-1 justify-center">
+                <span className="text-primary-500" aria-hidden="true">✓</span>
+                {feat}
+              </li>
+            ))}
+          </ul>
           <button
             onClick={() => navigate('/register')}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 shadow-neon-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 shadow-neon transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
           >
-            <Sparkles className="h-4 w-4" />
+            <Sparkles className="h-4 w-4" aria-hidden="true" />
             Crear mi plan gratis
           </button>
         </div>

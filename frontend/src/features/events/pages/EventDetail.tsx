@@ -179,6 +179,7 @@ export default function EventDetail() {
               type="datetime-local"
               value={reminderDate}
               onChange={(e) => setReminderDate(e.target.value)}
+              min={new Date().toISOString().slice(0, 16)}
               aria-label="Fecha y hora del recordatorio"
               className="flex-1 text-sm border border-gray-200 bg-gray-100 text-gray-800 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
             />
