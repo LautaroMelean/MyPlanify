@@ -133,7 +133,6 @@ class ClonePlanSerializer(serializers.Serializer):
     date = serializers.DateField()
 
     def validate_date(self, value):
-        from datetime import date as date_type
         if value < date_type.today():
             raise serializers.ValidationError("La fecha no puede ser en el pasado.")
         return value

@@ -150,24 +150,19 @@ class OpenTripMapProvider:
 
         wiki_text = details.get("wikipedia_extracts", {}).get("text", "")
 
-        updated = False
+        update_fields = []
         if image_url and not activity.image_url:
             activity.image_url = image_url
-            updated = True
+            update_fields.append("image_url")
 
         if wiki_text and not activity.description:
             activity.description = wiki_text[:500]
-            updated = True
+            update_fields.append("description")
 
-        if updated:
-            update_fields = []
-            if image_url and not activity.image_url:
-                update_fields.append("image_url")
-            if wiki_text and not activity.description:
-                update_fields.append("description")
-            activity.save(update_fields=update_fields or ["image_url", "description"])
+        if update_fields:
+            activity.save(update_fields=update_fields)
 
-        return updated
+        return bool(update_fields)
 
 
 opentripmap_provider = OpenTripMapProvider()

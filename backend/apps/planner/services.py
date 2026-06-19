@@ -20,16 +20,6 @@ SLOT_KEYWORDS = {
                 "teatro", "jazz", "milonga", "karaoke", "cervecería", "cocktail", "stand-up", "humor"],
 }
 
-# Categories that count as "something to do" (not just eating/drinking)
-ACTIVITY_CATEGORIES = {
-    "Museo", "Turismo", "Cultura", "Parque", "Deporte", "Entretenimiento",
-    "museum", "tourism", "park", "sports", "concert", "gaming",
-}
-
-GASTRO_CATEGORIES = {"Gastronomía", "Café", "restaurant", "cafe"}
-BAR_CATEGORIES = {"Bar", "bar"}
-
-
 _BA_BARRIOS: frozenset[str] = frozenset({
     "agronomía", "almagro", "balvanera", "barracas", "belgrano", "boedo",
     "caballito", "chacarita", "coghlan", "colegiales", "constitución",
@@ -491,7 +481,6 @@ def generate_surprise_plan(user, plan_date=None) -> Plan:
       Phase 2 (relaxed): city only, no budget/people constraints
       Phase 3 (minimal): no filters — always produces something
     """
-    from decimal import Decimal
     from apps.recommendations.services import log_interaction
     from apps.users.selectors import get_user_preferences
     from apps.recommendations.models import InteractionHistory
