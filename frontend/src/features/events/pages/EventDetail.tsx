@@ -7,6 +7,7 @@ import { useCreateReminder } from '@/hooks/useReminders'
 import Button from '@/components/ui/Button'
 import FavoriteButton from '@/components/ui/FavoriteButton'
 import ReviewSection from '@/components/ui/ReviewSection'
+import { formatARS } from '@/lib/format'
 import { useState } from 'react'
 
 function formatDate(iso: string) {
@@ -140,7 +141,7 @@ export default function EventDetail() {
           <DollarSign className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
           <div>
             <p className="text-xs text-gray-500">Precio</p>
-            <p className="text-sm font-medium text-gray-900">{price === 0 ? 'Gratis' : `$${Math.round(price).toLocaleString('es-AR')}`}</p>
+            <p className="text-sm font-medium text-gray-900">{formatARS(price)}</p>
           </div>
         </div>
         {event.minimum_age > 0 && (

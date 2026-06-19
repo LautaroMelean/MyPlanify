@@ -4,17 +4,12 @@ import { useActivity } from '@/hooks/useActivities'
 import Button from '@/components/ui/Button'
 import FavoriteButton from '@/components/ui/FavoriteButton'
 import ReviewSection from '@/components/ui/ReviewSection'
+import { formatARS } from '@/lib/format'
 
 const TYPE_LABELS: Record<string, string> = {
   restaurant: 'Restaurante', bar: 'Bar', cinema: 'Cine', museum: 'Museo',
   park: 'Parque', sports: 'Deporte', concert: 'Concierto', gaming: 'Juegos',
   tourism: 'Turismo', shopping: 'Shopping',
-}
-
-function formatBudget(val: string | number) {
-  const n = parseFloat(String(val))
-  if (n === 0) return 'Gratis'
-  return `$${Math.round(n).toLocaleString('es-AR')}`
 }
 
 export default function ActivityDetail() {
@@ -146,8 +141,8 @@ export default function ActivityDetail() {
               {minBudget === 0 && !maxBudget
                 ? 'Gratis'
                 : maxBudget
-                ? `${formatBudget(minBudget)} – ${formatBudget(maxBudget)}`
-                : `Desde ${formatBudget(minBudget)}`}
+                ? `${formatARS(minBudget)} – ${formatARS(maxBudget)}`
+                : `Desde ${formatARS(minBudget)}`}
             </p>
           </div>
         </div>

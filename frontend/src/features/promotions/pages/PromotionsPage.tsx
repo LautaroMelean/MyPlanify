@@ -3,10 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { usePromotions } from '@/hooks/usePromotions'
 import EmptyState from '@/components/common/EmptyState'
 import type { Promotion } from '@/types'
-
-function formatDate(iso: string) {
-  return new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(iso))
-}
+import { formatDateShort } from '@/lib/format'
 
 function daysUntil(iso: string): number {
   return Math.ceil((new Date(iso).getTime() - Date.now()) / 86_400_000)
@@ -53,7 +50,7 @@ function PromotionCard({ promo }: { promo: Promotion }) {
           )}
           <span className={`text-xs flex items-center gap-1 ${expiringSoon ? 'text-orange-500 font-medium' : 'text-gray-500'}`}>
             <Calendar className="h-3 w-3" aria-hidden="true" />
-            Hasta {formatDate(promo.end_date)}
+            Hasta {formatDateShort(promo.end_date)}
           </span>
         </div>
       </div>

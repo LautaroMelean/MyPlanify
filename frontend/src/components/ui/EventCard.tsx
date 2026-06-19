@@ -3,15 +3,10 @@ import { Calendar, DollarSign, MapPin } from 'lucide-react'
 import type { Event } from '@/types'
 import FavoriteButton from './FavoriteButton'
 import { RatingBadge } from './ReviewSection'
+import { formatARS, formatDateShort } from '@/lib/format'
 
 interface EventCardProps {
   event: Event
-}
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('es-AR', {
-    day: 'numeric', month: 'short', year: 'numeric',
-  })
 }
 
 export default function EventCard({ event }: EventCardProps) {
@@ -50,7 +45,7 @@ export default function EventCard({ event }: EventCardProps) {
             <div className="min-w-0">
               <h3 className="font-semibold text-gray-900 truncate">{event.title}</h3>
               <p className="text-xs text-gray-500 mt-0.5">
-                {formatDate(event.start_date)}
+                {formatDateShort(event.start_date)}
               </p>
             </div>
           </div>
@@ -73,7 +68,7 @@ export default function EventCard({ event }: EventCardProps) {
             )}
             <span className="text-xs text-gray-500 flex items-center gap-0.5">
               <DollarSign className="h-3 w-3" aria-hidden="true" />
-              {parseFloat(event.price) === 0 ? 'Gratis' : `$${Math.round(parseFloat(event.price)).toLocaleString('es-AR')}`}
+              {formatARS(event.price)}
             </span>
           </div>
         </div>

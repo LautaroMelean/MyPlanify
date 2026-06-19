@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { Search, MapPin, Calendar, Zap, DollarSign } from 'lucide-react'
 import { useSearch } from '@/hooks/useSearch'
 import EmptyState from '@/components/common/EmptyState'
+import { formatARS, formatDateShort } from '@/lib/format'
 
 const SEARCH_SUGGESTIONS = [
   { q: 'restaurante', emoji: '🍽️', label: 'Restaurantes' },
@@ -14,12 +15,6 @@ const SEARCH_SUGGESTIONS = [
   { q: 'concierto', emoji: '🎵', label: 'Conciertos' },
   { q: 'deporte', emoji: '⚽', label: 'Deportes' },
 ]
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('es-AR', {
-    day: 'numeric', month: 'short', year: 'numeric',
-  })
-}
 
 export default function SearchResultsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -171,7 +166,7 @@ export default function SearchResultsPage() {
                         </span>
                         <span className="text-xs text-gray-500 flex items-center gap-0.5">
                           <DollarSign className="h-3 w-3" />
-                          {parseFloat(String(activity.min_budget)) === 0 ? 'Gratis' : `Desde $${Math.round(parseFloat(String(activity.min_budget))).toLocaleString('es-AR')}`}
+                          {parseFloat(String(activity.min_budget)) === 0 ? 'Gratis' : `Desde ${formatARS(activity.min_budget)}`}
                         </span>
                       </div>
                     </div>
@@ -205,7 +200,7 @@ export default function SearchResultsPage() {
                     )}
                     <div className="min-w-0">
                       <p className="font-medium text-gray-900 truncate">{event.title}</p>
-                      <p className="text-xs text-gray-500">{formatDate(event.start_date)}</p>
+                      <p className="text-xs text-gray-500">{formatDateShort(event.start_date)}</p>
                       <span className="text-xs bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full font-medium">
                         {event.category}
                       </span>

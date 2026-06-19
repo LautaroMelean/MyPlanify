@@ -23,24 +23,26 @@ def _parse_coord(value, name: str, lo: float, hi: float):
     return f, None
 
 
+def _require_coords(params):
+    """Parse and validate lat/lon. Returns (lat, lon, error_msg) — error_msg is None on success."""
+    lat, err = _parse_coord(params.get("lat"), "lat", -90, 90)
+    if err:
+        return None, None, err
+    lon, err = _parse_coord(params.get("lon"), "lon", -180, 180)
+    if err:
+        return None, None, err
+    if lat is None or lon is None:
+        return None, None, "Se requieren lat y lon."
+    return lat, lon, None
+
+
 class WeatherCurrentView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        lat, err = _parse_coord(request.query_params.get("lat"), "lat", -90, 90)
+        lat, lon, err = _require_coords(request.query_params)
         if err:
             return error_response("INVALID_PARAM", err, status_code=status.HTTP_400_BAD_REQUEST)
-
-        lon, err = _parse_coord(request.query_params.get("lon"), "lon", -180, 180)
-        if err:
-            return error_response("INVALID_PARAM", err, status_code=status.HTTP_400_BAD_REQUEST)
-
-        if lat is None or lon is None:
-            return error_response(
-                "MISSING_PARAMS", "Se requieren lat y lon.",
-                status_code=status.HTTP_400_BAD_REQUEST,
-            )
-
         weather = openweather_provider.get_current_weather(lat, lon)
         return success_response(weather)
 
@@ -49,20 +51,9 @@ class WeatherForecastView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        lat, err = _parse_coord(request.query_params.get("lat"), "lat", -90, 90)
+        lat, lon, err = _require_coords(request.query_params)
         if err:
             return error_response("INVALID_PARAM", err, status_code=status.HTTP_400_BAD_REQUEST)
-
-        lon, err = _parse_coord(request.query_params.get("lon"), "lon", -180, 180)
-        if err:
-            return error_response("INVALID_PARAM", err, status_code=status.HTTP_400_BAD_REQUEST)
-
-        if lat is None or lon is None:
-            return error_response(
-                "MISSING_PARAMS", "Se requieren lat y lon.",
-                status_code=status.HTTP_400_BAD_REQUEST,
-            )
-
         forecast = openweather_provider.get_forecast(lat, lon)
         if forecast is None:
             return error_response(
@@ -76,19 +67,9 @@ class ExternalPlacesView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        lat, err = _parse_coord(request.query_params.get("lat"), "lat", -90, 90)
+        lat, lon, err = _require_coords(request.query_params)
         if err:
             return error_response("INVALID_PARAM", err, status_code=status.HTTP_400_BAD_REQUEST)
-
-        lon, err = _parse_coord(request.query_params.get("lon"), "lon", -180, 180)
-        if err:
-            return error_response("INVALID_PARAM", err, status_code=status.HTTP_400_BAD_REQUEST)
-
-        if lat is None or lon is None:
-            return error_response(
-                "MISSING_PARAMS", "Se requieren lat y lon.",
-                status_code=status.HTTP_400_BAD_REQUEST,
-            )
 
         try:
             radius = int(request.query_params.get("radius", 1500))
@@ -111,16 +92,9 @@ class ExternalPlacesSearchView(APIView):
                 "MISSING_PARAMS", "Se requiere el parámetro q.",
                 status_code=status.HTTP_400_BAD_REQUEST,
             )
-
-        lat, lat_err = _parse_coord(request.query_params.get("lat"), "lat", -90, 90)
-        lon, lon_err = _parse_coord(request.query_params.get("lon"), "lon", -180, 180)
-
-        if lat_err or lon_err or lat is None or lon is None:
-            return error_response(
-                "INVALID_PARAMS", "Se requieren lat y lon válidos.",
-                status_code=status.HTTP_400_BAD_REQUEST,
-            )
-
+        lat, lon, err = _require_coords(request.query_params)
+        if err:
+            return error_response("INVALID_PARAM", err, status_code=status.HTTP_400_BAD_REQUEST)
         places = search_external_places(query, lat, lon)
         return success_response([_serialize_place(p) for p in places])
 
@@ -148,17 +122,9 @@ class ReverseGeocodingView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        lat, err = _parse_coord(request.query_params.get("lat"), "lat", -90, 90)
+        lat, lon, err = _require_coords(request.query_params)
         if err:
             return error_response("INVALID_PARAM", err, status_code=status.HTTP_400_BAD_REQUEST)
-        lon, err = _parse_coord(request.query_params.get("lon"), "lon", -180, 180)
-        if err:
-            return error_response("INVALID_PARAM", err, status_code=status.HTTP_400_BAD_REQUEST)
-        if lat is None or lon is None:
-            return error_response(
-                "MISSING_PARAMS", "Se requieren lat y lon.",
-                status_code=status.HTTP_400_BAD_REQUEST,
-            )
         result = nominatim_provider.reverse_geocode(lat, lon)
         if not result:
             return error_response(

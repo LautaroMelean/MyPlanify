@@ -4,19 +4,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Sparkles, Check } from 'lucide-react'
 import { useSetPreferences } from '@/hooks/usePreferences'
 import Button from '@/components/ui/Button'
-
-const PREFERENCE_OPTIONS = [
-  { category: 'entertainment', value: 'música',      label: 'Música',      emoji: '🎵' },
-  { category: 'entertainment', value: 'cine',         label: 'Cine',        emoji: '🎬' },
-  { category: 'entertainment', value: 'gaming',       label: 'Gaming',      emoji: '🎮' },
-  { category: 'food',          value: 'gastronomía',  label: 'Gastronomía', emoji: '🍽️' },
-  { category: 'sports',        value: 'deportes',     label: 'Deportes',    emoji: '⚽' },
-  { category: 'outdoor',       value: 'outdoor',      label: 'Outdoor',     emoji: '🏕️' },
-  { category: 'culture',       value: 'arte',         label: 'Arte',        emoji: '🎨' },
-  { category: 'culture',       value: 'turismo',      label: 'Turismo',     emoji: '✈️' },
-  { category: 'technology',    value: 'tecnología',   label: 'Tecnología',  emoji: '💻' },
-  { category: 'lifestyle',     value: 'bienestar',    label: 'Bienestar',   emoji: '🧘' },
-]
+import { PREFERENCE_OPTIONS } from '@/lib/preferences'
 
 export default function OnboardingPage() {
   const navigate = useNavigate()

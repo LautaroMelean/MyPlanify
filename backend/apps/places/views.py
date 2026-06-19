@@ -10,6 +10,14 @@ from .services import create_place, update_place, deactivate_place
 from .permissions import PlacePermission
 
 
+def _parse_bool_param(val):
+    if val == "true":
+        return True
+    if val == "false":
+        return False
+    return None
+
+
 @api_view(["GET", "POST"])
 @permission_classes([PlacePermission])
 def place_list(request):
@@ -19,14 +27,6 @@ def place_list(request):
         name = request.query_params.get("name") or None
         cuisine = request.query_params.get("cuisine") or None
         wheelchair = request.query_params.get("wheelchair") or None
-
-        def _parse_bool_param(val):
-            if val == "true":
-                return True
-            if val == "false":
-                return False
-            return None
-
         outdoor_seating = _parse_bool_param(request.query_params.get("outdoor_seating"))
         fee = _parse_bool_param(request.query_params.get("fee"))
 

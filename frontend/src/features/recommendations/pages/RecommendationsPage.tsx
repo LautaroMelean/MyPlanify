@@ -7,6 +7,7 @@ import { recommendationsService } from '@/services/recommendationsService'
 import FavoriteButton from '@/components/ui/FavoriteButton'
 import WeatherWidget from '@/components/ui/WeatherWidget'
 import EmptyState from '@/components/common/EmptyState'
+import { formatARS } from '@/lib/format'
 import type { Recommendation, ScoreBreakdown } from '@/types'
 
 const BA_COORDS = { lat: -34.6037, lon: -58.3816 }
@@ -239,7 +240,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
             <DollarSign className="h-3.5 w-3.5 flex-shrink-0" aria-hidden="true" />
             {(rec.activity_detail.is_free || parseFloat(rec.activity_detail.min_budget) === 0)
               ? 'Gratis'
-              : `Desde $${Math.round(parseFloat(rec.activity_detail.min_budget)).toLocaleString('es-AR')}`}
+              : `Desde ${formatARS(rec.activity_detail.min_budget)}`}
           </span>
         )}
         {rec.item_type === 'event' && rec.event_detail && (
@@ -252,7 +253,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
             </span>
             <span className="flex items-center gap-1">
               <DollarSign className="h-3.5 w-3.5 flex-shrink-0" />
-              {parseFloat(rec.event_detail.price) === 0 ? 'Gratis' : `$${Math.round(parseFloat(rec.event_detail.price)).toLocaleString('es-AR')}`}
+              {formatARS(rec.event_detail.price)}
             </span>
           </>
         )}

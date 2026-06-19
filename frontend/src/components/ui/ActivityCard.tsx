@@ -3,6 +3,7 @@ import { Users, DollarSign, Cloud, Home, MapPin } from 'lucide-react'
 import type { Activity } from '@/types'
 import FavoriteButton from './FavoriteButton'
 import { RatingBadge } from './ReviewSection'
+import { formatARS } from '@/lib/format'
 
 interface ActivityCardProps {
   activity: Activity
@@ -101,7 +102,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
         <div className="flex flex-wrap gap-2 mt-3">
           <span className="text-xs text-gray-500 flex items-center gap-1">
             <DollarSign className="h-3 w-3" aria-hidden="true" />
-            {isFree(activity.min_budget) ? 'Gratis' : `Desde $${Math.round(parseFloat(String(activity.min_budget))).toLocaleString('es-AR')}`}
+            {isFree(activity.min_budget) ? 'Gratis' : `Desde ${formatARS(activity.min_budget)}`}
           </span>
           {activity.min_people > 1 && (
             <span className="text-xs text-gray-500 flex items-center gap-1">
