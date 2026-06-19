@@ -122,7 +122,8 @@ export default function PlanDetailPage() {
         <div>
           <h1 className="text-xl font-bold text-gray-900">{plan.title}</h1>
           <p className="text-sm text-gray-500 mt-1">
-            {plan.city} · {plan.people_count} persona{plan.people_count !== 1 ? 's' : ''} · ${Number(plan.budget).toLocaleString('es-AR')}
+            <span className="capitalize">{new Date(plan.date + 'T12:00:00').toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+            {' · '}{plan.city} · {plan.people_count} persona{plan.people_count !== 1 ? 's' : ''} · ${Number(plan.budget).toLocaleString('es-AR')}
           </p>
         </div>
 

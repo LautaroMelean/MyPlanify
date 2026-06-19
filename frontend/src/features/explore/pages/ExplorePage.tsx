@@ -236,46 +236,62 @@ export default function ExplorePage() {
         <>
           {trending.places.length > 0 && (
             <div>
-              <div className="flex items-center gap-2 mb-3">
-                <TrendingUp className="h-4 w-4 text-primary-600" aria-hidden="true" />
-                <h2 className="text-sm font-semibold text-gray-600">Lugares más populares</h2>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-primary-600" aria-hidden="true" />
+                  <h2 className="text-sm font-semibold text-gray-600">Lugares más populares</h2>
+                </div>
+                <button onClick={() => setTab('lugares')} className="text-xs text-primary-600 hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-500/40 rounded">
+                  Ver todos
+                </button>
               </div>
-              <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
-                {trending.places.map((p) => (
-                  <button key={p.id} onClick={() => navigate(`/places/${p.id}`)} aria-label={p.name}
-                    className="group flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
-                    {p.image_url ? (
-                      <img src={p.image_url} alt="" className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                    ) : (
-                      <div className="w-full h-24 bg-primary-100/40 flex items-center justify-center" aria-hidden="true"><MapPin className="h-8 w-8 text-primary-500" /></div>
-                    )}
-                    <div className="p-2"><p className="text-xs font-semibold text-gray-900 truncate">{p.name}</p><p className="text-xs text-gray-400 truncate">{p.city}</p></div>
-                  </button>
-                ))}
+              <div className="relative">
+                <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+                  {trending.places.map((p) => (
+                    <button key={p.id} onClick={() => navigate(`/places/${p.id}`)} aria-label={p.name}
+                      className="group flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
+                      {p.image_url ? (
+                        <img src={p.image_url} alt="" className="w-full h-28 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                      ) : (
+                        <div className="w-full h-28 bg-primary-100/40 flex items-center justify-center" aria-hidden="true"><MapPin className="h-8 w-8 text-primary-500" /></div>
+                      )}
+                      <div className="p-2"><p className="text-xs font-semibold text-gray-900 truncate">{p.name}</p><p className="text-xs text-gray-400 truncate">{p.city}</p></div>
+                    </button>
+                  ))}
+                </div>
+                <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none" aria-hidden="true" />
               </div>
             </div>
           )}
           {trending.events.length > 0 && (
             <div>
-              <div className="flex items-center gap-2 mb-3">
-                <TrendingUp className="h-4 w-4 text-primary-600" aria-hidden="true" />
-                <h2 className="text-sm font-semibold text-gray-600">Eventos más guardados</h2>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-primary-600" aria-hidden="true" />
+                  <h2 className="text-sm font-semibold text-gray-600">Eventos más guardados</h2>
+                </div>
+                <button onClick={() => setTab('eventos')} className="text-xs text-primary-600 hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-500/40 rounded">
+                  Ver todos
+                </button>
               </div>
-              <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
-                {trending.events.map((e) => (
-                  <button key={e.id} onClick={() => navigate(`/events/${e.id}`)} aria-label={e.title}
-                    className="group flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
-                    {e.image_url ? (
-                      <img src={e.image_url} alt="" className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                    ) : (
-                      <div className="w-full h-24 bg-primary-100/40 flex items-center justify-center" aria-hidden="true"><Calendar className="h-8 w-8 text-primary-500" /></div>
-                    )}
-                    <div className="p-2">
-                      <p className="text-xs font-semibold text-gray-900 truncate">{e.title}</p>
-                      <p className="text-xs text-gray-400">{new Date(e.start_date).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })}</p>
-                    </div>
-                  </button>
-                ))}
+              <div className="relative">
+                <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+                  {trending.events.map((e) => (
+                    <button key={e.id} onClick={() => navigate(`/events/${e.id}`)} aria-label={e.title}
+                      className="group flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
+                      {e.image_url ? (
+                        <img src={e.image_url} alt="" className="w-full h-28 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                      ) : (
+                        <div className="w-full h-28 bg-primary-100/40 flex items-center justify-center" aria-hidden="true"><Calendar className="h-8 w-8 text-primary-500" /></div>
+                      )}
+                      <div className="p-2">
+                        <p className="text-xs font-semibold text-gray-900 truncate">{e.title}</p>
+                        <p className="text-xs text-gray-400">{new Date(e.start_date).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none" aria-hidden="true" />
               </div>
             </div>
           )}

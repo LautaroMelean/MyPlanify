@@ -69,7 +69,12 @@ export default function BusinessDashboardPage() {
       </div>
 
       <section className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-800 mb-3">Mis lugares</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold text-gray-800">Mis lugares</h2>
+          {places && places.length > 0 && (
+            <span className="text-xs font-medium bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{places.length}</span>
+          )}
+        </div>
         {!places || places.length === 0 ? (
           <EmptyState
             title="Sin lugares registrados"
@@ -79,16 +84,20 @@ export default function BusinessDashboardPage() {
         ) : (
           <div className="space-y-2">
             {places.map(place => (
-              <div key={place.id} onClick={() => navigate(`/places/${place.id}`)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/places/${place.id}`)} role="button" tabIndex={0} aria-label={place.name} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
-                <div className="flex items-center gap-3">
-                  <Building2 className="h-4 w-4 text-gray-400" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{place.name}</p>
-                    <p className="text-xs text-gray-500">{place.city} · {place.category}</p>
+              <div key={place.id} onClick={() => navigate(`/places/${place.id}`)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/places/${place.id}`)} role="button" tabIndex={0} aria-label={place.name} className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
+                {place.image_url ? (
+                  <img src={place.image_url} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" loading="lazy" />
+                ) : (
+                  <div className="w-10 h-10 bg-primary-500/10 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                    <Building2 className="h-4 w-4 text-primary-400" />
                   </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">{place.name}</p>
+                  <p className="text-xs text-gray-500">{place.city} · {place.category}</p>
                 </div>
                 {place.avg_rating != null && (
-                  <span className="text-xs font-medium text-yellow-400">★ {place.avg_rating.toFixed(1)}</span>
+                  <span className="text-xs font-medium text-yellow-400 flex-shrink-0">★ {place.avg_rating.toFixed(1)}</span>
                 )}
               </div>
             ))}
@@ -97,7 +106,12 @@ export default function BusinessDashboardPage() {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-gray-800 mb-3">Mis promociones</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold text-gray-800">Mis promociones</h2>
+          {promotions && promotions.length > 0 && (
+            <span className="text-xs font-medium bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{promotions.length}</span>
+          )}
+        </div>
         {!promotions || promotions.length === 0 ? (
           <EmptyState
             title="Sin promociones"
@@ -109,9 +123,10 @@ export default function BusinessDashboardPage() {
             {promotions.map(promo => (
               <div key={promo.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm">
                 <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
-                    <span className="text-xs font-bold text-green-500 flex items-center">
-                      <Percent className="h-3 w-3" />{promo.discount_percentage}
+                  <div className="flex-shrink-0 w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center" aria-hidden="true">
+                    <span className="text-xs font-bold text-green-600 leading-none text-center">
+                      <Percent className="h-3 w-3 mx-auto" />
+                      {promo.discount_percentage}
                     </span>
                   </div>
                   <div>

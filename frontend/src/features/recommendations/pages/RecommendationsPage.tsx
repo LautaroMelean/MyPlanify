@@ -66,10 +66,17 @@ export default function RecommendationsPage() {
       <title>Para vos | Planify</title>
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary-600" aria-hidden="true" />
-            Para vos
-          </h1>
+          <div className="flex items-center gap-2 mb-1">
+            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <Sparkles className="h-6 w-6 text-primary-600" aria-hidden="true" />
+              Para vos
+            </h1>
+            {recommendations.length > 0 && (
+              <span className="text-sm font-medium bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full">
+                {recommendations.length}
+              </span>
+            )}
+          </div>
           <p className="text-gray-500 text-sm">
             Recomendaciones personalizadas basadas en tus preferencias.
           </p>
