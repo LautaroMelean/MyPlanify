@@ -31,9 +31,7 @@ def get_trending_plans(city=None, period="week", limit=10, exclude_user=None):
     if period == "today":
         since = today
     elif period == "weekend":
-        # next Saturday
-        days_until_sat = (5 - today.weekday()) % 7
-        since = today if days_until_sat == 0 else today
+        since = today
     else:  # week default
         since = today - timezone.timedelta(days=7)
 
