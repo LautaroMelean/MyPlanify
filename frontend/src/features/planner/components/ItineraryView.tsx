@@ -1,6 +1,5 @@
 import type { Plan, PlanItem, PlanSlot } from '@/types'
 import { PlanItemCard } from './PlanItemCard'
-import { SlotBadge } from './SlotBadge'
 
 const SLOTS: PlanSlot[] = ['morning', 'afternoon', 'evening']
 
@@ -8,6 +7,12 @@ const SLOT_LABELS: Record<PlanSlot, string> = {
   morning: 'Mañana',
   afternoon: 'Tarde',
   evening: 'Noche',
+}
+
+const SLOT_COLORS: Record<PlanSlot, string> = {
+  morning:   'bg-amber-500/15 text-amber-400',
+  afternoon: 'bg-blue-500/15 text-blue-400',
+  evening:   'bg-primary-500/15 text-primary-600',
 }
 
 interface Props {
@@ -29,7 +34,9 @@ export function ItineraryView({ plan, onRemoveItem, onFeedbackItem, onSaveNote, 
         return (
           <div key={slot}>
             <div className="flex items-center gap-2 mb-3">
-              <SlotBadge slot={slot} />
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${SLOT_COLORS[slot]}`}>
+                {SLOT_LABELS[slot]}
+              </span>
               <h3 className="text-sm font-semibold text-gray-600">{SLOT_LABELS[slot]}</h3>
               {items.length > 0 && (
                 <span className="text-xs text-gray-400 font-medium">{items.length} {items.length === 1 ? 'actividad' : 'actividades'}</span>

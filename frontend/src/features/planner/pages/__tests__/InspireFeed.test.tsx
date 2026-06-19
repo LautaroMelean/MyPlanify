@@ -2,11 +2,8 @@ import { screen } from '@testing-library/react'
 import { renderWithProviders } from '@/test/utils'
 import { InspireFeed } from '../../components/InspireFeed'
 
-vi.mock('@/hooks/useTrendingPlans', () => ({
+vi.mock('@/hooks/usePlanner', () => ({
   useTrendingPlans: vi.fn(),
-}))
-
-vi.mock('@/hooks/usePlanItem', () => ({
   useClonePlan: () => ({ mutate: vi.fn(), isPending: false }),
 }))
 
@@ -15,7 +12,7 @@ vi.mock('react-router-dom', async () => {
   return { ...actual, useNavigate: () => vi.fn() }
 })
 
-import { useTrendingPlans } from '@/hooks/useTrendingPlans'
+import { useTrendingPlans } from '@/hooks/usePlanner'
 
 describe('InspireFeed', () => {
   it('shows empty state when no trending plans', () => {

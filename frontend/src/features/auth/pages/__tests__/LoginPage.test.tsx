@@ -28,7 +28,7 @@ describe('LoginPage', () => {
   it('renders email and password fields', () => {
     renderWithProviders(<LoginPage />)
     expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/contraseña/i)).toBeInTheDocument()
+    expect(screen.getByLabelText('Contraseña')).toBeInTheDocument()
   })
 
   it('renders the submit button', () => {
@@ -51,7 +51,7 @@ describe('LoginPage', () => {
     const user = userEvent.setup()
     renderWithProviders(<LoginPage />)
     await user.type(screen.getByLabelText(/correo electrónico/i), 'test@example.com')
-    await user.type(screen.getByLabelText(/contraseña/i), 'password123')
+    await user.type(screen.getByLabelText('Contraseña'), 'password123')
     await user.click(screen.getByRole('button', { name: /ingresar/i }))
     await waitFor(() => {
       expect(mockMutate).toHaveBeenCalledWith({

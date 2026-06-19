@@ -1,12 +1,10 @@
 import { screen, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '@/test/utils'
 import MyPlansPage from '../MyPlansPage'
-import * as useMyPlansModule from '@/hooks/useMyPlans'
-import * as usePlanItemModule from '@/hooks/usePlanItem'
+import * as usePlannerModule from '@/hooks/usePlanner'
 import type { Plan } from '@/types'
 
-vi.mock('@/hooks/useMyPlans')
-vi.mock('@/hooks/usePlanItem')
+vi.mock('@/hooks/usePlanner')
 
 const makePlan = (id: string, title: string): Plan => ({
   id,
@@ -24,30 +22,30 @@ const makePlan = (id: string, title: string): Plan => ({
 })
 
 beforeEach(() => {
-  vi.mocked(usePlanItemModule.useDeletePlan).mockReturnValue({
+  vi.mocked(usePlannerModule.useDeletePlan).mockReturnValue({
     mutate: vi.fn(),
     isPending: false,
-  } as unknown as ReturnType<typeof usePlanItemModule.useDeletePlan>)
+  } as unknown as ReturnType<typeof usePlannerModule.useDeletePlan>)
 })
 
 describe('MyPlansPage', () => {
   afterEach(() => vi.clearAllMocks())
 
   it('shows loading state', () => {
-    vi.mocked(useMyPlansModule.useMyPlans).mockReturnValue({
+    vi.mocked(usePlannerModule.useMyPlans).mockReturnValue({
       data: undefined,
       isLoading: true,
-    } as unknown as ReturnType<typeof useMyPlansModule.useMyPlans>)
+    } as unknown as ReturnType<typeof usePlannerModule.useMyPlans>)
 
     renderWithProviders(<MyPlansPage />)
     expect(screen.getByTestId('plans-skeleton')).toBeInTheDocument()
   })
 
   it('shows list of plans', async () => {
-    vi.mocked(useMyPlansModule.useMyPlans).mockReturnValue({
+    vi.mocked(usePlannerModule.useMyPlans).mockReturnValue({
       data: [makePlan('1', 'Plan para 01/07/2026'), makePlan('2', 'Plan para 15/08/2026')],
       isLoading: false,
-    } as unknown as ReturnType<typeof useMyPlansModule.useMyPlans>)
+    } as unknown as ReturnType<typeof usePlannerModule.useMyPlans>)
 
     renderWithProviders(<MyPlansPage />)
     await waitFor(() => {
@@ -57,10 +55,10 @@ describe('MyPlansPage', () => {
   })
 
   it('shows empty state when no plans', async () => {
-    vi.mocked(useMyPlansModule.useMyPlans).mockReturnValue({
+    vi.mocked(usePlannerModule.useMyPlans).mockReturnValue({
       data: [],
       isLoading: false,
-    } as unknown as ReturnType<typeof useMyPlansModule.useMyPlans>)
+    } as unknown as ReturnType<typeof usePlannerModule.useMyPlans>)
 
     renderWithProviders(<MyPlansPage />)
     await waitFor(() => {

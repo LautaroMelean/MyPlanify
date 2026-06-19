@@ -159,7 +159,6 @@ export interface Activity {
   avg_rating: number | null
   review_count: number
   city: string
-  // Enrichment fields (Sprint 11)
   latitude: string | null
   longitude: string | null
   address: string

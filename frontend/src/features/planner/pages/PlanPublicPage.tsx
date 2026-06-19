@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { MapPin, Sparkles, CalendarDays } from 'lucide-react'
-import { usePublicPlan } from '@/hooks/usePlan'
+import { usePublicPlan } from '@/hooks/usePlanner'
 import { ItineraryView } from '../components/ItineraryView'
 import EmptyState from '@/components/common/EmptyState'
 

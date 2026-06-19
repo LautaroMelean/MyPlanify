@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { authService } from '@/services/authService'
 import { useAuthStore } from '@/store/authStore'
@@ -58,13 +58,3 @@ export function useUpdateProfile() {
   })
 }
 
-export function useCurrentUser() {
-  const { isAuthenticated } = useAuthStore()
-
-  return useQuery({
-    queryKey: ['auth', 'me'],
-    queryFn: authService.getMe,
-    enabled: isAuthenticated,
-    staleTime: 1000 * 60 * 10,
-  })
-}

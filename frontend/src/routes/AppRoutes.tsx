@@ -87,7 +87,7 @@ export default function AppRoutes() {
             <Route path="/dashboard/organizer"   element={<ProtectedRoute><OrganizerDashboard /></ProtectedRoute>} />
           </Route>
 
-          <Route path="/planes/p/:slug" element={<Suspense fallback={<PageLoader />}><PlanPublicPage /></Suspense>} />
+          <Route path="/planes/p/:slug" element={<PlanPublicPage />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

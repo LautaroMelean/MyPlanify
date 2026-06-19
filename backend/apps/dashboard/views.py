@@ -1,8 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from apps.core.responses import success_response, error_response
+from apps.core.responses import success_response
 from apps.places.serializers import PlaceSerializer
 from apps.promotions.serializers import PromotionSerializer
 from apps.events.serializers import EventSerializer
@@ -10,7 +9,7 @@ from .selectors import (
     get_business_stats, get_owned_places, get_owned_promotions,
     get_organizer_stats, get_owned_events, get_user_activity_stats,
 )
-from .permissions import IsBusinessOwner, IsEventOrganizer
+from apps.core.permissions import IsBusinessOwner, IsEventOrganizer
 
 
 @api_view(["GET"])

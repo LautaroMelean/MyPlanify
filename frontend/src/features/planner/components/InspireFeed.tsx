@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Sparkles } from 'lucide-react'
 import { TrendingPlanCard } from './TrendingPlanCard'
 import { ClonePlanModal } from './ClonePlanModal'
-import { useTrendingPlans } from '@/hooks/useTrendingPlans'
-import { useClonePlan } from '@/hooks/usePlanItem'
+import { useTrendingPlans, useClonePlan } from '@/hooks/usePlanner'
 import type { TrendingPlan } from '@/types'
 
 export function InspireFeed() {
@@ -28,7 +27,8 @@ export function InspireFeed() {
 
   if (isLoading) {
     return (
-      <div>
+      <div aria-busy="true">
+        <p className="sr-only">Cargando planes populares</p>
         <div className="flex items-center gap-2 mb-3">
           <div className="h-4 w-4 bg-gray-200/20 rounded-full animate-pulse" />
           <div className="h-4 w-40 bg-gray-200/20 rounded animate-pulse" />

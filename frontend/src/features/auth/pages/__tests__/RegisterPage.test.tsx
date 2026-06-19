@@ -45,9 +45,8 @@ async function fillForm(
   await user.type(screen.getByLabelText(/nombre/i), data.first_name)
   await user.type(screen.getByLabelText(/apellido/i), data.last_name)
   await user.type(screen.getByLabelText(/correo electrónico/i), data.email)
-  const [passInput, confirmInput] = screen.getAllByLabelText(/contraseña/i)
-  await user.type(passInput, data.password)
-  await user.type(confirmInput, data.password_confirm)
+  await user.type(screen.getByLabelText('Contraseña'), data.password)
+  await user.type(screen.getByLabelText('Confirmar contraseña'), data.password_confirm)
 }
 
 describe('RegisterPage', () => {
@@ -56,7 +55,8 @@ describe('RegisterPage', () => {
     expect(screen.getByLabelText(/nombre/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/apellido/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
-    expect(screen.getAllByLabelText(/contraseña/i)).toHaveLength(2)
+    expect(screen.getByLabelText('Contraseña')).toBeInTheDocument()
+    expect(screen.getByLabelText('Confirmar contraseña')).toBeInTheDocument()
   })
 
   it('shows validation error for password mismatch', async () => {

@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import status
 
 from apps.core.responses import success_response, created_response, no_content_response, error_response

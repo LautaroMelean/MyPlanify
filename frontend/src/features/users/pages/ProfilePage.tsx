@@ -9,7 +9,6 @@ import { useUpdateProfile } from '@/hooks/useAuth'
 import { ActivityStatsCard } from '@/features/dashboard/components/ActivityStatsCard'
 import Card from '@/components/ui/Card'
 import Avatar from '@/components/ui/Avatar'
-import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 
 const PREFERENCE_OPTIONS = [
@@ -71,7 +70,7 @@ export default function ProfilePage() {
           <div>
             <h2 className="text-xl font-semibold text-gray-800">{user.full_name}</h2>
             <p className="text-sm text-gray-500">{user.email}</p>
-            <Badge variant="info" className="mt-1">{user.role}</Badge>
+            <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-500/15 text-blue-400 mt-1">{user.role}</span>
           </div>
         </div>
 
