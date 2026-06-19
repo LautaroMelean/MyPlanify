@@ -18,6 +18,7 @@ vi.mock('react-leaflet', () => ({
   ),
   Popup: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   useMap: () => ({ setView: vi.fn() }),
+  useMapEvents: () => ({ getBounds: () => ({ contains: () => true }) }),
 }))
 
 vi.mock('leaflet', () => {
@@ -104,7 +105,7 @@ describe('MapPage', () => {
       isLoading: false,
     } as any)
     renderWithProviders(<MapPage />)
-    expect(screen.getByText(/2 lugares en el mapa/i)).toBeInTheDocument()
+    expect(screen.getByText(/2 de 2 lugar/i)).toBeInTheDocument()
   })
 
   it('renders place list cards', () => {
