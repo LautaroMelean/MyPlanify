@@ -384,9 +384,12 @@ export default function ExplorePage() {
             </div>
           )}
           {geoLoading && (
-            <p className="text-sm text-gray-500 flex items-center gap-2 animate-pulse py-2">
-              <Navigation className="h-4 w-4 text-primary-600" aria-hidden="true" /> Obteniendo tu ubicación…
-            </p>
+            <div className="flex flex-col items-center py-16 gap-3">
+              <div className="w-12 h-12 bg-primary-500/10 rounded-full flex items-center justify-center animate-pulse">
+                <Navigation className="h-6 w-6 text-primary-500" aria-hidden="true" />
+              </div>
+              <p className="text-sm text-gray-500">Obteniendo tu ubicación…</p>
+            </div>
           )}
           {nearbyCoords && (
             <>
