@@ -9,10 +9,3 @@ export function usePromotions(placeId?: string) {
   })
 }
 
-export function usePromotion(id: string) {
-  return useQuery({
-    queryKey: ['promotions', id],
-    queryFn: () => promotionsService.get(id),
-    enabled: !!id,
-  })
-}

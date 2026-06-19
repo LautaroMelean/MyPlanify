@@ -1,9 +1,10 @@
 import apiClient from '@/lib/axios'
 import type { ApiResponse, PaginatedResponse, Place } from '@/types'
 
-interface PlacesFilters {
+export interface PlacesFilters {
   city?: string
   category?: string
+  name?: string
   lat?: number
   lon?: number
   radius_km?: number
@@ -28,19 +29,5 @@ export const placesService = {
   async get(id: string): Promise<Place> {
     const { data } = await apiClient.get<ApiResponse<Place>>(`/places/${id}/`)
     return data.data
-  },
-
-  async create(payload: Partial<Place>): Promise<Place> {
-    const { data } = await apiClient.post<ApiResponse<Place>>('/places/', payload)
-    return data.data
-  },
-
-  async update(id: string, payload: Partial<Place>): Promise<Place> {
-    const { data } = await apiClient.patch<ApiResponse<Place>>(`/places/${id}/`, payload)
-    return data.data
-  },
-
-  async remove(id: string): Promise<void> {
-    await apiClient.delete(`/places/${id}/`)
   },
 }

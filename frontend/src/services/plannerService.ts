@@ -33,16 +33,6 @@ export const plannerService = {
     await apiClient.delete(`${BASE}/${id}/`)
   },
 
-  async addItem(planId: string, payload: {
-    entity_type: string
-    entity_id: string
-    slot: string
-    note?: string
-  }): Promise<Plan> {
-    const { data } = await apiClient.post<ApiResponse<Plan>>(`${BASE}/${planId}/items/`, payload)
-    return data.data
-  },
-
   async removeItem(planId: string, itemId: string): Promise<void> {
     await apiClient.delete(`${BASE}/${planId}/items/${itemId}/`)
   },

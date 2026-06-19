@@ -40,16 +40,15 @@ def event_list(request):
 @api_view(["GET", "PATCH", "DELETE"])
 @permission_classes([EventPermission])
 def event_detail(request, pk):
-    from rest_framework import status as http_status
     event = get_event_by_id(pk)
     if not event:
-        return error_response("NOT_FOUND", "Evento no encontrado.", status_code=http_status.HTTP_404_NOT_FOUND)
+        return error_response("NOT_FOUND", "Evento no encontrado.", status_code=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
         return success_response(EventSerializer(event).data)
 
     if not EventPermission().has_object_permission(request, None, event):
-        return error_response("PERMISSION_DENIED", "No tenés permiso para modificar este evento.", status_code=http_status.HTTP_403_FORBIDDEN)
+        return error_response("PERMISSION_DENIED", "No tenés permiso para modificar este evento.", status_code=status.HTTP_403_FORBIDDEN)
 
     if request.method == "PATCH":
         serializer = EventCreateSerializer(data=request.data, partial=True)
@@ -65,12 +64,11 @@ def event_detail(request, pk):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def event_publish(request, pk):
-    from rest_framework import status as http_status
     event = get_event_by_id(pk)
     if not event:
-        return error_response("NOT_FOUND", "Evento no encontrado.", status_code=http_status.HTTP_404_NOT_FOUND)
+        return error_response("NOT_FOUND", "Evento no encontrado.", status_code=status.HTTP_404_NOT_FOUND)
     if not (request.user.role in ("admin", "moderator") or event.organizer == request.user):
-        return error_response("PERMISSION_DENIED", "No tenés permiso para publicar este evento.", status_code=http_status.HTTP_403_FORBIDDEN)
+        return error_response("PERMISSION_DENIED", "No tenés permiso para publicar este evento.", status_code=status.HTTP_403_FORBIDDEN)
     event = publish_event(user=request.user, event=event)
     return success_response(EventSerializer(event).data)
 
@@ -78,12 +76,11 @@ def event_publish(request, pk):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def event_cancel(request, pk):
-    from rest_framework import status as http_status
     event = get_event_by_id(pk)
     if not event:
-        return error_response("NOT_FOUND", "Evento no encontrado.", status_code=http_status.HTTP_404_NOT_FOUND)
+        return error_response("NOT_FOUND", "Evento no encontrado.", status_code=status.HTTP_404_NOT_FOUND)
     if not EventPermission().has_object_permission(request, None, event):
-        return error_response("PERMISSION_DENIED", "No tenés permiso para cancelar este evento.", status_code=http_status.HTTP_403_FORBIDDEN)
+        return error_response("PERMISSION_DENIED", "No tenés permiso para cancelar este evento.", status_code=status.HTTP_403_FORBIDDEN)
     reason = request.data.get("reason", "")
     event = cancel_event(user=request.user, event=event, reason=reason)
     return success_response(EventSerializer(event).data)

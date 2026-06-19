@@ -22,14 +22,4 @@ export const geocodingService = {
     }
   },
 
-  async reverseGeocode(lat: number, lon: number): Promise<GeocodingResult | null> {
-    try {
-      const { data } = await apiClient.get<ApiResponse<GeocodingResult>>('/geocode/reverse/', {
-        params: { lat, lon },
-      })
-      return data.data
-    } catch {
-      return null
-    }
-  },
 }

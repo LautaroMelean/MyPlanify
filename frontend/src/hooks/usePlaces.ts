@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { placesService } from '@/services/placesService'
+import { placesService, type PlacesFilters } from '@/services/placesService'
 
-export function usePlaces(filters = {}) {
+export function usePlaces(filters: PlacesFilters = {}) {
   return useQuery({
     queryKey: ['places', filters],
     queryFn: () => placesService.list(filters),
@@ -9,10 +9,10 @@ export function usePlaces(filters = {}) {
   })
 }
 
-export function usePlacesPaginated(filters: Record<string, unknown> & { page: number }) {
+export function usePlacesPaginated(filters: PlacesFilters & { page: number }) {
   return useQuery({
     queryKey: ['places-paginated', filters],
-    queryFn: () => placesService.listPaginated(filters as any),
+    queryFn: () => placesService.listPaginated(filters),
     staleTime: 1000 * 60 * 5,
     placeholderData: (prev) => prev,
   })

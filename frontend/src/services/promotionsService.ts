@@ -11,8 +11,4 @@ export const promotionsService = {
     return data.data
   },
 
-  async get(id: string): Promise<Promotion> {
-    const { data } = await apiClient.get<ApiResponse<Promotion>>(`/promotions/${id}/`)
-    return data.data
-  },
 }

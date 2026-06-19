@@ -12,11 +12,6 @@ export const preferencesService = {
     return data.data
   },
 
-  async update(id: string, payload: Partial<UserPreference>): Promise<UserPreference> {
-    const { data } = await apiClient.patch<ApiResponse<UserPreference>>(`/users/me/preferences/${id}/`, payload)
-    return data.data
-  },
-
   async remove(id: string): Promise<void> {
     await apiClient.delete(`/users/me/preferences/${id}/`)
   },

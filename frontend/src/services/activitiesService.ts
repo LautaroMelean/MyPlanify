@@ -1,7 +1,7 @@
 import apiClient from '@/lib/axios'
 import type { ApiResponse, PaginatedResponse, Activity } from '@/types'
 
-interface ActivitiesFilters {
+export interface ActivitiesFilters {
   type?: string
   category?: string
   indoor?: boolean
@@ -12,11 +12,6 @@ interface ActivitiesFilters {
 }
 
 export const activitiesService = {
-  async list(filters: ActivitiesFilters = {}): Promise<Activity[]> {
-    const { data } = await apiClient.get<ApiResponse<Activity[]>>('/activities/', { params: filters })
-    return data.data
-  },
-
   async listPaginated(filters: ActivitiesFilters & { page: number }): Promise<PaginatedResponse<Activity>> {
     const { data } = await apiClient.get<ApiResponse<PaginatedResponse<Activity>>>('/activities/', { params: filters })
     return data.data

@@ -45,12 +45,3 @@ def cancel_event(*, user, event: Event, reason: str = "") -> Event:
         metadata={"reason": reason},
     )
     return event
-
-
-def finish_event(*, user, event: Event) -> Event:
-    if not event.can_finish():
-        raise ValidationError({"status": f"Cannot finish event in status '{event.status}'."})
-    event.status = EventStatus.FINISHED
-    event.save(update_fields=["status", "updated_at"])
-    log_action(user=user, action="finish", entity_type="event", entity_id=str(event.id))
-    return event

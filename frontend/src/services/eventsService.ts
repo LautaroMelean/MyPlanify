@@ -1,7 +1,7 @@
 import apiClient from '@/lib/axios'
 import type { ApiResponse, PaginatedResponse, Event } from '@/types'
 
-interface EventsFilters {
+export interface EventsFilters {
   category?: string
   city?: string
   date_from?: string

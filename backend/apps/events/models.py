@@ -52,6 +52,3 @@ class Event(TimeStampedModel):
 
     def can_cancel(self):
         return self.status == EventStatus.PUBLISHED
-
-    def can_finish(self):
-        return self.status == EventStatus.PUBLISHED
