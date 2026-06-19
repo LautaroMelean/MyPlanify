@@ -443,7 +443,7 @@ class TestOrganizerDashboard:
 @pytest.mark.django_db
 class TestRecommendationV3:
     def test_feedback_score_positive(self):
-        from apps.recommendations.services import _feedback_score
+        from apps.recommendations.services import _feedback_score_from_cache, _build_feedback_cache
         from apps.places.models import Place
         from apps.planner.models import PlanFeedback, Plan
         from django.contrib.auth import get_user_model
@@ -463,11 +463,12 @@ class TestRecommendationV3:
             plan=plan, user=user, entity_type="place",
             entity_id=str(place.id), rating=5,
         )
-        score = _feedback_score(str(place.id), "place")
+        cache = _build_feedback_cache()
+        score = _feedback_score_from_cache(str(place.id), "place", cache)
         assert score > 0
 
     def test_feedback_score_negative(self):
-        from apps.recommendations.services import _feedback_score
+        from apps.recommendations.services import _feedback_score_from_cache, _build_feedback_cache
         from apps.places.models import Place
         from apps.planner.models import PlanFeedback, Plan
         from django.contrib.auth import get_user_model
@@ -487,12 +488,14 @@ class TestRecommendationV3:
             plan=plan, user=user, entity_type="place",
             entity_id=str(place.id), rating=1,
         )
-        score = _feedback_score(str(place.id), "place")
+        cache = _build_feedback_cache()
+        score = _feedback_score_from_cache(str(place.id), "place", cache)
         assert score < 0
 
     def test_feedback_score_empty_returns_zero(self):
-        from apps.recommendations.services import _feedback_score
-        score = _feedback_score(str(uuid.uuid4()), "place")
+        from apps.recommendations.services import _feedback_score_from_cache, _build_feedback_cache
+        cache = _build_feedback_cache()
+        score = _feedback_score_from_cache(str(uuid.uuid4()), "place", cache)
         assert score == 0
 
 
