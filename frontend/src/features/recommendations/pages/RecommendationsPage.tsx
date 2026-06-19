@@ -86,9 +86,9 @@ export default function RecommendationsPage() {
       {recommendations.length === 0 ? (
         <EmptyState
           title="Sin recomendaciones todavía"
-          description="Configurá tus preferencias para recibir sugerencias personalizadas de actividades, lugares y eventos."
+          description="Configurá tus intereses para que el motor de recomendaciones pueda sugerirte actividades, lugares y eventos personalizados."
           icon={<Sparkles className="h-12 w-12 text-gray-300" />}
-          action={{ label: 'Configurar mis preferencias', onClick: () => navigate('/perfil') }}
+          action={{ label: 'Configurar mis intereses', onClick: () => navigate('/onboarding/preferencias') }}
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

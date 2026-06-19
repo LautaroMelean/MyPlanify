@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sparkles, Users, DollarSign, ArrowRight, Compass, Heart, Cloud, CalendarDays, FolderOpen } from 'lucide-react'
+import { Sparkles, Users, DollarSign, ArrowRight, Compass, Heart, Cloud, CalendarDays, FolderOpen, ChevronRight, Globe, Lock } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useWeather } from '@/hooks/useWeather'
 import { useForecast } from '@/hooks/useForecast'
 import { usePlanner } from '@/hooks/usePlanner'
+import { useMyPlans } from '@/hooks/useMyPlans'
 import WeatherWidget from '@/components/ui/WeatherWidget'
 import WeatherForecastWidget from '@/components/ui/WeatherForecastWidget'
 
@@ -33,10 +34,17 @@ const ACTIVITY_SHORTCUTS = [
   { type: 'bar',        emoji: '🍺', label: 'Bares' },
 ]
 
+function formatPlanDate(iso: string) {
+  return new Date(iso + 'T12:00:00').toLocaleDateString('es-AR', {
+    day: 'numeric', month: 'short',
+  })
+}
+
 export default function HomePage() {
   const { user } = useAuthStore()
   const navigate = useNavigate()
   const planner = usePlanner()
+  const { data: plans } = useMyPlans()
 
   const { data: weather, isLoading: weatherLoading } = useWeather(BA)
   const { data: forecast, isLoading: forecastLoading } = useForecast(BA)
@@ -50,6 +58,8 @@ export default function HomePage() {
       { onSuccess: (plan) => navigate(`/planes/${plan.id}`) },
     )
   }
+
+  const recentPlans = plans ? [...plans].sort((a, b) => a.date < b.date ? 1 : -1).slice(0, 3) : []
 
   return (
     <div className="flex flex-col gap-8 pb-8">
@@ -69,7 +79,7 @@ export default function HomePage() {
           <WeatherWidget weather={weather} />
         ) : (
           <div className="flex items-center gap-2 text-sm text-gray-400 bg-white border border-gray-200 rounded-xl px-4 py-3">
-            <Cloud className="h-4 w-4" /> Buenos Aires
+            <Cloud className="h-4 w-4" aria-hidden="true" /> Buenos Aires
           </div>
         )}
       </div>
@@ -77,7 +87,7 @@ export default function HomePage() {
       {/* HERO — generar plan */}
       <div className="bg-gradient-to-br from-violet-900 via-purple-900 to-indigo-900 rounded-2xl p-6 text-white shadow-neon ring-1 ring-violet-500/30">
         <div className="flex items-center gap-2 mb-1">
-          <Sparkles className="h-5 w-5 text-yellow-300" />
+          <Sparkles className="h-5 w-5 text-yellow-300" aria-hidden="true" />
           <span className="text-sm font-semibold text-indigo-200">Plan inteligente</span>
         </div>
         <h2 className="text-xl font-bold mb-4">¿Qué hacés hoy en Buenos Aires?</h2>
@@ -163,6 +173,57 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+
+      {/* Planes recientes */}
+      {recentPlans.length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-gray-600 flex items-center gap-1.5">
+              <CalendarDays className="h-4 w-4 text-gray-400" aria-hidden="true" />
+              Tus últimos planes
+            </h2>
+            <button
+              onClick={() => navigate('/mis-planes')}
+              className="text-xs text-primary-600 hover:underline flex items-center gap-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-500/40 rounded"
+            >
+              Ver todos <ChevronRight className="h-3 w-3" aria-hidden="true" />
+            </button>
+          </div>
+          <div className="flex flex-col gap-2">
+            {recentPlans.map((plan) => (
+              <button
+                key={plan.id}
+                onClick={() => navigate(`/planes/${plan.id}`)}
+                className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-3 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 group"
+              >
+                <div className="flex-shrink-0 w-10 text-center bg-primary-500/10 rounded-lg py-1">
+                  <p className="text-base font-bold text-primary-600 leading-none">
+                    {new Date(plan.date + 'T12:00:00').getDate()}
+                  </p>
+                  <p className="text-[9px] font-medium text-primary-500 uppercase">
+                    {new Date(plan.date + 'T12:00:00').toLocaleDateString('es-AR', { month: 'short' })}
+                  </p>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-gray-800 truncate group-hover:text-primary-600 transition-colors">{plan.title}</p>
+                  <p className="text-xs text-gray-500">
+                    {plan.city} · {formatPlanDate(plan.date)}
+                    {plan.items.length > 0 && ` · ${plan.items.length} actividades`}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1.5 flex-shrink-0">
+                  {plan.is_public ? (
+                    <Globe className="h-3.5 w-3.5 text-green-500" aria-hidden="true" />
+                  ) : (
+                    <Lock className="h-3.5 w-3.5 text-gray-400" aria-hidden="true" />
+                  )}
+                  <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-primary-500 transition-colors" aria-hidden="true" />
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Pronóstico semanal */}
       {(forecastLoading || (forecast && forecast.length > 0)) && (
