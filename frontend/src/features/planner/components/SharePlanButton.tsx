@@ -67,17 +67,17 @@ export function SharePlanButton({ planId, slug, isPublic, onMakePublic }: Props)
         <div className="absolute right-0 mt-1 w-48 rounded-xl shadow-glass border border-white/10 bg-white z-10">
           <div className="py-1">
             <button
-              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-600 hover:bg-white/5 hover:text-gray-800"
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-600 hover:bg-white/5 hover:text-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded-t-xl"
               onClick={handleCopy}
             >
-              <Copy className="h-4 w-4" />
+              <Copy className="h-4 w-4" aria-hidden="true" />
               Copiar link
             </button>
             <button
-              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-600 hover:bg-white/5 hover:text-gray-800"
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-600 hover:bg-white/5 hover:text-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded-b-xl"
               onClick={handleWhatsApp}
             >
-              <MessageCircle className="h-4 w-4 text-green-500" />
+              <MessageCircle className="h-4 w-4 text-green-500" aria-hidden="true" />
               Compartir por WhatsApp
             </button>
           </div>

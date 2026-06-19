@@ -28,8 +28,23 @@ export function InspireFeed() {
 
   if (isLoading) {
     return (
-      <div className="text-sm text-gray-400 text-center py-4">
-        Cargando planes populares...
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <div className="h-4 w-4 bg-gray-200/20 rounded-full animate-pulse" />
+          <div className="h-4 w-40 bg-gray-200/20 rounded animate-pulse" />
+        </div>
+        <div className="grid sm:grid-cols-2 gap-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 shadow-glass-sm animate-pulse">
+              <div className="h-4 w-3/4 bg-gray-200/20 rounded mb-2" />
+              <div className="flex gap-3 mb-3">
+                <div className="h-3 w-16 bg-gray-200/20 rounded" />
+                <div className="h-3 w-12 bg-gray-200/20 rounded" />
+              </div>
+              <div className="h-7 w-full bg-gray-200/20 rounded-xl" />
+            </div>
+          ))}
+        </div>
       </div>
     )
   }
