@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Sparkles, MapPin, Activity, Calendar, CheckCircle, Navigation, DollarSign, ArrowRight } from 'lucide-react'
 import { useRecommendations } from '@/hooks/useRecommendations'
 import { useWeather } from '@/hooks/useWeather'
+import { recommendationsService } from '@/services/recommendationsService'
 import FavoriteButton from '@/components/ui/FavoriteButton'
 import WeatherWidget from '@/components/ui/WeatherWidget'
 import EmptyState from '@/components/common/EmptyState'
@@ -176,14 +177,20 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
 
   const reasonLabels = rec.score_breakdown ? getReasonLabels(rec.score_breakdown) : []
 
+  function handleClick() {
+    if (!itemId || !rec.item_type) return
+    recommendationsService.click(rec.item_type, itemId).catch(() => {})
+    navigate(detailPath)
+  }
+
   return (
     <div
       className="bg-white rounded-xl border border-gray-200 shadow-glass-sm p-4 flex flex-col gap-3 hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
-      onClick={() => itemId && navigate(detailPath)}
+      onClick={handleClick}
       role="button"
       tabIndex={0}
       aria-label={name}
-      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && itemId && navigate(detailPath)}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleClick()}
     >
       {/* Thumbnail — available for events and places */}
       {(rec.event_detail?.image_url || rec.place_detail?.image_url) && (

@@ -13,4 +13,8 @@ export const recommendationsService = {
     const { data } = await apiClient.get<ApiResponse<Recommendation[]>>('/recommendations/', { params: filters })
     return data.data
   },
+
+  async click(entityType: string, entityId: string): Promise<void> {
+    await apiClient.post('/recommendations/click/', { entity_type: entityType, entity_id: entityId })
+  },
 }

@@ -15,7 +15,6 @@ def get_active_places(
     city=None, category=None, lat=None, lon=None, radius_km=None, name=None,
     outdoor_seating=None, fee=None, wheelchair=None, cuisine=None,
 ):
-    from apps.reviews.models import Review
     qs = Place.objects.filter(is_active=True)
     if name:
         qs = qs.filter(name__icontains=name)
