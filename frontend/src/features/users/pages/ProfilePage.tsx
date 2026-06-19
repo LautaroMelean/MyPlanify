@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import { Plus, X, User } from 'lucide-react'
+import { Plus, X, User, Pencil, Check } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { useAuthStore } from '@/store/authStore'
 import { usePreferences, useSetPreferences, useRemovePreference } from '@/hooks/usePreferences'
 import { useUserActivityStats } from '@/hooks/useDashboard'
+import { useUpdateProfile } from '@/hooks/useAuth'
 import { ActivityStatsCard } from '@/features/dashboard/components/ActivityStatsCard'
 import Card from '@/components/ui/Card'
 import Avatar from '@/components/ui/Avatar'
@@ -30,7 +32,10 @@ export default function ProfilePage() {
   const { data: activityStats } = useUserActivityStats()
   const setPrefs = useSetPreferences()
   const removePref = useRemovePreference()
+  const updateProfile = useUpdateProfile()
   const [adding, setAdding] = useState(false)
+  const [editingName, setEditingName] = useState(false)
+  const [nameForm, setNameForm] = useState({ first_name: user?.first_name ?? '', last_name: user?.last_name ?? '' })
 
   if (!user) return null
 
@@ -70,24 +75,79 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-          <div>
-            <dt className="text-gray-500 font-medium">Nombre</dt>
-            <dd className="text-gray-800 mt-0.5">{user.first_name}</dd>
-          </div>
-          <div>
-            <dt className="text-gray-500 font-medium">Apellido</dt>
-            <dd className="text-gray-800 mt-0.5">{user.last_name}</dd>
-          </div>
-          <div>
-            <dt className="text-gray-500 font-medium">Correo electrónico</dt>
-            <dd className="text-gray-800 mt-0.5">{user.email}</dd>
-          </div>
-          <div>
-            <dt className="text-gray-500 font-medium">Miembro desde</dt>
-            <dd className="text-gray-800 mt-0.5">{new Date(user.created_at).toLocaleDateString('es-AR')}</dd>
-          </div>
-        </dl>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold text-gray-600">Información personal</h3>
+          {!editingName && (
+            <button
+              onClick={() => { setNameForm({ first_name: user.first_name, last_name: user.last_name }); setEditingName(true) }}
+              className="flex items-center gap-1 text-xs text-primary-600 hover:text-primary-700 font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-500/40 rounded"
+            >
+              <Pencil className="h-3 w-3" aria-hidden="true" />
+              Editar
+            </button>
+          )}
+        </div>
+
+        {editingName ? (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              updateProfile.mutate(nameForm, {
+                onSuccess: () => { setEditingName(false); toast.success('Perfil actualizado') },
+                onError: () => toast.error('No se pudo actualizar el perfil'),
+              })
+            }}
+            className="flex flex-col gap-3"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-gray-500 font-medium block mb-1">Nombre</label>
+                <input
+                  value={nameForm.first_name}
+                  onChange={(e) => setNameForm((f) => ({ ...f, first_name: e.target.value }))}
+                  className="w-full text-sm border border-gray-200 bg-gray-100 text-gray-800 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 font-medium block mb-1">Apellido</label>
+                <input
+                  value={nameForm.last_name}
+                  onChange={(e) => setNameForm((f) => ({ ...f, last_name: e.target.value }))}
+                  className="w-full text-sm border border-gray-200 bg-gray-100 text-gray-800 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button type="submit" size="sm" isLoading={updateProfile.isPending} leftIcon={<Check className="h-3.5 w-3.5" />}>
+                Guardar
+              </Button>
+              <Button type="button" size="sm" variant="ghost" onClick={() => setEditingName(false)}>
+                Cancelar
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <dt className="text-gray-500 font-medium">Nombre</dt>
+              <dd className="text-gray-800 mt-0.5">{user.first_name}</dd>
+            </div>
+            <div>
+              <dt className="text-gray-500 font-medium">Apellido</dt>
+              <dd className="text-gray-800 mt-0.5">{user.last_name}</dd>
+            </div>
+            <div>
+              <dt className="text-gray-500 font-medium">Correo electrónico</dt>
+              <dd className="text-gray-800 mt-0.5">{user.email}</dd>
+            </div>
+            <div>
+              <dt className="text-gray-500 font-medium">Miembro desde</dt>
+              <dd className="text-gray-800 mt-0.5">{new Date(user.created_at).toLocaleDateString('es-AR')}</dd>
+            </div>
+          </dl>
+        )}
       </Card>
 
       {/* Actividad */}

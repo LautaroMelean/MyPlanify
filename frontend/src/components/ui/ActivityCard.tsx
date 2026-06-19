@@ -44,24 +44,24 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
 
   return (
     <div
-      className="bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
+      className="group bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
       onClick={() => navigate(`/activities/${activity.id}`)}
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/activities/${activity.id}`)}
       role="button"
       tabIndex={0}
       aria-label={activity.name}
     >
-      <div className="overflow-hidden h-32">
+      <div className="overflow-hidden h-40">
         {activity.image_url ? (
           <img
             src={activity.image_url}
             alt=""
-            className="w-full h-32 object-cover hover:scale-105 transition-transform duration-300"
+            className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />
         ) : (
-          <div className={`w-full h-32 bg-gradient-to-br ${gradient} flex items-center justify-center`} aria-hidden="true">
-            <span className="text-4xl">{typeEmojis[activity.activity_type] ?? '⚡'}</span>
+          <div className={`w-full h-40 bg-gradient-to-br ${gradient} flex items-center justify-center`} aria-hidden="true">
+            <span className="text-5xl">{typeEmojis[activity.activity_type] ?? '⚡'}</span>
           </div>
         )}
       </div>

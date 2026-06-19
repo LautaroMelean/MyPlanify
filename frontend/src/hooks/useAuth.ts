@@ -44,6 +44,20 @@ export function useLogout() {
   })
 }
 
+export function useUpdateProfile() {
+  const { user, setUser } = useAuthStore()
+
+  return useMutation({
+    mutationFn: async (payload: { first_name?: string; last_name?: string }) => {
+      const { data } = await import('@/lib/axios').then(({ default: api }) =>
+        api.patch<{ data: import('@/types').User }>(`/users/${user!.id}/`, payload)
+      )
+      return data.data
+    },
+    onSuccess: (updated) => setUser(updated),
+  })
+}
+
 export function useCurrentUser() {
   const { isAuthenticated } = useAuthStore()
 
