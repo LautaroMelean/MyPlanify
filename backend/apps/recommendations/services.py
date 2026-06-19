@@ -342,12 +342,6 @@ def generate_recommendations_for_user(
     for event in get_published_events():
         place_lat = event.place.latitude if event.place_id else None
         place_lon = event.place.longitude if event.place_id else None
-        distance_km = None
-        if user_lat and place_lat:
-            try:
-                distance_km = _haversine_km(user_lat, user_lon, float(place_lat), float(place_lon))
-            except Exception:
-                pass
 
         days_away = max(0, (event.start_date - now).days) if event.start_date > now else 99
         proximity_bonus = WEIGHT_PROXIMITY if 0 <= days_away <= 7 else 0
@@ -390,13 +384,6 @@ def generate_recommendations_for_user(
 
     # ── Places ────────────────────────────────────────────────────────────────
     for place in get_active_places():
-        distance_km = None
-        if user_lat and place.latitude:
-            try:
-                distance_km = _haversine_km(user_lat, user_lon, float(place.latitude), float(place.longitude))
-            except Exception:
-                pass
-
         pref_s     = _pref_boost(place.category, "", pref_map)
         cat_s      = _category_score(place.category, pref_map)
         pop_s      = _popularity_score(50)
