@@ -27,6 +27,12 @@ const typeColors: Record<string, string> = {
   shopping: 'from-yellow-400 to-amber-500',
 }
 
+const typeEmojis: Record<string, string> = {
+  restaurant: '🍽️', bar: '🍺', cinema: '🎬', museum: '🏛️',
+  park: '🌳', sports: '⚽', concert: '🎵', gaming: '🎮',
+  tourism: '✈️', shopping: '🛍️',
+}
+
 function isFree(value: string | number | null | undefined): boolean {
   if (value === null || value === undefined) return false
   return parseFloat(String(value)) === 0
@@ -45,7 +51,20 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
       tabIndex={0}
       aria-label={activity.name}
     >
-      <div className={`h-2 bg-gradient-to-r ${gradient}`} />
+      <div className="overflow-hidden h-32">
+        {activity.image_url ? (
+          <img
+            src={activity.image_url}
+            alt=""
+            className="w-full h-32 object-cover hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+          />
+        ) : (
+          <div className={`w-full h-32 bg-gradient-to-br ${gradient} flex items-center justify-center`} aria-hidden="true">
+            <span className="text-4xl">{typeEmojis[activity.activity_type] ?? '⚡'}</span>
+          </div>
+        )}
+      </div>
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
