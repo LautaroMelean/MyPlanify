@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet'
 import { MapPin, Locate, Search, X } from 'lucide-react'
@@ -77,19 +77,27 @@ export default function MapPage() {
   const { data: externalPlaces = [], isLoading: externalLoading } = useExternalPlaces(externalCoords)
 
   // All places with valid coordinates, de-duplicated
-  const allPlacesWithCoords = [
-    ...places.filter((p) => p.latitude && p.longitude && !EXCLUDED_CATEGORIES.has(p.category)),
-    ...externalPlaces.filter(
-      (p) => p.latitude && p.longitude && !EXCLUDED_CATEGORIES.has(p.category) && !places.find((ip) => ip.id === p.id),
-    ),
-  ]
+  const internalIds = useMemo(() => new Set(places.map((p) => p.id)), [places])
+  const allPlacesWithCoords = useMemo(
+    () => [
+      ...places.filter((p) => p.latitude && p.longitude && !EXCLUDED_CATEGORIES.has(p.category)),
+      ...externalPlaces.filter(
+        (p) => p.latitude && p.longitude && !EXCLUDED_CATEGORIES.has(p.category) && !internalIds.has(p.id),
+      ),
+    ],
+    [places, externalPlaces, internalIds],
+  )
 
   // Only render markers that are within the current map viewport
-  const visiblePlaces = mapBounds
-    ? allPlacesWithCoords.filter((p) =>
-        mapBounds.contains([parseFloat(String(p.latitude!)), parseFloat(String(p.longitude!))])
-      )
-    : allPlacesWithCoords.slice(0, 60)
+  const visiblePlaces = useMemo(
+    () =>
+      mapBounds
+        ? allPlacesWithCoords.filter((p) =>
+            mapBounds.contains([parseFloat(String(p.latitude!)), parseFloat(String(p.longitude!))])
+          )
+        : allPlacesWithCoords.slice(0, 60),
+    [allPlacesWithCoords, mapBounds],
+  )
 
   const handleBoundsChange = useCallback((b: L.LatLngBounds) => setMapBounds(b), [])
 
