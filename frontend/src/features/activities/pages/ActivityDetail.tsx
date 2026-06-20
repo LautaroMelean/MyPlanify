@@ -5,12 +5,7 @@ import Button from '@/components/ui/Button'
 import FavoriteButton from '@/components/ui/FavoriteButton'
 import ReviewSection from '@/components/ui/ReviewSection'
 import { formatARS } from '@/lib/format'
-
-const TYPE_LABELS: Record<string, string> = {
-  restaurant: 'Restaurante', bar: 'Bar', cinema: 'Cine', museum: 'Museo',
-  park: 'Parque', sports: 'Deporte', concert: 'Concierto', gaming: 'Juegos',
-  tourism: 'Turismo', shopping: 'Shopping',
-}
+import { ACTIVITY_TYPE_LABELS } from '@/lib/activityTypes'
 
 export default function ActivityDetail() {
   const { id } = useParams<{ id: string }>()
@@ -93,7 +88,7 @@ export default function ActivityDetail() {
           <h1 className="text-2xl font-bold text-gray-900">{activity.name}</h1>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
             <span className="text-xs bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full font-medium">
-              {TYPE_LABELS[activity.activity_type] ?? activity.activity_type}
+              {ACTIVITY_TYPE_LABELS[activity.activity_type] ?? activity.activity_type}
             </span>
             <span className="text-xs bg-gray-300/10 text-gray-500 px-2 py-0.5 rounded-full font-medium">
               {activity.category}

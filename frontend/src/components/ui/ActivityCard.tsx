@@ -4,15 +4,10 @@ import type { Activity } from '@/types'
 import FavoriteButton from './FavoriteButton'
 import { RatingBadge } from './ReviewSection'
 import { formatARS } from '@/lib/format'
+import { ACTIVITY_TYPE_LABELS } from '@/lib/activityTypes'
 
 interface ActivityCardProps {
   activity: Activity
-}
-
-const typeLabels: Record<string, string> = {
-  restaurant: 'Restaurante', bar: 'Bar', cinema: 'Cine', museum: 'Museo',
-  park: 'Parque', sports: 'Deporte', concert: 'Concierto', gaming: 'Juegos',
-  tourism: 'Turismo', shopping: 'Shopping',
 }
 
 const typeColors: Record<string, string> = {
@@ -71,7 +66,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
           <div className="min-w-0">
             <h3 className="font-semibold text-gray-900 truncate">{activity.name}</h3>
             <span className="text-xs bg-primary-500/15 text-primary-600 px-2 py-0.5 rounded-full font-medium">
-              {typeLabels[activity.activity_type] ?? activity.activity_type}
+              {ACTIVITY_TYPE_LABELS[activity.activity_type] ?? activity.activity_type}
             </span>
           </div>
           <div onClick={(e) => e.stopPropagation()}>

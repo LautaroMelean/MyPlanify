@@ -11,6 +11,7 @@ interface EventCardProps {
 
 export default function EventCard({ event }: EventCardProps) {
   const navigate = useNavigate()
+  const startDate = new Date(event.start_date)
 
   return (
     <div
@@ -36,10 +37,10 @@ export default function EventCard({ event }: EventCardProps) {
             {/* Mini date badge */}
             <div className="flex-shrink-0 w-10 text-center bg-primary-500/10 rounded-lg py-1">
               <p className="text-sm font-bold text-primary-600 leading-none">
-                {new Date(event.start_date).getDate()}
+                {startDate.getDate()}
               </p>
               <p className="text-[9px] font-medium text-primary-500 uppercase">
-                {new Date(event.start_date).toLocaleDateString('es-AR', { month: 'short' })}
+                {startDate.toLocaleDateString('es-AR', { month: 'short' })}
               </p>
             </div>
             <div className="min-w-0">
