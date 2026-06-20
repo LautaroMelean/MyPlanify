@@ -6,12 +6,6 @@ import Button from '@/components/ui/Button'
 import EmptyState from '@/components/common/EmptyState'
 import type { Plan } from '@/types'
 
-function formatPlanDate(iso: string) {
-  return new Date(iso + 'T12:00:00').toLocaleDateString('es-AR', {
-    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
-  })
-}
-
 function isPast(dateIso: string) {
   const planDate = new Date(dateIso + 'T23:59:59')
   return planDate < new Date()
@@ -99,7 +93,7 @@ function PlanRow({
           )}
         </div>
         <p className="text-xs text-gray-500 mt-0.5">
-          {plan.city} · {formatPlanDate(plan.date)}
+          {plan.city} · {planDate.toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
           {plan.items.length > 0 && (
             <span className="ml-1">· {plan.items.length} {plan.items.length === 1 ? 'actividad' : 'actividades'}</span>
           )}
@@ -157,11 +151,14 @@ export default function MyPlansPage() {
 
   const allPlans = plans ?? []
   const { upcoming, past } = useMemo(() => {
-    const sorted = [...allPlans].sort((a, b) => (a.date < b.date ? 1 : -1))
-    return {
-      upcoming: sorted.filter((p) => !isPast(p.date)),
-      past: sorted.filter((p) => isPast(p.date)),
+    const now = new Date()
+    const up: typeof allPlans = [], past: typeof allPlans = []
+    for (const p of allPlans) {
+      (new Date(p.date + 'T23:59:59') < now ? past : up).push(p)
     }
+    up.sort((a, b) => (a.date < b.date ? 1 : -1))
+    past.sort((a, b) => (a.date < b.date ? 1 : -1))
+    return { upcoming: up, past }
   }, [allPlans])
 
   return (

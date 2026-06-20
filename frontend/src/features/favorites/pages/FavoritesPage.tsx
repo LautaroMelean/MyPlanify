@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Heart, Trash2, MapPin, Calendar, Zap, ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -55,14 +55,20 @@ export default function FavoritesPage() {
     )
   }
 
-  const counts: Record<FilterTab, number> = {
-    all:      favorites.length,
-    place:    favorites.filter((f) => f.item_type === 'place').length,
-    activity: favorites.filter((f) => f.item_type === 'activity').length,
-    event:    favorites.filter((f) => f.item_type === 'event').length,
-  }
+  const counts = useMemo(() => {
+    const c = { all: favorites.length, place: 0, activity: 0, event: 0 }
+    for (const f of favorites) {
+      if (f.item_type === 'place') c.place++
+      else if (f.item_type === 'activity') c.activity++
+      else if (f.item_type === 'event') c.event++
+    }
+    return c
+  }, [favorites])
 
-  const visible = activeTab === 'all' ? favorites : favorites.filter((f) => f.item_type === activeTab)
+  const visible = useMemo(
+    () => activeTab === 'all' ? favorites : favorites.filter((f) => f.item_type === activeTab),
+    [favorites, activeTab],
+  )
 
   return (
     <div className="flex flex-col gap-6">

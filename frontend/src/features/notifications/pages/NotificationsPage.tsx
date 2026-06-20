@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Bell, CheckCheck, Circle } from 'lucide-react'
 import { useNotifications, useMarkNotificationRead, useMarkAllNotificationsRead } from '@/hooks/useNotifications'
 import EmptyState from '@/components/common/EmptyState'
@@ -90,8 +91,13 @@ export default function NotificationsPage() {
     )
   }
 
-  const unread = notifications.filter((n) => !n.read)
-  const read   = notifications.filter((n) =>  n.read)
+  const { unread, read } = useMemo(() => {
+    const unread: typeof notifications = [], read: typeof notifications = []
+    for (const n of notifications) {
+      (n.read ? read : unread).push(n)
+    }
+    return { unread, read }
+  }, [notifications])
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-6">
