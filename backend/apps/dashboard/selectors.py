@@ -1,4 +1,5 @@
 def get_business_stats(user):
+    from django.db.models import Count, Q
     from apps.places.models import Place
     from apps.promotions.models import Promotion, PromotionStatus
     from apps.reviews.models import Review
@@ -7,8 +8,13 @@ def get_business_stats(user):
         Place.objects.filter(owner=user).values_list("id", flat=True)
     )
     total_places = len(owned_place_ids)
-    total_promotions = Promotion.objects.filter(owner=user).count()
-    active_promotions = Promotion.objects.filter(owner=user, status=PromotionStatus.ACTIVE).count()
+
+    promo_stats = Promotion.objects.filter(owner=user).aggregate(
+        total=Count("id"),
+        active=Count("id", filter=Q(status=PromotionStatus.ACTIVE)),
+    )
+    total_promotions = promo_stats["total"]
+    active_promotions = promo_stats["active"]
 
     reviews_qs = Review.objects.filter(entity_type="place", entity_id__in=[str(i) for i in owned_place_ids])
     total_reviews = reviews_qs.count()
@@ -41,10 +47,11 @@ def get_organizer_stats(user):
     from apps.events.models import Event, EventStatus
     from apps.reviews.models import Review
 
-    total_events = Event.objects.filter(organizer=user).count()
-    published_events = Event.objects.filter(organizer=user, status=EventStatus.PUBLISHED).count()
-
-    owned_event_ids = list(Event.objects.filter(organizer=user).values_list("id", flat=True))
+    # Fetch ids + statuses in one query; derive counts in Python
+    event_rows = list(Event.objects.filter(organizer=user).values("id", "status"))
+    total_events = len(event_rows)
+    published_events = sum(1 for e in event_rows if e["status"] == EventStatus.PUBLISHED)
+    owned_event_ids = [str(e["id"]) for e in event_rows]
     reviews_qs = Review.objects.filter(entity_type="event", entity_id__in=[str(i) for i in owned_event_ids])
     total_reviews = reviews_qs.count()
     avg = None
