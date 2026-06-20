@@ -489,13 +489,14 @@ def generate_surprise_plan(user, plan_date=None) -> Plan:
     if plan_date is None:
         plan_date = (timezone.now() + timezone.timedelta(days=1)).date()
 
-    last_plan = Plan.objects.filter(user=user).order_by("-created_at").first()
-    city = last_plan.city if last_plan else "Buenos Aires"
-
-    recent = list(Plan.objects.filter(user=user).order_by("-created_at").values_list("budget", flat=True)[:3])
-    if recent:
-        budget = Decimal(sum(float(b) for b in recent) / len(recent)).quantize(Decimal("0.01"))
+    recent_plans = list(
+        Plan.objects.filter(user=user).order_by("-created_at").values_list("city", "budget")[:3]
+    )
+    if recent_plans:
+        city = recent_plans[0][0] or "Buenos Aires"
+        budget = Decimal(sum(float(b) for _, b in recent_plans) / len(recent_plans)).quantize(Decimal("0.01"))
     else:
+        city = "Buenos Aires"
         budget = Decimal("3000.00")
 
     # Shared context for all phases
