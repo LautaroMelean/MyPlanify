@@ -1,8 +1,9 @@
 from rest_framework import serializers
+from apps.core.mixins import RatingMixin
 from .models import Event
 
 
-class EventSerializer(serializers.ModelSerializer):
+class EventSerializer(RatingMixin, serializers.ModelSerializer):
     place_name = serializers.CharField(source="place.name", read_only=True, default=None)
     organizer_email = serializers.EmailField(source="organizer.email", read_only=True, default=None)
     avg_rating = serializers.SerializerMethodField()
@@ -17,13 +18,6 @@ class EventSerializer(serializers.ModelSerializer):
             "avg_rating", "review_count", "created_at", "updated_at",
         )
         read_only_fields = ("id", "status", "organizer_email", "created_at", "updated_at")
-
-    def get_avg_rating(self, obj):
-        val = getattr(obj, "avg_rating", None)
-        return round(float(val), 1) if val is not None else None
-
-    def get_review_count(self, obj):
-        return getattr(obj, "review_count", None) or 0
 
 
 class EventCreateSerializer(serializers.ModelSerializer):

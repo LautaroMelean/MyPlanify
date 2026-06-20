@@ -18,10 +18,11 @@ class PlanItemSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "created_at")
 
     def _resolve_entity(self, obj):
-        cache = getattr(self, "_entity_cache", {})
+        if not hasattr(self, "_entity_cache"):
+            self._entity_cache = {}
         key = f"{obj.entity_type}:{obj.entity_id}"
-        if key in cache:
-            return cache[key]
+        if key in self._entity_cache:
+            return self._entity_cache[key]
         try:
             if obj.entity_type == "place":
                 from apps.places.models import Place
@@ -36,8 +37,6 @@ class PlanItemSerializer(serializers.ModelSerializer):
                 entity = None
         except Exception:
             entity = None
-        if not hasattr(self, "_entity_cache"):
-            self._entity_cache = {}
         self._entity_cache[key] = entity
         return entity
 

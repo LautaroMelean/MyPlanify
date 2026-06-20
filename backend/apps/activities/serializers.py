@@ -1,8 +1,9 @@
 from rest_framework import serializers
+from apps.core.mixins import RatingMixin
 from .models import Activity
 
 
-class ActivitySerializer(serializers.ModelSerializer):
+class ActivitySerializer(RatingMixin, serializers.ModelSerializer):
     place_name = serializers.SerializerMethodField()
     avg_rating = serializers.SerializerMethodField()
     review_count = serializers.SerializerMethodField()
@@ -22,13 +23,6 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     def get_place_name(self, obj):
         return obj.place.name if obj.place else None
-
-    def get_avg_rating(self, obj):
-        val = getattr(obj, "avg_rating", None)
-        return round(float(val), 1) if val is not None else None
-
-    def get_review_count(self, obj):
-        return getattr(obj, "review_count", None) or 0
 
 
 class ActivityCreateSerializer(serializers.ModelSerializer):

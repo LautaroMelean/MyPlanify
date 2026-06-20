@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CalendarDays, Trash2, Globe, Lock, Plus, Clock, CheckCircle2, FileEdit } from 'lucide-react'
+import { CalendarDays, Trash2, Globe, Lock, Plus, Clock, CheckCircle2, FileEdit, Sparkles, CalendarCheck, XCircle } from 'lucide-react'
 import { useMyPlans, useDeletePlan } from '@/hooks/usePlanner'
 import Button from '@/components/ui/Button'
 import EmptyState from '@/components/common/EmptyState'
@@ -23,15 +23,25 @@ const STATUS_CONFIG: Record<string, { label: string; icon: React.ReactNode; cls:
     icon: <FileEdit className="h-3 w-3" aria-hidden="true" />,
     cls: 'bg-gray-300/10 text-gray-500 border-gray-300/20',
   },
-  published: {
-    label: 'Publicado',
-    icon: <Globe className="h-3 w-3" aria-hidden="true" />,
-    cls: 'bg-green-500/10 text-green-500 border-green-500/20',
+  generated: {
+    label: 'Generado',
+    icon: <Sparkles className="h-3 w-3" aria-hidden="true" />,
+    cls: 'bg-primary-500/10 text-primary-600 border-primary-400/20',
+  },
+  planned: {
+    label: 'Planificado',
+    icon: <CalendarCheck className="h-3 w-3" aria-hidden="true" />,
+    cls: 'bg-blue-500/10 text-blue-600 border-blue-400/20',
   },
   completed: {
     label: 'Completado',
     icon: <CheckCircle2 className="h-3 w-3" aria-hidden="true" />,
-    cls: 'bg-primary-500/10 text-primary-600 border-primary-400/20',
+    cls: 'bg-green-500/10 text-green-600 border-green-400/20',
+  },
+  cancelled: {
+    label: 'Cancelado',
+    icon: <XCircle className="h-3 w-3" aria-hidden="true" />,
+    cls: 'bg-red-500/10 text-red-500 border-red-400/20',
   },
 }
 
