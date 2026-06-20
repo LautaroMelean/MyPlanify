@@ -86,12 +86,18 @@ def _popularity_score(score_base: int) -> float:
     return min((score_base / 100) * WEIGHT_POPULARITY, WEIGHT_POPULARITY)
 
 
-def _interaction_score_v2(entity_id: str, interactions: list[tuple]) -> float:
-    """V2: weighted by action type, returns score contribution 0-10."""
-    total = 0.0
+def _build_interaction_map(interactions: list[tuple]) -> dict:
+    """Collapse per-user interactions into entity_id → cumulative weight (O(n) once)."""
+    result: dict = {}
     for eid, action in interactions:
-        if str(eid) == str(entity_id):
-            total += INTERACTION_WEIGHTS.get(action, 0)
+        k = str(eid)
+        result[k] = result.get(k, 0.0) + INTERACTION_WEIGHTS.get(action, 0)
+    return result
+
+
+def _interaction_score_v2(entity_id: str, interaction_map: dict) -> float:
+    """V2: weighted by action type, O(1) lookup against pre-built map."""
+    total = interaction_map.get(str(entity_id), 0.0)
     return max(-WEIGHT_INTERACTION, min(WEIGHT_INTERACTION, total * WEIGHT_INTERACTION))
 
 
@@ -288,9 +294,10 @@ def generate_recommendations_for_user(
     _hour = _now.hour
     _weekday = _now.weekday()
 
-    interactions = list(
+    raw_interactions = list(
         InteractionHistory.objects.filter(user=user).values_list("entity_id", "action")
     )
+    interaction_map = _build_interaction_map(raw_interactions)
     feedback_cache = _build_feedback_cache()
 
     pending = []
@@ -310,7 +317,7 @@ def generate_recommendations_for_user(
         pref_s       = _pref_boost(activity.category, activity.activity_type, pref_map)
         cat_s        = _category_score(activity.category, pref_map)
         pop_s        = _popularity_score(activity.score_base)
-        inter_s      = _interaction_score_v2(activity.id, interactions)
+        inter_s      = _interaction_score_v2(activity.id, interaction_map)
         weather_s    = _weather_modifier(activity.outdoor, activity.indoor, is_outdoor_friendly)
         dist_s       = _distance_modifier(user_lat, user_lon, act_lat, act_lon)
         budget_s     = _budget_modifier(budget, min_cost)
@@ -356,7 +363,7 @@ def generate_recommendations_for_user(
         pref_s     = _pref_boost(event.category, "", pref_map)
         cat_s      = _category_score(event.category, pref_map)
         pop_s      = _popularity_score(60)
-        inter_s    = _interaction_score_v2(event.id, interactions)
+        inter_s    = _interaction_score_v2(event.id, interaction_map)
         dist_s     = _distance_modifier(user_lat, user_lon, place_lat, place_lon)
         budget_s   = _budget_modifier(budget, event_cost)
         age_s      = _age_modifier(user, event.minimum_age)
@@ -393,7 +400,7 @@ def generate_recommendations_for_user(
         pref_s     = _pref_boost(place.category, "", pref_map)
         cat_s      = _category_score(place.category, pref_map)
         pop_s      = _popularity_score(50)
-        inter_s    = _interaction_score_v2(place.id, interactions)
+        inter_s    = _interaction_score_v2(place.id, interaction_map)
         dist_s     = _distance_modifier(user_lat, user_lon, place.latitude, place.longitude)
         time_s     = _time_of_day_modifier(is_indoor=True, is_outdoor=False, category=place.category, activity_type="", hour=_hour)
         day_s      = _day_of_week_modifier(is_outdoor=False, category=place.category, activity_type="", weekday=_weekday)

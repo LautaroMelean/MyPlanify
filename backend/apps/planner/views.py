@@ -92,7 +92,8 @@ def plan_detail(request, plan_id):
         return error_response("NOT_FOUND", "Plan no encontrado.", status_code=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        return success_response(PlanSerializer(plan).data)
+        entity_map = _build_entity_map([plan])
+        return success_response(PlanSerializer(plan, context={"entity_map": entity_map}).data)
 
     if request.method == "PATCH":
         serializer = PlanUpdateSerializer(data=request.data)
@@ -178,7 +179,8 @@ def public_plan(request, slug):
             entity_type="plan",
             entity_id=str(plan.id),
         )
-    return success_response(PlanSerializer(plan).data)
+    entity_map = _build_entity_map([plan])
+    return success_response(PlanSerializer(plan, context={"entity_map": entity_map}).data)
 
 
 @api_view(["POST"])
@@ -237,7 +239,8 @@ def plan_clone(request, plan_id):
         return error_response("VALIDATION_ERROR", "Datos inválidos.", serializer.errors)
 
     cloned = clone_plan(source_plan=source, user=request.user, new_date=serializer.validated_data["date"])
-    return created_response(PlanSerializer(cloned).data)
+    entity_map = _build_entity_map([cloned])
+    return created_response(PlanSerializer(cloned, context={"entity_map": entity_map}).data)
 
 
 @api_view(["POST"])
