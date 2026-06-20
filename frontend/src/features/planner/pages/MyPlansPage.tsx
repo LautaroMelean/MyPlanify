@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CalendarDays, Trash2, Globe, Lock, Plus, Clock, CheckCircle2, FileEdit, Sparkles, CalendarCheck, XCircle } from 'lucide-react'
 import { useMyPlans, useDeletePlan } from '@/hooks/usePlanner'
@@ -59,6 +59,7 @@ function PlanRow({
   const navigate = useNavigate()
   const status = STATUS_CONFIG[plan.status] ?? STATUS_CONFIG.draft
   const past = isPast(plan.date)
+  const planDate = new Date(plan.date + 'T12:00:00')
 
   return (
     <div
@@ -72,10 +73,10 @@ function PlanRow({
       {/* Date column */}
       <div className={`flex-shrink-0 w-12 text-center rounded-lg py-1.5 ${past ? 'bg-gray-100/40' : 'bg-primary-500/10'}`}>
         <p className={`text-lg font-bold leading-none ${past ? 'text-gray-400' : 'text-primary-600'}`}>
-          {new Date(plan.date + 'T12:00:00').getDate()}
+          {planDate.getDate()}
         </p>
         <p className={`text-[10px] font-medium uppercase ${past ? 'text-gray-400' : 'text-primary-500'}`}>
-          {new Date(plan.date + 'T12:00:00').toLocaleDateString('es-AR', { month: 'short' })}
+          {planDate.toLocaleDateString('es-AR', { month: 'short' })}
         </p>
       </div>
 
@@ -155,9 +156,13 @@ export default function MyPlansPage() {
   }
 
   const allPlans = plans ?? []
-  const sorted = [...allPlans].sort((a, b) => a.date < b.date ? 1 : -1)
-  const upcoming = sorted.filter((p) => !isPast(p.date))
-  const past     = sorted.filter((p) =>  isPast(p.date))
+  const { upcoming, past } = useMemo(() => {
+    const sorted = [...allPlans].sort((a, b) => (a.date < b.date ? 1 : -1))
+    return {
+      upcoming: sorted.filter((p) => !isPast(p.date)),
+      past: sorted.filter((p) => isPast(p.date)),
+    }
+  }, [allPlans])
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">

@@ -5,9 +5,11 @@ from apps.audit.services import log_action
 
 
 def update_event(*, user, event: Event, **kwargs) -> Event:
+    changed = list(kwargs.keys())
     for field, value in kwargs.items():
         setattr(event, field, value)
-    event.save()
+    if changed:
+        event.save(update_fields=[*changed, "updated_at"])
     log_action(user=user, action="update", entity_type="event", entity_id=str(event.id))
     return event
 

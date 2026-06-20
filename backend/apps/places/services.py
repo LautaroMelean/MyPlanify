@@ -9,9 +9,11 @@ def create_place(*, user, **kwargs) -> Place:
 
 
 def update_place(*, user, place: Place, **kwargs) -> Place:
+    changed = list(kwargs.keys())
     for field, value in kwargs.items():
         setattr(place, field, value)
-    place.save()
+    if changed:
+        place.save(update_fields=[*changed, "updated_at"])
     log_action(user=user, action="update", entity_type="place", entity_id=str(place.id))
     return place
 

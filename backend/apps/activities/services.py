@@ -9,9 +9,11 @@ def create_activity(*, user, **kwargs) -> Activity:
 
 
 def update_activity(*, user, activity: Activity, **kwargs) -> Activity:
+    changed = list(kwargs.keys())
     for field, value in kwargs.items():
         setattr(activity, field, value)
-    activity.save()
+    if changed:
+        activity.save(update_fields=[*changed, "updated_at"])
     log_action(user=user, action="update", entity_type="activity", entity_id=str(activity.id))
     return activity
 

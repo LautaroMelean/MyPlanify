@@ -13,9 +13,11 @@ def create_promotion(*, user, **kwargs) -> Promotion:
 def update_promotion(*, user, promotion: Promotion, **kwargs) -> Promotion:
     if not (user.role in ("admin", "moderator") or promotion.owner == user):
         raise PermissionDenied("No tenés permiso para editar esta promoción.")
+    changed = list(kwargs.keys())
     for field, value in kwargs.items():
         setattr(promotion, field, value)
-    promotion.save()
+    if changed:
+        promotion.save(update_fields=[*changed, "updated_at"])
     log_action(user=user, action="update", entity_type="promotion", entity_id=str(promotion.id))
     return promotion
 

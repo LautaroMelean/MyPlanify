@@ -44,12 +44,13 @@ def get_trending_plans(city=None, period="week", limit=10, exclude_user=None):
     # annotate item count to filter plans with at least 1 item
     plans_qs = plans_qs.annotate(item_count=Count("items")).filter(item_count__gte=1)
 
-    plan_ids = list(plans_qs.values_list("id", flat=True))
+    all_plans = list(plans_qs)
+    plan_ids = [str(p.id) for p in all_plans]
 
     # Compute view/share counts from InteractionHistory
     interactions = InteractionHistory.objects.filter(
         entity_type="plan",
-        entity_id__in=[str(pid) for pid in plan_ids],
+        entity_id__in=plan_ids,
         created_at__date__gte=since,
     ).values("entity_id", "action")
 
@@ -63,7 +64,7 @@ def get_trending_plans(city=None, period="week", limit=10, exclude_user=None):
             share_counts[eid] = share_counts.get(eid, 0) + 1
 
     scored = []
-    for plan in plans_qs:
+    for plan in all_plans:
         pid = str(plan.id)
         views = view_counts.get(pid, 0)
         shares = share_counts.get(pid, 0)

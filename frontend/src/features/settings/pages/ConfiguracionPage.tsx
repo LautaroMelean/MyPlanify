@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { Settings, Lock, AlertTriangle, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'sonner'
 import apiClient from '@/lib/axios'
+import { getApiErrorMessage } from '@/lib/errors'
 import Card from '@/components/ui/Card'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
@@ -52,10 +53,8 @@ export default function ConfiguracionPage() {
       await apiClient.post('/users/me/change-password/', data)
       reset()
       toast.success('Contraseña cambiada correctamente')
-    } catch (err: any) {
-      setApiError(
-        err?.response?.data?.error?.message ?? 'Error al cambiar la contraseña. Verificá tu contraseña actual.',
-      )
+    } catch (err: unknown) {
+      setApiError(getApiErrorMessage(err, 'Error al cambiar la contraseña. Verificá tu contraseña actual.'))
     }
   }
 
