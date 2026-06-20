@@ -43,3 +43,7 @@ def mark_notification_read(*, notification: Notification) -> Notification:
     notification.read = True
     notification.save(update_fields=["read"])
     return notification
+
+
+def mark_all_notifications_read(*, user) -> int:
+    return Notification.objects.filter(user=user, read=False).update(read=True)

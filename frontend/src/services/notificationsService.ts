@@ -12,7 +12,7 @@ export const notificationsService = {
     return data.data
   },
 
-  async markAllRead(ids: string[]): Promise<void> {
-    await Promise.all(ids.map((id) => notificationsService.markRead(id)))
+  async markAllRead(): Promise<void> {
+    await apiClient.post('/notifications/read-all/')
   },
 }

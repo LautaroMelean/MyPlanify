@@ -78,6 +78,9 @@ export default function RemindersPage() {
   const navigate = useNavigate()
   const { data: reminders = [], isLoading } = useReminders()
 
+  const upcoming = reminders.filter((r) => !isPast(r.reminder_date)).sort((a, b) => a.reminder_date < b.reminder_date ? -1 : 1)
+  const pastReminders = reminders.filter((r) => isPast(r.reminder_date)).sort((a, b) => a.reminder_date < b.reminder_date ? 1 : -1)
+
   if (isLoading) {
     return (
       <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-6 animate-pulse">
@@ -114,34 +117,30 @@ export default function RemindersPage() {
           icon={<Bell className="h-8 w-8 text-gray-400" />}
           action={{ label: 'Explorar eventos', onClick: () => navigate('/explorar') }}
         />
-      ) : (() => {
-        const upcoming = reminders.filter((r) => !isPast(r.reminder_date)).sort((a, b) => a.reminder_date < b.reminder_date ? -1 : 1)
-        const past = reminders.filter((r) => isPast(r.reminder_date)).sort((a, b) => a.reminder_date < b.reminder_date ? 1 : -1)
-        return (
-          <div className="flex flex-col gap-6">
-            {upcoming.length > 0 && (
-              <section>
-                <h2 className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                  <Clock className="h-3.5 w-3.5" aria-hidden="true" /> Próximos
-                </h2>
-                <div className="flex flex-col gap-3">
-                  {upcoming.map((r) => <ReminderItem key={r.id} reminder={r} />)}
-                </div>
-              </section>
-            )}
-            {past.length > 0 && (
-              <section>
-                <h2 className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                  <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" /> Pasados
-                </h2>
-                <div className="flex flex-col gap-3">
-                  {past.map((r) => <ReminderItem key={r.id} reminder={r} />)}
-                </div>
-              </section>
-            )}
-          </div>
-        )
-      })()}
+      ) : (
+        <div className="flex flex-col gap-6">
+          {upcoming.length > 0 && (
+            <section>
+              <h2 className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                <Clock className="h-3.5 w-3.5" aria-hidden="true" /> Próximos
+              </h2>
+              <div className="flex flex-col gap-3">
+                {upcoming.map((r) => <ReminderItem key={r.id} reminder={r} />)}
+              </div>
+            </section>
+          )}
+          {pastReminders.length > 0 && (
+            <section>
+              <h2 className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" /> Pasados
+              </h2>
+              <div className="flex flex-col gap-3">
+                {pastReminders.map((r) => <ReminderItem key={r.id} reminder={r} />)}
+              </div>
+            </section>
+          )}
+        </div>
+      )}
     </div>
   )
 }

@@ -5,7 +5,7 @@ from rest_framework import status
 from apps.core.responses import success_response, created_response, no_content_response, error_response
 from .serializers import NotificationSerializer, ReminderSerializer
 from .selectors import get_user_notifications, get_user_reminders
-from .services import create_reminder, delete_reminder, mark_notification_read
+from .services import create_reminder, delete_reminder, mark_notification_read, mark_all_notifications_read
 from .models import Notification, Reminder
 
 
@@ -25,6 +25,13 @@ def notification_read(request, pk):
         return error_response("NOT_FOUND", "Notificación no encontrada.", status_code=status.HTTP_404_NOT_FOUND)
     mark_notification_read(notification=notif)
     return success_response(NotificationSerializer(notif).data)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def notification_mark_all_read(request):
+    count = mark_all_notifications_read(user=request.user)
+    return success_response({"marked_read": count})
 
 
 @api_view(["GET", "POST"])

@@ -106,7 +106,7 @@ export default function NotificationsPage() {
         )}
         {unread.length > 1 && (
           <button
-            onClick={() => markAll.mutate(unread.map((n) => n.id))}
+            onClick={() => markAll.mutate()}
             disabled={markAll.isPending}
             className="ml-auto text-xs text-primary-600 hover:text-primary-700 font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded"
           >
