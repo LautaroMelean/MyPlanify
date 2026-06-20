@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Sparkles, Users, DollarSign, ArrowRight, Compass, Heart, Cloud, CalendarDays, FolderOpen, ChevronRight, Globe, Lock } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
@@ -39,11 +39,6 @@ function getGreeting(firstName: string) {
   return `Buenas noches, ${firstName}`
 }
 
-function formatPlanDate(iso: string) {
-  return new Date(iso + 'T12:00:00').toLocaleDateString('es-AR', {
-    day: 'numeric', month: 'short',
-  })
-}
 
 export default function HomePage() {
   const { user } = useAuthStore()
@@ -64,7 +59,10 @@ export default function HomePage() {
     )
   }
 
-  const recentPlans = plans ? [...plans].sort((a, b) => a.date < b.date ? 1 : -1).slice(0, 3) : []
+  const recentPlans = useMemo(
+    () => (plans ? [...plans].sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 3) : []),
+    [plans],
+  )
 
   return (
     <div className="flex flex-col gap-8 pb-8">
@@ -195,7 +193,9 @@ export default function HomePage() {
             </button>
           </div>
           <div className="flex flex-col gap-2">
-            {recentPlans.map((plan) => (
+            {recentPlans.map((plan) => {
+              const planDate = new Date(plan.date + 'T12:00:00')
+              return (
               <button
                 key={plan.id}
                 onClick={() => navigate(`/planes/${plan.id}`)}
@@ -203,16 +203,16 @@ export default function HomePage() {
               >
                 <div className="flex-shrink-0 w-10 text-center bg-primary-500/10 rounded-lg py-1">
                   <p className="text-base font-bold text-primary-600 leading-none">
-                    {new Date(plan.date + 'T12:00:00').getDate()}
+                    {planDate.getDate()}
                   </p>
                   <p className="text-[9px] font-medium text-primary-500 uppercase">
-                    {new Date(plan.date + 'T12:00:00').toLocaleDateString('es-AR', { month: 'short' })}
+                    {planDate.toLocaleDateString('es-AR', { month: 'short' })}
                   </p>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-gray-800 truncate group-hover:text-primary-600 transition-colors">{plan.title}</p>
                   <p className="text-xs text-gray-500">
-                    {plan.city} · {formatPlanDate(plan.date)}
+                    {plan.city} · {planDate.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })}
                     {plan.items.length > 0 && ` · ${plan.items.length} actividades`}
                   </p>
                 </div>
@@ -225,7 +225,8 @@ export default function HomePage() {
                   <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-primary-500 transition-colors" aria-hidden="true" />
                 </div>
               </button>
-            ))}
+              )
+            })}
           </div>
         </div>
       )}
