@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Bell, Trash2, Calendar, CheckCircle2, Clock } from 'lucide-react'
 import { toast } from 'sonner'
@@ -78,8 +78,16 @@ export default function RemindersPage() {
   const navigate = useNavigate()
   const { data: reminders = [], isLoading } = useReminders()
 
-  const upcoming = reminders.filter((r) => !isPast(r.reminder_date)).sort((a, b) => a.reminder_date < b.reminder_date ? -1 : 1)
-  const pastReminders = reminders.filter((r) => isPast(r.reminder_date)).sort((a, b) => a.reminder_date < b.reminder_date ? 1 : -1)
+  const { upcoming, pastReminders } = useMemo(() => {
+    const now = new Date()
+    const up: typeof reminders = [], past: typeof reminders = []
+    for (const r of reminders) {
+      (new Date(r.reminder_date) < now ? past : up).push(r)
+    }
+    up.sort((a, b) => (a.reminder_date < b.reminder_date ? -1 : 1))
+    past.sort((a, b) => (a.reminder_date < b.reminder_date ? 1 : -1))
+    return { upcoming: up, pastReminders: past }
+  }, [reminders])
 
   if (isLoading) {
     return (
