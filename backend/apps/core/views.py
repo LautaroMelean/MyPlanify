@@ -42,15 +42,28 @@ def trending(request):
     activity_ids = _top_ids("activity")
     event_ids = _top_ids("event")
 
-    places = list(Place.objects.filter(id__in=place_ids, is_active=True).values(
-        "id", "name", "category", "city", "image_url", "price_level",
-    ))
-    activities = list(Activity.objects.filter(id__in=activity_ids, is_active=True).values(
-        "id", "name", "category", "activity_type", "min_budget", "indoor", "outdoor",
-    ))
-    events = list(Event.objects.filter(id__in=event_ids, status="published").values(
-        "id", "title", "category", "start_date", "price", "image_url",
-    ))
+    def _sorted_by_rank(items, ranked_ids):
+        order = {str(pid): i for i, pid in enumerate(ranked_ids)}
+        return sorted(items, key=lambda x: order.get(str(x["id"]), 999))
+
+    places = _sorted_by_rank(
+        Place.objects.filter(id__in=place_ids, is_active=True).values(
+            "id", "name", "category", "city", "image_url", "price_level",
+        ),
+        place_ids,
+    )
+    activities = _sorted_by_rank(
+        Activity.objects.filter(id__in=activity_ids, is_active=True).values(
+            "id", "name", "category", "activity_type", "min_budget", "indoor", "outdoor",
+        ),
+        activity_ids,
+    )
+    events = _sorted_by_rank(
+        Event.objects.filter(id__in=event_ids, status="published").values(
+            "id", "title", "category", "start_date", "price", "image_url",
+        ),
+        event_ids,
+    )
 
     result = {"places": places, "activities": activities, "events": events}
     cache.set(CACHE_KEY, result, CACHE_TTL)

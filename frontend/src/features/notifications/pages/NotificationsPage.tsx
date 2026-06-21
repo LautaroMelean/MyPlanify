@@ -75,6 +75,14 @@ export default function NotificationsPage() {
   const { data: notifications = [], isLoading } = useNotifications()
   const markAll = useMarkAllNotificationsRead()
 
+  const { unread, read } = useMemo(() => {
+    const unread: typeof notifications = [], read: typeof notifications = []
+    for (const n of notifications) {
+      (n.read ? read : unread).push(n)
+    }
+    return { unread, read }
+  }, [notifications])
+
   if (isLoading) {
     return (
       <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-6 animate-pulse">
@@ -90,14 +98,6 @@ export default function NotificationsPage() {
       </div>
     )
   }
-
-  const { unread, read } = useMemo(() => {
-    const unread: typeof notifications = [], read: typeof notifications = []
-    for (const n of notifications) {
-      (n.read ? read : unread).push(n)
-    }
-    return { unread, read }
-  }, [notifications])
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4 flex flex-col gap-6">

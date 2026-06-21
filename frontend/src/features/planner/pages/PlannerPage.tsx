@@ -22,6 +22,7 @@ export default function PlannerPage() {
     navigator.geolocation?.getCurrentPosition(
       (pos) => setCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
       () => setCoords(null),
+      { timeout: 8000 },
     )
   }, [])
 
