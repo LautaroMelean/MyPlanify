@@ -123,6 +123,18 @@ export default function MyPlansPage() {
   const deletePlan = useDeletePlan()
   const [confirmingId, setConfirmingId] = useState<string | null>(null)
 
+  const allPlans = plans ?? []
+  const { upcoming, past } = useMemo(() => {
+    const now = new Date()
+    const up: typeof allPlans = [], past: typeof allPlans = []
+    for (const p of allPlans) {
+      (new Date(p.date + 'T23:59:59') < now ? past : up).push(p)
+    }
+    up.sort((a, b) => (a.date < b.date ? -1 : 1))
+    past.sort((a, b) => (a.date < b.date ? 1 : -1))
+    return { upcoming: up, past }
+  }, [allPlans])
+
   if (isLoading) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-8" data-testid="plans-skeleton">
@@ -148,18 +160,6 @@ export default function MyPlansPage() {
       setConfirmingId(planId)
     }
   }
-
-  const allPlans = plans ?? []
-  const { upcoming, past } = useMemo(() => {
-    const now = new Date()
-    const up: typeof allPlans = [], past: typeof allPlans = []
-    for (const p of allPlans) {
-      (new Date(p.date + 'T23:59:59') < now ? past : up).push(p)
-    }
-    up.sort((a, b) => (a.date < b.date ? -1 : 1))
-    past.sort((a, b) => (a.date < b.date ? 1 : -1))
-    return { upcoming: up, past }
-  }, [allPlans])
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
