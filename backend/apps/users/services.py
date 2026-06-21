@@ -84,14 +84,24 @@ def delete_user(*, requesting_user: User, target_user: User) -> None:
 
 
 def set_user_preferences(*, user: User, preferences: list) -> list:
-    created = []
-    for pref in preferences:
-        obj, _ = UserPreference.objects.update_or_create(
+    if not preferences:
+        return []
+    objs = [
+        UserPreference(
             user=user,
-            category=pref["category"],
-            value=pref["value"],
-            defaults={"weight": pref.get("weight", 1)},
+            category=p["category"],
+            value=p["value"],
+            weight=p.get("weight", 1),
         )
-        created.append(obj)
+        for p in preferences
+    ]
+    UserPreference.objects.bulk_create(
+        objs,
+        update_conflicts=True,
+        update_fields=["weight"],
+        unique_fields=["user", "category", "value"],
+    )
+    keys = {(p["category"], p["value"]) for p in preferences}
+    result = [r for r in UserPreference.objects.filter(user=user) if (r.category, r.value) in keys]
     log_action(user=user, action="update_preferences", entity_type="user", entity_id=str(user.id))
-    return created
+    return result
