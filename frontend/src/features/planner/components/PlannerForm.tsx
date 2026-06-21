@@ -34,6 +34,13 @@ export function PlannerForm({ onSubmit, isLoading }: Props) {
   const [peopleCount, setPeopleCount] = useState('2')
   const [city, setCity] = useState('Buenos Aires')
 
+  const budgetDisplay = budget === '' ? '' : Number(budget).toLocaleString('es-AR')
+
+  const handleBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/\D/g, '')
+    setBudget(raw)
+  }
+
   const isValid = date && city && Number(budget) >= 0
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -90,11 +97,11 @@ export function PlannerForm({ onSubmit, isLoading }: Props) {
         </label>
         <input
           id="plan-budget"
-          type="number"
-          value={budget}
-          onChange={(e) => setBudget(e.target.value)}
-          placeholder="5000"
-          min="0"
+          type="text"
+          inputMode="numeric"
+          value={budgetDisplay}
+          onChange={handleBudgetChange}
+          placeholder="5.000"
           className="w-full px-3 py-2 border border-gray-200 bg-gray-100 text-gray-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/50"
         />
         {(budget === '' || budget === '0') && (
