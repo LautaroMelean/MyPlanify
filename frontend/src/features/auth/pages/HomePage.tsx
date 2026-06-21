@@ -6,11 +6,11 @@ import { useWeather, useForecast } from '@/hooks/useWeather'
 import { usePlanner, useMyPlans } from '@/hooks/usePlanner'
 import WeatherWidget from '@/components/ui/WeatherWidget'
 import WeatherForecastWidget from '@/components/ui/WeatherForecastWidget'
+import { localDateString } from '@/lib/format'
 
 const BA = { lat: -34.6037, lon: -58.3816 }
 
-const _now = new Date()
-const TODAY = `${_now.getFullYear()}-${String(_now.getMonth() + 1).padStart(2, '0')}-${String(_now.getDate()).padStart(2, '0')}`
+const TODAY = localDateString()
 const TODAY_LABEL = new Date().toLocaleDateString('es-AR', {
   weekday: 'long', day: 'numeric', month: 'long',
 })

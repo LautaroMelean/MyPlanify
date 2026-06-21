@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Globe, Lock, Copy, CalendarDays, Link } from 'lucide-react'
 import { toast } from 'sonner'
+import { localDateString } from '@/lib/format'
 import { usePlan, useRemovePlanItem, useUpdatePlan, useUpdatePlanItem, useClonePlan } from '@/hooks/usePlanner'
 import { useForecast } from '@/hooks/useWeather'
 import { ItineraryView } from '../components/ItineraryView'
@@ -33,6 +34,7 @@ export default function PlanDetailPage() {
     navigator.geolocation?.getCurrentPosition(
       (pos) => setCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
       () => setCoords(null),
+      { timeout: 8000 },
     )
   }, [])
 
@@ -172,7 +174,7 @@ export default function PlanDetailPage() {
       </div>
 
       {/* Forecast for plan date (only for future plans) */}
-      {plan.date >= new Date().toISOString().slice(0, 10) && coords && (
+      {plan.date >= localDateString() && coords && (
         <div className="mb-6 p-4 bg-gray-100 rounded-xl border border-gray-200/30">
           <h2 className="text-sm font-semibold text-gray-600 mb-2">
             Pronóstico para el {new Date(plan.date + 'T12:00:00').toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}

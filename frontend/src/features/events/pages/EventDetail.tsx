@@ -7,7 +7,7 @@ import { useCreateReminder } from '@/hooks/useReminders'
 import Button from '@/components/ui/Button'
 import FavoriteButton from '@/components/ui/FavoriteButton'
 import ReviewSection from '@/components/ui/ReviewSection'
-import { formatARS } from '@/lib/format'
+import { formatARS, localDateTimeString } from '@/lib/format'
 import { useState } from 'react'
 
 function formatDate(iso: string) {
@@ -180,7 +180,7 @@ export default function EventDetail() {
               type="datetime-local"
               value={reminderDate}
               onChange={(e) => setReminderDate(e.target.value)}
-              min={new Date().toISOString().slice(0, 16)}
+              min={localDateTimeString()}
               aria-label="Fecha y hora del recordatorio"
               className="flex-1 text-sm border border-gray-200 bg-gray-100 text-gray-800 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
             />

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Calendar, DollarSign, Users, MapPin } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import type { PlanGenerateInput } from '@/types'
+import { localDateString } from '@/lib/format'
 
 const CABA_BARRIOS = [
   'Buenos Aires',
@@ -26,8 +27,7 @@ interface Props {
 }
 
 export function PlannerForm({ onSubmit, isLoading }: Props) {
-  const _d = new Date()
-  const today = `${_d.getFullYear()}-${String(_d.getMonth() + 1).padStart(2, '0')}-${String(_d.getDate()).padStart(2, '0')}`
+  const today = localDateString()
 
   const [date, setDate] = useState(today)
   const [budget, setBudget] = useState('5000')

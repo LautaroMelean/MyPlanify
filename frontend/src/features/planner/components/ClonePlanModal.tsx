@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import { localDateString } from '@/lib/format'
 
 interface Props {
   isOpen: boolean
@@ -13,7 +14,7 @@ interface Props {
 export function ClonePlanModal({ isOpen, onClose, onConfirm, isLoading, title = 'Usar como base' }: Props) {
   const tomorrow = new Date()
   tomorrow.setDate(tomorrow.getDate() + 1)
-  const defaultDate = tomorrow.toISOString().split('T')[0]
+  const defaultDate = localDateString(tomorrow)
 
   const [date, setDate] = useState(defaultDate)
 
