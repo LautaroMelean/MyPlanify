@@ -28,9 +28,9 @@ def remove_favorite(*, user, favorite: Favorite) -> None:
     log_action(user=user, action="unfavorite", entity_type="favorite", entity_id=str(favorite.id))
 
     from apps.recommendations.services import log_interaction
-    entity = favorite.event or favorite.place or favorite.activity
-    if entity:
+    entity_id = favorite.event_id or favorite.place_id or favorite.activity_id
+    if entity_id:
         entity_type = "event" if favorite.event_id else ("place" if favorite.place_id else "activity")
-        log_interaction(user=user, action="unfavorite", entity_type=entity_type, entity_id=str(entity.id))
+        log_interaction(user=user, action="unfavorite", entity_type=entity_type, entity_id=str(entity_id))
 
     favorite.delete()
