@@ -83,7 +83,7 @@ export default function FavoritesPage() {
 
       {/* Filter tabs */}
       {favorites.length > 0 && (
-        <div role="tablist" className="flex gap-1 border-b border-gray-200">
+        <div role="tablist" className="flex gap-1 border-b border-gray-200 overflow-x-auto scrollbar-hide">
           {FILTER_TABS.map((tab) => {
             const count = counts[tab.id]
             return (
@@ -92,7 +92,7 @@ export default function FavoritesPage() {
                 role="tab"
                 aria-selected={activeTab === tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded-t-md ${
+                className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded-t-md whitespace-nowrap flex-shrink-0 ${
                   activeTab === tab.id
                     ? 'border-primary-600 text-primary-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700'

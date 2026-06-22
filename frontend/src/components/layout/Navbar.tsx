@@ -128,6 +128,14 @@ export default function Navbar() {
         <nav className="flex items-center gap-3">
           {isAuthenticated ? (
             <>
+              {/* Search — mobile only, desktop uses the inline search bar */}
+              <Link
+                to="/search"
+                className="flex md:hidden p-1.5 rounded-lg text-gray-500 hover:text-gray-700 transition-colors"
+                aria-label="Buscar"
+              >
+                <Search className="h-5 w-5" />
+              </Link>
               {/* Bell visible on all sizes — mobile users see it in the top bar */}
               <Link
                 to="/notificaciones"

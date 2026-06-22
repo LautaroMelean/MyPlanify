@@ -230,8 +230,7 @@ export default function MapPage() {
       <div
         role="region"
         aria-label="Mapa interactivo de lugares"
-        className="rounded-xl overflow-hidden border border-gray-200/30 shadow-glass-sm"
-        style={{ height: '65vh' }}
+        className="rounded-xl overflow-hidden border border-gray-200/30 shadow-glass-sm h-[50vh] md:h-[65vh]"
       >
         <MapContainer center={mapCenter} zoom={13} style={{ height: '100%', width: '100%' }}>
           <TileLayer
