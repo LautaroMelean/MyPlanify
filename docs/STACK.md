@@ -42,15 +42,18 @@
 
 | Componente | Tecnología |
 |---|---|
-| Framework | React |
-| Build tool | Vite |
+| Framework | React 19 |
+| Build tool | Vite (con code splitting vía React.lazy) |
 | Lenguaje | TypeScript |
-| Estilos | Tailwind CSS |
+| Estilos | Tailwind CSS (tema Neon Glowmorph, glassmorphism) |
 | Estado cliente | Zustand |
-| Server state | TanStack Query |
+| Server state | TanStack Query v5 |
 | Formularios | React Hook Form |
 | Validaciones | Zod |
 | Íconos | Lucide React |
+| Mapas | Leaflet + react-leaflet |
+| Notificaciones | Sonner (toast) |
+| Routing | React Router v6 |
 
 ### Consideraciones Frontend
 
@@ -104,12 +107,13 @@
 
 | Servicio | API | Propósito |
 |---|---|---|
-| Clima | OpenWeather API | Obtener clima actual y pronóstico |
-| Mapas | Google Maps API | Visualización de mapas y navegación |
-| Geolocalización | Google Geocoding API | Conversión entre direcciones y coordenadas |
-| Lugares | Google Places API | Restaurantes, bares, cafeterías, cines y puntos de interés |
-| Eventos | Ticketmaster Discovery API | Consulta de eventos, espectáculos y actividades |
-| Autenticación Social | Google OAuth | Inicio de sesión con Google |
+| Clima | OpenWeather API | Clima actual (cache 15min) y pronóstico 5 días (cache 3h) |
+| Mapas | Leaflet + react-leaflet | Mapa interactivo en frontend (tiles OSM) |
+| Geocodificación | Nominatim (OSM) | Conversión dirección ↔ coordenadas |
+| Lugares externos | OpenStreetMap / Overpass API | Lugares cercanos por coordenadas, enriquecidos (horarios, amenities) |
+| Actividades reales | GCBA Open Data (CKAN) | Teatros, museos, deportivos, bibliotecas de Buenos Aires |
+| Imágenes | OpenTripMap API | Enriquecimiento de imágenes y descripciones de actividades |
+| Calendario | iCalendar (.ics) + Google Calendar deep link | Exportación de plan a calendario externo |
 
 ### Reglas de integración
 
@@ -196,9 +200,8 @@ docker compose logs -f
 
 ### APIs externas
 
-- OpenWeather API
-- Google Maps API
-- Google Geocoding API
-- Google Places API
-- Ticketmaster Discovery API
-- Google OAuth
+- OpenWeather API (clima actual + pronóstico)
+- OpenStreetMap / Overpass API (lugares externos)
+- Nominatim OSM (geocodificación)
+- GCBA Open Data / CKAN (actividades reales de Buenos Aires)
+- OpenTripMap API (enriquecimiento de imágenes)

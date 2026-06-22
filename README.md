@@ -98,6 +98,8 @@ npm run test
 | Cache / Tasks | Redis + Celery |
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS |
 | State | TanStack Query + Zustand |
+| Maps | Leaflet + react-leaflet |
+| Notifications | Sonner toasts |
 | Containers | Docker + Docker Compose |
 | Proxy | Nginx |
 | CI/CD | GitHub Actions |
@@ -123,10 +125,14 @@ All endpoints are prefixed with `/api/v1/`.
 | Endpoint | Description |
 |---|---|
 | `GET /api/v1/health/` | System healthcheck |
-| `GET /api/v1/events/` | List published events |
-| `GET /api/v1/places/` | List active places |
-| `GET /api/v1/activities/` | List activities |
+| `GET /api/v1/events/` | List published events (supports `?page`, `?category`, `?date_from`, `?free`) |
+| `GET /api/v1/places/` | List active places (supports `?page`, `?lat`, `?lon`, `?radius_km`, `?open_now`) |
+| `GET /api/v1/activities/` | List activities (supports `?page`, `?type`, `?indoor`, `?free`) |
 | `GET /api/v1/promotions/` | List active promotions |
+| `GET /api/v1/search/?q=` | Global search across places, activities and events |
+| `GET /api/v1/trending/` | Trending places, activities and events (5-min cache) |
+| `GET /api/v1/plans/trending/` | Trending public plans ranked by views + shares |
+| `GET /api/v1/plans/public/<slug>/` | Public plan by slug |
 
 ### Response format
 
@@ -148,15 +154,18 @@ Planify/
 │   ├── apps/
 │   │   ├── users/     Auth, profiles, preferences
 │   │   ├── events/    Events + workflow
-│   │   ├── places/    Places
-│   │   ├── activities/Activities
+│   │   ├── places/    Places + OSM enrichment
+│   │   ├── activities/Activities (manual + GCBA + OpenTripMap)
 │   │   ├── favorites/ User favorites
 │   │   ├── promotions/Business promotions
 │   │   ├── notifications/ Notifications + reminders
-│   │   ├── recommendations/ Recommendation engine (Sprint 1)
-│   │   ├── integrations/ External API stubs
+│   │   ├── recommendations/ Recommendation engine V3
+│   │   ├── reviews/   Reviews & ratings (entity_type generic)
+│   │   ├── planner/   Smart Planner: generate, itinerary, clone, surprise
+│   │   ├── dashboard/ Business, organizer, and user-activity dashboards
+│   │   ├── integrations/ OpenWeather, OSM/Overpass, Nominatim, GCBA, OpenTripMap
 │   │   ├── audit/     Audit logging
-│   │   └── core/      Shared utilities
+│   │   └── core/      Shared utilities + search + trending
 │   └── config/        Django settings + URL router
 ├── frontend/          React application
 │   └── src/
@@ -183,7 +192,7 @@ Planify/
 | Sprint 2 | ✅ `DONE` | Recommendation Engine v1, UserPreferences, Reminders, RBAC |
 | Sprint 3 | ✅ `DONE` | Full experience: promotions, advanced recs, detail pages, geo |
 | Sprint 4 | ✅ `DONE` | Quality, testing (90+ Vitest, 5 Playwright), production Docker |
-| Sprint 5 | ✅ `DONE` | External integrations: OpenWeather, Google Places, Rec Engine v2 |
+| Sprint 5 | ✅ `DONE` | External integrations: OpenWeather, OSM/Overpass, Rec Engine v2 |
 | Sprint 6 | ✅ `DONE` | Reviews & Ratings, Global Search, Advanced Filters, Trending |
 | Sprint 7 | ✅ `DONE` | Smart Planner: generate_plan, itinerary view, plan CRUD |
 | Sprint 8 | ✅ `DONE` | Ownership, Business/Organizer Dashboards, Rec Engine v3, Plan Feedback |
@@ -191,6 +200,11 @@ Planify/
 | Sprint 10 | ✅ `DONE` | Rich places data (opening_hours, cuisine, fee, wifi), weather forecast |
 | Sprint 11 | ✅ `DONE` | GCBA Open Data, OpenTripMap enrichment, smart Sorprendeme (3-phase) |
 | Sprint 12 | ✅ `DONE` | UI polish: spinners, date formatting, card hover, EmptyState, Navbar |
+| Sprint 13–15 | ✅ `DONE` | UX audit: score badges, search page, address in cards, PREF_TYPE_MAP, activity distance |
+| Sprint 16 | ✅ `DONE` | Neon Glowmorph aesthetic: dark glass UI, neon shadows, glassmorphism |
+| A11y audit | ✅ `DONE` | aria-hidden, focus-visible, role=alert, optimistic favorites, sonner toasts |
+| Paginación + Mapa | ✅ `DONE` | Server-side pagination (30/page), BoundsWatcher en MapPage, code splitting |
+| UX polish | ✅ `DONE` | Errores en español, aria-label dinámico, Escape en dropdowns, caps de input |
 
 ---
 

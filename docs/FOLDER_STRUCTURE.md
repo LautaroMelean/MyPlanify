@@ -206,11 +206,11 @@ Responsable de:
 
 Responsable de:
 
-- Google Maps
-- Google Places
-- OpenWeather
-- Ticketmaster
-- OAuth
+- OpenWeather API (clima actual y pronóstico 5 días)
+- OpenStreetMap / Overpass API (lugares externos enriquecidos)
+- Nominatim OSM (geocodificación y geocodificación inversa)
+- GCBA Open Data / CKAN (actividades reales de Buenos Aires)
+- OpenTripMap API (enriquecimiento de imágenes y descripciones)
 
 ### audit
 

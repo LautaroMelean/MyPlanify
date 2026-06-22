@@ -126,7 +126,35 @@ DELETE /api/v1/favorites/{id}/
 ### Notificaciones
 
 ```txt
-GET /api/v1/notifications/
+GET  /api/v1/notifications/                     — Listar notificaciones propias (auth)
+POST /api/v1/notifications/read-all/            — Marcar todas como leídas (auth)
+POST /api/v1/notifications/{id}/read/           — Marcar una notificación como leída (auth)
+```
+
+### Recordatorios
+
+```txt
+GET    /api/v1/reminders/                       — Listar recordatorios propios (auth)
+POST   /api/v1/reminders/                       — Crear recordatorio para un evento (auth)
+DELETE /api/v1/reminders/{id}/                  — Eliminar recordatorio (auth)
+```
+
+### Geocodificación
+
+```txt
+GET /api/v1/geocode/?q={address}                — Dirección → coordenadas (Nominatim)
+GET /api/v1/geocode/reverse/?lat={lat}&lon={lon} — Coordenadas → dirección (Nominatim)
+```
+
+### Dashboard
+
+```txt
+GET /api/v1/dashboard/me/stats/                 — Stats de actividad personal del usuario (auth)
+GET /api/v1/dashboard/business/stats/           — Estadísticas del negocio (auth, business_owner)
+GET /api/v1/dashboard/business/places/          — Lugares propios del negocio (auth, business_owner)
+GET /api/v1/dashboard/business/promotions/      — Promociones propias del negocio (auth, business_owner)
+GET /api/v1/dashboard/organizer/stats/          — Stats del organizador (auth, event_organizer)
+GET /api/v1/dashboard/organizer/events/         — Eventos propios del organizador (auth, event_organizer)
 ```
 
 ### Recomendaciones
@@ -150,18 +178,26 @@ DELETE /api/v1/reviews/{entity_type}/{entity_id}/delete/ — Eliminar propia res
 
 ```txt
 POST   /api/v1/plans/generate/                       — Generar itinerario automático (auth)
+POST   /api/v1/plans/surprise/                       — Modo Sorprendeme: plan sin parámetros (auth)
+GET    /api/v1/plans/trending/                       — Trending public plans por vistas+shares (AllowAny)
 GET    /api/v1/plans/                                — Listar planes propios (auth)
 POST   /api/v1/plans/                                — Crear plan vacío (auth)
 GET    /api/v1/plans/{id}/                           — Ver plan propio (auth)
 PATCH  /api/v1/plans/{id}/                           — Actualizar plan: is_public, status, title (auth)
 DELETE /api/v1/plans/{id}/                           — Eliminar plan propio (auth)
 POST   /api/v1/plans/{id}/items/                     — Agregar ítem al plan (auth)
+PATCH  /api/v1/plans/{id}/items/{item_id}/           — Editar nota/orden de ítem (auth)
 DELETE /api/v1/plans/{id}/items/{item_id}/           — Quitar ítem del plan (auth)
+POST   /api/v1/plans/{id}/share/                     — Registrar share del plan (auth)
+POST   /api/v1/plans/{id}/feedback/                  — Dar feedback a un ítem (auth, solo dueño)
+POST   /api/v1/plans/{id}/clone/                     — Clonar plan público como draft propio (auth)
 GET    /api/v1/plans/public/{slug}/                  — Ver plan público sin autenticación (AllowAny)
 ```
 
 `generate/` acepta: `date`, `budget`, `people_count`, `city`. Devuelve el plan con 3 ítems (morning/afternoon/evening).
 Regla de clima: `date ≤ 5 días desde hoy` → real OpenWeather; `date > 5 días` → lógica neutral.
+`trending/` acepta: `?city`, `?period` (días, default 30), `?limit` (default 6).
+Exportación a `.ics` / Google Calendar: generada completamente en el frontend (sin endpoint backend).
 
 ### Búsqueda global
 
@@ -438,15 +474,17 @@ No se modifican contratos existentes sin versionar.
 
 Las APIs externas nunca serán consumidas directamente desde el frontend.
 
-Todas las integraciones deberán pasar por el backend.
+Todas las integraciones deberán pasar por el backend (excepto tiles de mapa OSM, que son públicos y sin clave).
 
-Integraciones previstas:
+Integraciones implementadas:
 
-- Google Maps API
-- Google Places API
-- OpenWeather API
-- Ticketmaster API
-- OAuth Google
+- OpenWeather API (clima actual + pronóstico 5 días, cache Redis 15min/3h)
+- OpenStreetMap / Overpass API (lugares externos enriquecidos)
+- Nominatim OSM (geocodificación y geocodificación inversa)
+- GCBA Open Data / CKAN (actividades reales de Buenos Aires)
+- OpenTripMap API (imágenes y descripciones de actividades)
+- Leaflet + react-leaflet (tiles OSM en frontend, sin clave)
+- iCalendar (.ics) + Google Calendar deep link (frontend, sin clave)
 
 ---
 

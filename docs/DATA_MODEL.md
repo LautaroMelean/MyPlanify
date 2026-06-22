@@ -41,12 +41,15 @@ User
  ├── Reminder
  ├── Notification
  ├── InteractionHistory
- └── Review
+ ├── Review
+ ├── Plan
+ └── PlanFeedback
 
 Place
  ├── Promotion
  ├── Event
- └── Activity
+ ├── Activity
+ └── owner → User (Sprint 8)
 
 Event
  ├── Reminder
@@ -64,6 +67,15 @@ Recommendation
 Review
  ├── User
  └── (Place | Activity | Event) via entity_type + entity_id
+
+Plan
+ ├── User
+ ├── PlanItem (morning / afternoon / evening)
+ └── PlanFeedback
+
+PlanFeedback
+ ├── Plan
+ └── User
 ```
 
 ---
@@ -636,6 +648,12 @@ Promotion.is_active
 Favorite.user_id
 
 Recommendation.user_id
+
+InteractionHistory.(entity_type, entity_id, created_at)
+
+Plan.(user, -created_at)
+
+Plan.(date, status)
 ```
 
 ---

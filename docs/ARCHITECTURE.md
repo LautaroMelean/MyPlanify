@@ -288,12 +288,14 @@ Toda acción relevante debe generar evento auditable.
 
 | Integración | Propósito | Responsable | Estado |
 |----------|----------|----------|----------|
-| OpenWeather API | Obtener clima actual y pronósticos | Backend | Disponible (clave configurada, uso condicional) |
-| Google Maps API | Geolocalización y mapas | Backend | Pendiente Sprint 5+ |
-| Google Places API | Obtención de lugares cercanos | Backend | Pendiente Sprint 5+ |
-| Ticketmaster API | Consulta de eventos y recitales | Backend | Pendiente Sprint 5+ |
-| Sistema de Notificaciones (interno) | Alertas y recordatorios vía Celery | Backend | Implementado Sprint 2 |
-| Google Calendar | Exportación de eventos y recordatorios | Backend | Futuro |
+| OpenWeather API | Clima actual y pronóstico 5 días (cache Redis 15min/3h) | Backend | ✅ Implementado |
+| OpenStreetMap / Overpass API | Lugares cercanos enriquecidos (categorías, horarios, amenities) | Backend | ✅ Implementado |
+| Nominatim (OSM) | Geocodificación y geocodificación inversa | Backend | ✅ Implementado |
+| Leaflet + react-leaflet | Mapa interactivo con markers en frontend | Frontend | ✅ Implementado |
+| GCBA Open Data (CKAN) | Datos reales de BA: teatros, museos, deportivos, bibliotecas | Backend | ✅ Implementado |
+| OpenTripMap API | Enriquecimiento de imágenes y descripciones de actividades | Backend | ✅ Implementado |
+| Google Calendar | Exportación de plan a .ics / deep link Google Calendar | Frontend | ✅ Implementado |
+| Sistema de Notificaciones (interno) | Alertas y recordatorios vía Celery | Backend | ✅ Implementado Sprint 2 |
 
 ### Principios de integración
 
@@ -318,16 +320,21 @@ Las decisiones relevantes deben registrarse como ADR en `docs/adr/`.
 | [ADR-003](adr/ADR-003-postgresql-redis.md) | PostgreSQL como BD principal y Redis como caché/broker | Aprobado |
 | [ADR-004](adr/ADR-004-arquitectura-modular.md) | Arquitectura modular por dominio de negocio | Aprobado |
 | [ADR-005](adr/ADR-005-openweather.md) | Integración OpenWeather API | Aprobado |
-| [ADR-006](adr/ADR-006-google-places.md) | Integración Google Places API | Aprobado |
+| [ADR-006](adr/ADR-006-google-places.md) | Integración OSM/Overpass para lugares externos | Aprobado |
 | [ADR-007](adr/ADR-007-recommendation-engine-v2.md) | Motor de Recomendaciones V2 con score_breakdown | Aprobado |
 | [ADR-008](adr/ADR-008-reviews-ratings.md) | Sistema de Reviews & Ratings con entidad genérica | Aprobado |
 | [ADR-009](adr/ADR-009-planner-itinerario.md) | Planner de Itinerario Inteligente | Aprobado |
-
-### ADRs pendientes
-
-- Estrategia de soft delete para entidades críticas.
-- Recomendaciones calculadas exclusivamente desde backend.
-- Estrategia de fallback ante fallas de proveedores externos.
+| [ADR-010](adr/ADR-010-ownership-contenido.md) | Ownership de contenido por usuario/negocio | Aprobado |
+| [ADR-011](adr/ADR-011-planner-feedback-loop.md) | Plan Feedback Loop para mejorar recomendaciones | Aprobado |
+| [ADR-012](adr/ADR-012-recommendation-engine-v3.md) | Motor de Recomendaciones V3 con feedback score | Aprobado |
+| [ADR-013](adr/ADR-013-discovery-feed.md) | Discovery Feed: trending plans con scoring de vistas/shares | Aprobado |
+| [ADR-014](adr/ADR-014-modo-sorprendeme.md) | Modo Sorprendeme: plan automático desde historial | Aprobado |
+| [ADR-015](adr/ADR-015-calendar-export.md) | Exportación de plan a .ics / Google Calendar | Aprobado |
+| [ADR-016](adr/ADR-016-place-enrichment.md) | Enriquecimiento de Places con datos OSM (opening_hours, cuisine, amenities) | Aprobado |
+| [ADR-017](adr/ADR-017-weather-forecast.md) | Pronóstico climático 5 días integrado en Planner | Aprobado |
+| [ADR-018](adr/ADR-018-gcba-open-data.md) | GCBA Open Data como fuente de actividades reales de BA | Aprobado |
+| [ADR-019](adr/ADR-019-surprise-plan-relaxation.md) | Relajación progresiva 3 fases en generate_surprise_plan | Aprobado |
+| [ADR-020](adr/ADR-020-planner-generate-fallback.md) | Fallback 3 fases en generate_plan (igual que Sorprendeme) | Aprobado |
 
 ---
 
