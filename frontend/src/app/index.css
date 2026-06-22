@@ -58,6 +58,15 @@
     scrollbar-width: thin;
   }
 
+  /* Hide scrollbar but keep scroll functionality (horizontal carousels on mobile) */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   .page-enter {
     animation: pageEnter 0.2s ease-out;
   }
