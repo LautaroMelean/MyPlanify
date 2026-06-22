@@ -2,7 +2,7 @@ from .models import Notification, Reminder
 
 
 def get_user_notifications(user):
-    return Notification.objects.filter(user=user).order_by("-created_at")
+    return Notification.objects.filter(user=user).order_by("-created_at")[:100]
 
 
 def get_user_reminders(user):

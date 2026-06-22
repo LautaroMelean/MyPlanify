@@ -29,7 +29,7 @@ def event_list(request):
             result_page = paginator.paginate_queryset(events, request)
             return paginator.get_paginated_response(EventSerializer(result_page, many=True).data)
 
-        return success_response(EventSerializer(events, many=True).data)
+        return success_response(EventSerializer(events[:200], many=True).data)
 
     serializer = EventCreateSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)

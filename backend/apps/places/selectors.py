@@ -31,7 +31,7 @@ def get_active_places(
         qs = qs.filter(wheelchair__in=["yes", "limited"])
     if cuisine:
         qs = qs.filter(cuisine__icontains=cuisine)
-    return annotate_ratings(qs, "place").order_by("name")
+    return annotate_ratings(qs, "place").order_by("-is_curated", "name")
 
 
 def get_place_by_id(place_id):

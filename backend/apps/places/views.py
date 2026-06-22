@@ -52,7 +52,7 @@ def place_list(request):
             result_page = paginator.paginate_queryset(places, request)
             return paginator.get_paginated_response(PlaceSerializer(result_page, many=True).data)
 
-        return success_response(PlaceSerializer(places, many=True).data)
+        return success_response(PlaceSerializer(places[:500], many=True).data)
 
     serializer = PlaceCreateSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)

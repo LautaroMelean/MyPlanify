@@ -3,7 +3,7 @@ from .models import Review
 
 
 def get_reviews_for_entity(entity_type: str, entity_id):
-    return Review.objects.filter(entity_type=entity_type, entity_id=entity_id).select_related("user")
+    return Review.objects.filter(entity_type=entity_type, entity_id=entity_id).select_related("user").order_by("-created_at")[:50]
 
 
 def get_entity_rating(entity_type: str, entity_id) -> dict:

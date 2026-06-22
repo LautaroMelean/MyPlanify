@@ -14,7 +14,7 @@ from apps.core.responses import success_response
 @permission_classes([AllowAny])
 def trending(request):
     CACHE_KEY = "trending_data"
-    CACHE_TTL = 60  # 1 minute
+    CACHE_TTL = 300  # 5 minutes
 
     cached = cache.get(CACHE_KEY)
     if cached is not None:
@@ -83,6 +83,7 @@ def search(request):
 
     places = list(
         Place.objects.filter(is_active=True, name__icontains=q)
+        .order_by("-is_curated", "name")
         .values("id", "name", "category", "city", "image_url", "price_level")[:10]
     )
     activities = list(
