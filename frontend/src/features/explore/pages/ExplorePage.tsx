@@ -540,10 +540,10 @@ function FilterPanel({ children, onClose }: { children: React.ReactNode; onClose
 
 function FilterRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-1 [&_input]:w-full [&_input]:border [&_input]:border-gray-200 [&_input]:rounded-lg [&_input]:px-2.5 [&_input]:py-1.5 [&_input]:text-sm [&_input]:bg-gray-100 [&_input]:text-gray-800 [&_input]:outline-none [&_input:focus]:border-primary-500/50 [&_input:focus]:ring-2 [&_input:focus]:ring-primary-500/20">
-      <label className="text-xs font-medium text-gray-600">{label}</label>
+    <label className="flex flex-col gap-1 [&_input]:w-full [&_input]:border [&_input]:border-gray-200 [&_input]:rounded-lg [&_input]:px-2.5 [&_input]:py-1.5 [&_input]:text-sm [&_input]:bg-gray-100 [&_input]:text-gray-800 [&_input]:outline-none [&_input:focus]:border-primary-500/50 [&_input:focus]:ring-2 [&_input:focus]:ring-primary-500/20">
+      <span className="text-xs font-medium text-gray-600">{label}</span>
       {children}
-    </div>
+    </label>
   )
 }
 

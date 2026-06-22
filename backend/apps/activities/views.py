@@ -29,7 +29,7 @@ def activity_list(request):
             result_page = paginator.paginate_queryset(activities, request)
             return paginator.get_paginated_response(ActivitySerializer(result_page, many=True).data)
 
-        return success_response(ActivitySerializer(activities, many=True).data)
+        return success_response(ActivitySerializer(activities[:200], many=True).data)
 
     if not IsAdminOrModerator().has_permission(request, None):
         return error_response("PERMISSION_DENIED", "Solo administradores pueden crear actividades.", status_code=status.HTTP_403_FORBIDDEN)

@@ -88,7 +88,7 @@ export default function OrganizerDashboardPage() {
             {events.map(event => {
               const d = new Date(event.start_date)
               return (
-              <div key={event.id} onClick={() => navigate(`/events/${event.id}`)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/events/${event.id}`)} role="button" tabIndex={0} aria-label={event.title} className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
+              <button key={event.id} type="button" onClick={() => navigate(`/events/${event.id}`)} aria-label={event.title} className="w-full text-left flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
                 <div className="flex-shrink-0 w-10 text-center bg-primary-500/10 rounded-lg py-1">
                   <p className="text-base font-bold text-primary-600 leading-none">{d.getDate()}</p>
                   <p className="text-[9px] font-medium text-primary-500 uppercase">{d.toLocaleDateString('es-AR', { month: 'short' })}</p>
@@ -105,8 +105,9 @@ export default function OrganizerDashboardPage() {
                     {STATUS_LABELS[event.status] ?? event.status}
                   </span>
                 </div>
-              </div>
-            )})}
+              </button>
+            )
+          })}
           </div>
         )}
       </section>

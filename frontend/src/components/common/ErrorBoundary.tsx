@@ -30,7 +30,7 @@ export default class ErrorBoundary extends Component<Props, State> {
           <p className="text-sm text-gray-500 mb-6">
             Ocurrió un error inesperado. Podés intentar recargar la página.
           </p>
-          {this.state.message && (
+          {import.meta.env.DEV && this.state.message && (
             <p className="text-xs text-gray-400 font-mono bg-gray-100 rounded-lg px-3 py-2 mb-6 text-left break-all">
               {this.state.message}
             </p>

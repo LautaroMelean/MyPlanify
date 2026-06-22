@@ -75,10 +75,15 @@ export default function ReviewSection({ entityType, entityId }: Props) {
   const [stars, setStars] = useState(0)
   const [text, setText] = useState('')
   const [showForm, setShowForm] = useState(false)
+  const [starError, setStarError] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (stars === 0) return
+    if (stars === 0) {
+      setStarError(true)
+      return
+    }
+    setStarError(false)
     try {
       await createMutation.mutateAsync({ stars, text })
       setStars(0)
@@ -91,6 +96,7 @@ export default function ReviewSection({ entityType, entityId }: Props) {
   }
 
   const handleDelete = async () => {
+    if (!confirm('¿Eliminar tu reseña? Esta acción no se puede deshacer.')) return
     try {
       await deleteMutation.mutateAsync()
       toast.success('Reseña eliminada')
@@ -144,7 +150,10 @@ export default function ReviewSection({ entityType, entityId }: Props) {
       {user && showForm && (
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 bg-gray-100 rounded-xl p-4 border border-gray-200">
           <p className="text-sm font-medium text-gray-600">Tu calificación</p>
-          <StarPicker value={stars} onChange={setStars} />
+          <StarPicker value={stars} onChange={(v) => { setStars(v); setStarError(false) }} />
+          {starError && (
+            <p className="text-xs text-red-500" role="alert">Seleccioná al menos una estrella.</p>
+          )}
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
