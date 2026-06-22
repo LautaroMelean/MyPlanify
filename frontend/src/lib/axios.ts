@@ -16,31 +16,65 @@ apiClient.interceptors.request.use((config) => {
   return config
 })
 
+// Queue of pending requests that arrived while a token refresh was in progress
+type QueueEntry = { resolve: (token: string) => void; reject: (err: unknown) => void }
+let isRefreshing = false
+let failedQueue: QueueEntry[] = []
+
+function processQueue(error: unknown, token: string | null = null) {
+  failedQueue.forEach((entry) => {
+    if (error) entry.reject(error)
+    else entry.resolve(token!)
+  })
+  failedQueue = []
+}
+
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true
-      const refreshToken = useAuthStore.getState().refreshToken
-
-      if (refreshToken) {
-        try {
-          const response = await axios.post('/api/v1/auth/refresh/', { refresh: refreshToken })
-          const { access } = response.data
-          useAuthStore.getState().setTokens(access, refreshToken)
-          originalRequest.headers.Authorization = `Bearer ${access}`
-          return apiClient(originalRequest)
-        } catch {
-          useAuthStore.getState().logout()
-        }
-      } else {
-        useAuthStore.getState().logout()
-      }
+    if (error.response?.status !== 401 || originalRequest._retry) {
+      return Promise.reject(error)
     }
 
-    return Promise.reject(error)
+    if (isRefreshing) {
+      // Queue this request until the in-progress refresh completes
+      return new Promise((resolve, reject) => {
+        failedQueue.push({ resolve, reject })
+      }).then((token) => {
+        originalRequest.headers.Authorization = `Bearer ${token}`
+        return apiClient(originalRequest)
+      })
+    }
+
+    originalRequest._retry = true
+    isRefreshing = true
+
+    const refreshToken = useAuthStore.getState().refreshToken
+
+    if (!refreshToken) {
+      isRefreshing = false
+      processQueue(error)
+      useAuthStore.getState().logout()
+      return Promise.reject(error)
+    }
+
+    try {
+      const response = await axios.post('/api/v1/auth/refresh/', { refresh: refreshToken })
+      // simplejwt returns a NEW refresh token when ROTATE_REFRESH_TOKENS = True
+      const { access, refresh: newRefresh } = response.data
+      useAuthStore.getState().setTokens(access, newRefresh ?? refreshToken)
+      originalRequest.headers.Authorization = `Bearer ${access}`
+      processQueue(null, access)
+      return apiClient(originalRequest)
+    } catch (refreshError) {
+      processQueue(refreshError)
+      useAuthStore.getState().logout()
+      return Promise.reject(refreshError)
+    } finally {
+      isRefreshing = false
+    }
   },
 )
 
