@@ -152,7 +152,7 @@ export default function HomePage() {
         </button>
 
         {planner.isError && (
-          <p className="text-xs text-red-300 mt-2 text-center">
+          <p className="text-xs text-red-300 mt-2 text-center" role="alert">
             Error al generar el plan. Intentá de nuevo.
           </p>
         )}
