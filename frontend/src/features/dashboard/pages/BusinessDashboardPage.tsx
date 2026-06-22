@@ -1,4 +1,4 @@
-import { Building2, Tag, Star, MapPin, Percent } from 'lucide-react'
+import { Building2, Tag, Star, MapPin } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useBusinessStats, useOwnedPlaces, useOwnedPromotions } from '@/hooks/useDashboard'
 import EmptyState from '@/components/common/EmptyState'
@@ -84,7 +84,7 @@ export default function BusinessDashboardPage() {
         ) : (
           <div className="space-y-2">
             {places.map(place => (
-              <div key={place.id} onClick={() => navigate(`/places/${place.id}`)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/places/${place.id}`)} role="button" tabIndex={0} aria-label={place.name} className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
+              <button key={place.id} type="button" onClick={() => navigate(`/places/${place.id}`)} aria-label={place.name} className="w-full text-left flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/30 hover:shadow-neon-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
                 {place.image_url ? (
                   <img src={place.image_url} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" loading="lazy" />
                 ) : (
@@ -99,7 +99,7 @@ export default function BusinessDashboardPage() {
                 {place.avg_rating != null && (
                   <span className="text-xs font-medium text-yellow-400 flex-shrink-0">★ {place.avg_rating.toFixed(1)}</span>
                 )}
-              </div>
+              </button>
             ))}
           </div>
         )}
@@ -124,9 +124,8 @@ export default function BusinessDashboardPage() {
               <div key={promo.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm">
                 <div className="flex items-center gap-3">
                   <div className="flex-shrink-0 w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center" aria-hidden="true">
-                    <span className="text-xs font-bold text-green-600 leading-none text-center">
-                      <Percent className="h-3 w-3 mx-auto" />
-                      {promo.discount_percentage}
+                    <span className="text-xs font-bold text-green-600 leading-none">
+                      -{promo.discount_percentage}%
                     </span>
                   </div>
                   <div>

@@ -154,20 +154,28 @@ export default function EventDetail() {
           </div>
         )}
         {event.place_name && (
-          <div
-            className={`flex items-center gap-3 bg-gray-100 rounded-xl p-3 border col-span-full sm:col-span-1 ${event.place ? 'border-gray-200/30 cursor-pointer hover:border-primary-500/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40' : 'border-gray-200/30'}`}
-            onClick={() => event.place && navigate(`/places/${event.place}`)}
-            role={event.place ? 'button' : undefined}
-            tabIndex={event.place ? 0 : undefined}
-            aria-label={event.place ? `Ver lugar: ${event.place_name}` : undefined}
-            onKeyDown={event.place ? (e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/places/${event.place}`) : undefined}
-          >
-            <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
-            <div>
-              <p className="text-xs text-gray-500">Lugar</p>
-              <p className={`text-sm font-medium ${event.place ? 'text-primary-600 hover:underline' : 'text-gray-900'}`}>{event.place_name}</p>
+          event.place ? (
+            <button
+              type="button"
+              onClick={() => navigate(`/places/${event.place}`)}
+              aria-label={`Ver lugar: ${event.place_name}`}
+              className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30 col-span-full sm:col-span-1 hover:border-primary-500/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 text-left w-full"
+            >
+              <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
+              <div>
+                <p className="text-xs text-gray-500">Lugar</p>
+                <p className="text-sm font-medium text-primary-600 hover:underline">{event.place_name}</p>
+              </div>
+            </button>
+          ) : (
+            <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-3 border border-gray-200/30 col-span-full sm:col-span-1">
+              <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
+              <div>
+                <p className="text-xs text-gray-500">Lugar</p>
+                <p className="text-sm font-medium text-gray-900">{event.place_name}</p>
+              </div>
             </div>
-          </div>
+          )
         )}
       </div>
 
