@@ -210,8 +210,7 @@ export default function PlaceDetail() {
       {/* Map */}
       {hasCoords && (
         <div
-          className="rounded-xl overflow-hidden border border-gray-200/30"
-          style={{ height: '200px' }}
+          className="rounded-xl overflow-hidden border border-gray-200/30 h-[200px]"
           role="region"
           aria-label={`Mapa de ${place.name}`}
         >

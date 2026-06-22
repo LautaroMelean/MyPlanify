@@ -80,7 +80,7 @@ export function PlanFeedbackModal({ isOpen, onClose, planId, item }: Props) {
             maxLength={1000}
           />
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-red-400" role="alert">{error}</p>}
 
           <div className="flex gap-2 justify-end">
             <Button variant="ghost" size="sm" onClick={handleClose}>Cancelar</Button>
