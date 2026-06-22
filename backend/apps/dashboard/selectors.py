@@ -33,7 +33,8 @@ def get_business_stats(user):
 
 def get_owned_places(user):
     from apps.places.models import Place
-    return Place.objects.filter(owner=user).order_by("name")
+    from apps.core.selectors import annotate_ratings
+    return annotate_ratings(Place.objects.filter(owner=user), "place").order_by("name")
 
 
 def get_owned_promotions(user):
@@ -67,7 +68,11 @@ def get_organizer_stats(user):
 
 def get_owned_events(user):
     from apps.events.models import Event
-    return Event.objects.filter(organizer=user).order_by("-start_date")
+    from apps.core.selectors import annotate_ratings
+    return annotate_ratings(
+        Event.objects.filter(organizer=user).select_related("place"),
+        "event",
+    ).order_by("-start_date")
 
 
 def get_user_activity_stats(user):
