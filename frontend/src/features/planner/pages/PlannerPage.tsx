@@ -75,7 +75,7 @@ export default function PlannerPage() {
           )}
 
           {planner.isError && (
-            <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm">
+            <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm" role="alert">
               Error al generar el plan. Intentá de nuevo.
             </div>
           )}
@@ -128,7 +128,7 @@ export default function PlannerPage() {
           {surprise.isPending ? 'Armando algo especial...' : '¡Sorprendeme!'}
         </button>
         {surprise.isError && (
-          <p className="text-xs text-red-500">Error al generar el plan. Intentá de nuevo.</p>
+          <p className="text-xs text-red-500" role="alert">Error al generar el plan. Intentá de nuevo.</p>
         )}
       </div>
 
