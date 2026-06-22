@@ -134,12 +134,16 @@ export default function BottomNav() {
                 key={to}
                 to={to}
                 aria-current={active ? 'page' : undefined}
-                className={`flex flex-col items-center gap-0.5 flex-1 py-2 px-1 rounded-xl transition-colors ${
+                className={`relative flex flex-col items-center gap-0.5 flex-1 py-2 px-1 transition-colors touch-manipulation ${
                   active ? 'text-primary-500' : 'text-gray-500'
                 }`}
               >
-                <Icon className="h-5 w-5" aria-hidden="true" />
-                <span className="text-[10px] font-medium leading-none">{label}</span>
+                {/* Active indicator dot */}
+                {active && (
+                  <span className="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary-500" aria-hidden="true" />
+                )}
+                <Icon className={`h-5 w-5 transition-transform ${active ? 'scale-110' : ''}`} aria-hidden="true" />
+                <span className={`text-[10px] font-medium leading-none ${active ? 'font-semibold' : ''}`}>{label}</span>
               </Link>
             )
           })}
@@ -149,7 +153,7 @@ export default function BottomNav() {
             onClick={() => setDrawerOpen(!drawerOpen)}
             aria-expanded={drawerOpen}
             aria-label="Más opciones de navegación"
-            className={`relative flex flex-col items-center gap-0.5 flex-1 py-2 px-1 rounded-xl transition-colors ${
+            className={`relative flex flex-col items-center gap-0.5 flex-1 py-2 px-1 transition-colors touch-manipulation ${
               drawerOpen ? 'text-primary-500' : 'text-gray-500'
             }`}
           >

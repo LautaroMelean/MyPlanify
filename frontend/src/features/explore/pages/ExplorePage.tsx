@@ -300,24 +300,28 @@ export default function ExplorePage() {
       )}
 
       {/* Tabs */}
-      <div role="tablist" className="flex gap-1 border-b border-gray-200 overflow-x-auto">
-        {tabs.map((t) => (
-          <button key={t.id} role="tab" aria-selected={tab === t.id}
-            onClick={() => { setTab(t.id); setShowFilters(false) }}
-            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
-              tab === t.id ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            {t.icon}{t.label}
-          </button>
-        ))}
+      <div className="relative -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div role="tablist" className="flex gap-1 border-b border-gray-200 overflow-x-auto scrollbar-hide">
+          {tabs.map((t) => (
+            <button key={t.id} role="tab" aria-selected={tab === t.id}
+              onClick={() => { setTab(t.id); setShowFilters(false) }}
+              className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
+                tab === t.id ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              {t.icon}{t.label}
+            </button>
+          ))}
+        </div>
+        {/* Gradient hint: indicates more tabs are scrollable on mobile */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-[#07060f] to-transparent sm:hidden" aria-hidden="true" />
       </div>
 
       {/* Content */}
       {tab === 'lugares' && (
         <>
           <TabContent isLoading={places.isLoading} isEmpty={!places.data?.results?.length}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
               {places.data?.results.map((place) => <PlaceCard key={place.id} place={place} />)}
             </div>
           </TabContent>
@@ -345,7 +349,7 @@ export default function ExplorePage() {
             ))}
           </div>
           <TabContent isLoading={activities.isLoading} isEmpty={!activities.data?.results?.length}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
               {activities.data?.results.map((activity) => <ActivityCard key={activity.id} activity={activity} />)}
             </div>
           </TabContent>
@@ -358,7 +362,7 @@ export default function ExplorePage() {
       {tab === 'eventos' && (
         <>
           <TabContent isLoading={events.isLoading} isEmpty={!events.data?.results?.length}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
               {events.data?.results.map((event) => <EventCard key={event.id} event={event} />)}
             </div>
           </TabContent>
@@ -413,7 +417,7 @@ export default function ExplorePage() {
                 </button>
               </div>
               <TabContent isLoading={nearbyPlaces.isLoading && externalNearby.isLoading} isEmpty={nearbyAll.length === 0}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                   {nearbyAll.map((place) => <PlaceCard key={place.id} place={place} />)}
                 </div>
               </TabContent>
@@ -512,7 +516,7 @@ function CardSkeleton() {
 
 function TabContent({ isLoading, isEmpty, children }: { isLoading: boolean; isEmpty: boolean; children: React.ReactNode }) {
   if (isLoading) return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
       {Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)}
     </div>
   )

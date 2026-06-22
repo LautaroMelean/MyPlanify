@@ -74,7 +74,7 @@ export default function MapPage() {
     : userPos
     ? { lat: userPos[0], lon: userPos[1], radius: 1500 }
     : null
-  const { data: externalPlaces = [], isLoading: externalLoading } = useExternalPlaces(externalCoords)
+  const { data: externalPlaces = [] } = useExternalPlaces(externalCoords)
 
   // All places with valid coordinates, de-duplicated
   const internalIds = useMemo(() => new Set(places.map((p) => p.id)), [places])
@@ -174,17 +174,16 @@ export default function MapPage() {
   return (
     <div className="flex flex-col gap-4 h-full">
       <title>Mapa | Planify</title>
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">
-            <MapPin className="h-6 w-6 text-primary-600" aria-hidden="true" />
+      <div className="flex items-center justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <MapPin className="h-5 w-5 sm:h-6 sm:w-6 text-primary-600 flex-shrink-0" aria-hidden="true" />
             Mapa
           </h1>
-          <p className="text-gray-500 text-sm">
-            {visiblePlaces.length} de {allPlacesWithCoords.length} lugar{allPlacesWithCoords.length !== 1 ? 'es' : ''} visibles.
-            {userPos && !searchedCity && <span className="text-primary-600 ml-1">· Tu ubicación activa</span>}
-            {searchedCity && <span className="text-primary-600 ml-1">· {searchedCity}</span>}
-            {externalLoading && <span className="text-gray-400 ml-1">· Cargando lugares de OpenStreetMap…</span>}
+          <p className="text-gray-500 text-xs sm:text-sm truncate mt-0.5">
+            {visiblePlaces.length} de {allPlacesWithCoords.length} lugares visibles
+            {userPos && !searchedCity && <span className="text-primary-600"> · Tu ubicación activa</span>}
+            {searchedCity && <span className="text-primary-600"> · {searchedCity}</span>}
           </p>
         </div>
         <Button
@@ -194,12 +193,13 @@ export default function MapPage() {
           isLoading={locating}
           leftIcon={<Locate className="h-4 w-4" aria-hidden="true" />}
         >
-          Mi ubicación
+          <span className="hidden sm:inline">Mi ubicación</span>
+          <span className="sm:hidden">Ubicación</span>
         </Button>
       </div>
 
       <div className="flex gap-2">
-        <div className="relative flex-1 max-w-sm">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
           <input
             type="text"
@@ -269,7 +269,7 @@ export default function MapPage() {
       {visiblePlaces.length > 0 && (
         <div>
           <p className="text-xs text-gray-400 mb-2">Mostrando {visiblePlaces.length} lugar{visiblePlaces.length !== 1 ? 'es' : ''} en esta área — zoom o mové el mapa para ver más.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
             {visiblePlaces.map((place) => {
               const isInternal = place.source !== 'osm'
               return (

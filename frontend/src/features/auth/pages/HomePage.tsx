@@ -174,10 +174,10 @@ export default function HomePage() {
             <button
               key={s.type}
               onClick={() => navigate('/explorar', { state: { activityType: s.type } })}
-              className="flex flex-col items-center gap-1.5 p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/40 hover:shadow-neon-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
+              className="flex flex-col items-center gap-1 p-2 sm:p-3 bg-white border border-gray-200 rounded-xl shadow-glass-sm hover:border-primary-500/40 hover:shadow-neon-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 touch-manipulation active:scale-[0.97]"
             >
-              <span className="text-xl" aria-hidden="true">{s.emoji}</span>
-              <span className="text-xs font-medium text-gray-600">{s.label}</span>
+              <span className="text-lg sm:text-xl" aria-hidden="true">{s.emoji}</span>
+              <span className="text-[10px] sm:text-xs font-medium text-gray-600 truncate w-full text-center leading-tight">{s.label}</span>
             </button>
           ))}
         </div>
