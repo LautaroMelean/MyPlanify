@@ -206,8 +206,7 @@ def plan_trending(request):
     except (ValueError, TypeError):
         limit = 10
 
-    exclude_user = request.user if request.user.is_authenticated else None
-    results = get_trending_plans(city=city, period=period, limit=limit, exclude_user=exclude_user)
+    results = get_trending_plans(city=city, period=period, limit=limit)
 
     data = [
         TrendingPlanSerializer({
