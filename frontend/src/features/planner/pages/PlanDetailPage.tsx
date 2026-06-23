@@ -82,25 +82,6 @@ export default function PlanDetailPage() {
     updateItem.mutate({ itemId, payload: { note } })
   }
 
-  const handleReorder = async (itemId: string, direction: 'up' | 'down') => {
-    const item = plan.items.find((i) => i.id === itemId)
-    if (!item) return
-    const slotItems = plan.items
-      .filter((i) => i.slot === item.slot)
-      .sort((a, b) => a.order - b.order)
-    const idx = slotItems.findIndex((i) => i.id === itemId)
-    const targetIdx = direction === 'up' ? idx - 1 : idx + 1
-    if (targetIdx < 0 || targetIdx >= slotItems.length) return
-    const targetItem = slotItems[targetIdx]
-    try {
-      await Promise.all([
-        updateItem.mutateAsync({ itemId, payload: { order: targetItem.order } }),
-        updateItem.mutateAsync({ itemId: targetItem.id, payload: { order: item.order } }),
-      ])
-    } catch {
-      toast.error('No se pudo reordenar el ítem')
-    }
-  }
 
   const handleClone = (date: string) => {
     clonePlan.mutate(
@@ -209,7 +190,6 @@ export default function PlanDetailPage() {
           })}
           onFeedbackItem={setFeedbackItem}
           onSaveNote={handleSaveNote}
-          onReorderItem={handleReorder}
         />
       )}
 
