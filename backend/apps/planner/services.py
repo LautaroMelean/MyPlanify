@@ -1,4 +1,5 @@
 import uuid
+import random
 import logging
 from datetime import date as date_type
 from decimal import Decimal
@@ -138,7 +139,7 @@ def _collect_candidates(
         else:
             activity_qs = activity_qs.filter(Q(city__icontains=city) | Q(city=""))
 
-    for act in activity_qs[:80]:
+    for act in activity_qs.order_by("?"):
         pref_s = _pref_boost(act.category, act.activity_type, pref_map)
         pop_s = _popularity_score(act.score_base)
         inter_s = _interaction_score_v2(act.id, interaction_map)
@@ -150,7 +151,7 @@ def _collect_candidates(
             "preference": pref_s, "popularity": pop_s, "interaction": inter_s,
             "weather": weather_s, "budget": budget_s, "people": people_s,
         }
-        base_score = max(0, min(100, sum(breakdown.values())))
+        base_score = max(0, min(100, sum(breakdown.values()))) + random.uniform(0, 8)
         all_candidates.append({
             "base_score": base_score + 10,  # +10 "do-something" bonus
             "breakdown": breakdown,
@@ -174,7 +175,7 @@ def _collect_candidates(
         else:
             place_qs = place_qs.filter(Q(city__icontains=city) | Q(city=""))
 
-    for place in place_qs.order_by("-is_curated", "name")[:80]:
+    for place in place_qs.order_by("?"):
         pref_s = _pref_boost(place.category, "", pref_map)
         pop_s = max(0, 15 - place.price_level * 2)
         if place.is_curated:
@@ -186,7 +187,7 @@ def _collect_candidates(
             "preference": pref_s, "popularity": pop_s, "interaction": inter_s,
             "weather": outdoor_s, "budget": 0, "people": 0,
         }
-        base_score = max(0, min(100, sum(breakdown.values())))
+        base_score = max(0, min(100, sum(breakdown.values()))) + random.uniform(0, 8)
         all_candidates.append({
             "base_score": base_score,
             "breakdown": breakdown,
