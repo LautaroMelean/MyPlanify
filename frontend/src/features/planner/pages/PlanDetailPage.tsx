@@ -129,7 +129,7 @@ export default function PlanDetailPage() {
         <div>
           <h1 className="text-xl font-bold text-gray-900">{plan.title}</h1>
           <p className="text-sm text-gray-500 mt-1">
-            <span className="capitalize">{new Date(plan.date + 'T12:00:00').toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+            <span>{(new Date(plan.date + 'T12:00:00').toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })).replace(/^./, c => c.toUpperCase())}</span>
             {' · '}{plan.city} · {plan.people_count} persona{plan.people_count !== 1 ? 's' : ''} · ${Number(plan.budget).toLocaleString('es-AR')}
           </p>
         </div>
@@ -183,7 +183,7 @@ export default function PlanDetailPage() {
       {plan.date >= localDateString() && coords && (
         <div className="mb-6 p-4 bg-gray-100 rounded-xl border border-gray-200/30">
           <h2 className="text-sm font-semibold text-gray-600 mb-2">
-            Pronóstico para el {new Date(plan.date + 'T12:00:00').toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
+            Pronóstico para el {new Date(plan.date + 'T12:00:00').toLocaleDateString('es-AR', { day: 'numeric', month: 'long' })}
           </h2>
           <WeatherForecastWidget
             forecast={forecast}

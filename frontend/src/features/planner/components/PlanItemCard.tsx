@@ -106,10 +106,10 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
             detailPath ? (
               <button
                 onClick={() => navigate(detailPath)}
-                className="font-semibold text-gray-900 text-sm leading-snug hover:text-primary-600 flex items-center gap-1 group/link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded"
+                className="font-semibold text-gray-900 text-sm leading-snug hover:text-primary-600 hover:underline flex items-center gap-1 group/link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded text-left"
               >
                 {item.entity_name}
-                <ExternalLink className="h-3 w-3 opacity-0 group-hover/link:opacity-60 transition-opacity flex-shrink-0" />
+                <ExternalLink className="h-3 w-3 opacity-0 group-hover/link:opacity-70 transition-opacity flex-shrink-0" />
               </button>
             ) : (
               <p className="font-semibold text-gray-900 text-sm leading-snug">{item.entity_name}</p>
@@ -130,7 +130,7 @@ export function PlanItemCard({ item, onRemove, onFeedback, onSaveNote, onReorder
                 className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-0.5 mt-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-500/40 rounded"
               >
                 <Info className="h-3 w-3" aria-hidden="true" />
-                {showDescription ? 'Ocultar' : 'Ver más'}
+                {showDescription ? 'Ocultar descripción' : 'Ver descripción'}
               </button>
             </div>
           )}

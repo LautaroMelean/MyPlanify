@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { CalendarDays, Sparkles, ArrowRight } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { CalendarDays, Sparkles, ArrowRight, FolderOpen } from 'lucide-react'
 import { PlannerForm } from '../components/PlannerForm'
 import { ItineraryView } from '../components/ItineraryView'
 import { InspireFeed } from '../components/InspireFeed'
@@ -43,12 +43,21 @@ export default function PlannerPage() {
     <div className="max-w-3xl mx-auto px-4 py-8 space-y-8">
       <title>Planner | Planify</title>
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <CalendarDays className="h-7 w-7 text-primary-600" />
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Planner Inteligente</h1>
-          <p className="text-sm text-gray-500">Generá tu itinerario del día en segundos</p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <CalendarDays className="h-7 w-7 text-primary-600" />
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Planner Inteligente</h1>
+            <p className="text-sm text-gray-500">Generá tu itinerario del día en segundos</p>
+          </div>
         </div>
+        <Link
+          to="/mis-planes"
+          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded px-2 py-1"
+        >
+          <FolderOpen className="h-4 w-4" aria-hidden="true" />
+          Mis planes
+        </Link>
       </div>
 
       {/* Plan form + result */}
