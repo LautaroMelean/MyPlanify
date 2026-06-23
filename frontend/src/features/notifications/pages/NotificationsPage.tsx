@@ -11,6 +11,10 @@ const TYPE_LABELS: Record<string, string> = {
   recommendation: 'Recomendación',
 }
 
+function cleanTitle(title: string): string {
+  return title.replace(/\s*\[[0-9a-f-]{36}\]\s*$/i, '')
+}
+
 function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime()
   const minutes = Math.floor(diff / 60_000)
@@ -44,7 +48,7 @@ function NotificationItem({ notification }: { notification: Notification }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
           <p className={`text-sm font-semibold ${notification.read ? 'text-gray-600' : 'text-gray-900'}`}>
-            {notification.title}
+            {cleanTitle(notification.title)}
           </p>
           <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0">
             {timeAgo(notification.created_at)}
@@ -60,7 +64,7 @@ function NotificationItem({ notification }: { notification: Notification }) {
               onClick={() => markRead.mutate(notification.id)}
               disabled={markRead.isPending}
               className="text-xs text-primary-600 hover:text-primary-700 font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 rounded"
-              aria-label={`Marcar como leída: ${notification.title}`}
+              aria-label={`Marcar como leída: ${cleanTitle(notification.title)}`}
             >
               Marcar como leída
             </button>
