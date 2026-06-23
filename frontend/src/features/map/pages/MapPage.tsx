@@ -231,7 +231,7 @@ export default function MapPage() {
               <Popup>
                 <div className="min-w-[160px]">
                   <p className="font-semibold text-gray-900">{place.name}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{place.category}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{place.category.split('/')[0].trim()}</p>
                   {place.address && <p className="text-xs text-gray-400 mt-1">{place.address}</p>}
                 </div>
               </Popup>
@@ -258,7 +258,7 @@ export default function MapPage() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="font-medium text-gray-900 text-sm truncate">{place.name}</p>
-                  <p className="text-xs text-gray-500">{place.city || '—'} · {place.category}</p>
+                  <p className="text-xs text-gray-500">{place.city || '—'} · {place.category.split('/')[0].trim()}</p>
                 </div>
               </button>
             ))}
