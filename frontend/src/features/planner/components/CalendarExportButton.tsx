@@ -26,7 +26,7 @@ function generateIcs(plan: Plan): string {
     const dtstart = formatIcsDate(plan.date, times.start)
     const dtend = formatIcsDate(plan.date, times.end)
     const uid = `${plan.id}-${item.id}@planify`
-    const summary = `Planify: ${item.entity_type} (${item.slot})`
+    const summary = item.entity_name ? `Planify: ${item.entity_name}` : `Planify: ${item.entity_type}`
     const description = item.generation_reason.replace(/\n/g, '\\n') || 'Plan generado con Planify'
 
     lines.push(
@@ -48,7 +48,7 @@ function googleCalendarUrl(plan: Plan, item: PlanItem): string {
   const times = SLOT_TIMES[item.slot]
   const dateStr = plan.date.replace(/-/g, '')
   const dates = `${dateStr}T${times.start.replace(':', '')}00/${dateStr}T${times.end.replace(':', '')}00`
-  const text = encodeURIComponent(`Planify: ${item.entity_type}`)
+  const text = encodeURIComponent(item.entity_name ? `Planify: ${item.entity_name}` : `Planify: ${item.entity_type}`)
   const details = encodeURIComponent(item.generation_reason || 'Plan generado con Planify')
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${dates}&details=${details}`
 }
