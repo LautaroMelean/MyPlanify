@@ -1,18 +1,16 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
-import { MapPin, Activity, Calendar, TrendingUp, Navigation, Filter, X, Globe, Compass, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MapPin, Activity, TrendingUp, Navigation, Filter, X, Globe, Compass, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { usePlaces, usePlacesPaginated } from '@/hooks/usePlaces'
 import { useActivitiesPaginated } from '@/hooks/useActivities'
-import { useEventsPaginated } from '@/hooks/useEvents'
 import { useTrending } from '@/hooks/useTrending'
 import { useExternalPlaces } from '@/hooks/useExternalPlaces'
 import PlaceCard from '@/components/ui/PlaceCard'
 import ActivityCard from '@/components/ui/ActivityCard'
-import EventCard from '@/components/ui/EventCard'
 import SearchBar from '@/components/ui/SearchBar'
 import EmptyState from '@/components/common/EmptyState'
 
-type Tab = 'lugares' | 'actividades' | 'eventos' | 'cerca'
+type Tab = 'lugares' | 'actividades' | 'cerca'
 
 const ACTIVITY_TYPE_CHIPS = [
   { type: 'gaming',     emoji: '🎮', label: 'Gaming' },
@@ -39,7 +37,6 @@ interface PlaceFilters {
   cuisine?: string
 }
 interface ActivityFilters { category?: string; indoor?: boolean; outdoor?: boolean; free?: boolean; type?: string }
-interface EventFilters { category?: string; date_from?: string; date_to?: string; free?: boolean }
 
 export default function ExplorePage() {
   const location = useLocation()
@@ -52,7 +49,6 @@ export default function ExplorePage() {
 
   const [placeFilters, setPlaceFilters] = useState<PlaceFilters>({})
   const [activityFilters, setActivityFilters] = useState<ActivityFilters>(() => ({ type: initialType }))
-  const [eventFilters, setEventFilters] = useState<EventFilters>({})
   const [nearbyCoords, setNearbyCoords] = useState<{ lat: number; lon: number } | null>(null)
   const [geoLoading, setGeoLoading] = useState(false)
   const [geoError, setGeoError] = useState<string | null>(null)
@@ -64,7 +60,7 @@ export default function ExplorePage() {
   }, [search])
 
   // Reset to page 1 when tab, search or filters change
-  useEffect(() => { setPage(1) }, [tab, debouncedSearch, placeFilters, activityFilters, eventFilters])
+  useEffect(() => { setPage(1) }, [tab, debouncedSearch, placeFilters, activityFilters])
 
   // Paginated queries for the three main tabs
   const places = usePlacesPaginated({
@@ -85,14 +81,6 @@ export default function ExplorePage() {
     outdoor: tab === 'actividades' && activityFilters.outdoor ? true : undefined,
     free: tab === 'actividades' && activityFilters.free ? true : undefined,
     type: tab === 'actividades' ? activityFilters.type : undefined,
-  })
-
-  const events = useEventsPaginated({
-    page,
-    category: tab === 'eventos' ? (eventFilters.category || debouncedSearch || undefined) : undefined,
-    date_from: tab === 'eventos' ? eventFilters.date_from : undefined,
-    date_to: tab === 'eventos' ? eventFilters.date_to : undefined,
-    free: tab === 'eventos' && eventFilters.free ? true : undefined,
   })
 
   // Nearby tab uses non-paginated (filtered by radius, always small result set)
@@ -117,7 +105,6 @@ export default function ExplorePage() {
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: 'lugares', label: 'Lugares', icon: <MapPin className="h-4 w-4" aria-hidden="true" /> },
     { id: 'actividades', label: 'Actividades', icon: <Activity className="h-4 w-4" aria-hidden="true" /> },
-    { id: 'eventos', label: 'Eventos', icon: <Calendar className="h-4 w-4" aria-hidden="true" /> },
     { id: 'cerca', label: 'Cerca de mí', icon: <Navigation className="h-4 w-4" aria-hidden="true" /> },
   ]
 
@@ -136,12 +123,10 @@ export default function ExplorePage() {
     ? Object.values(placeFilters).filter((v) => v !== undefined && v !== false).length + (placeFilters.fee === false ? 1 : 0)
     : tab === 'actividades'
     ? Object.values(activityFilters).filter((v) => v !== undefined && v !== false).length
-    : tab === 'eventos'
-    ? Object.values(eventFilters).filter(Boolean).length
     : 0
 
   // Derived pagination info for active tab
-  const activePaginated = tab === 'lugares' ? places : tab === 'actividades' ? activities : events
+  const activePaginated = tab === 'lugares' ? places : activities
   const totalCount = activePaginated.data?.count ?? 0
   const totalPages = Math.ceil(totalCount / 30)
   const showPagination = tab !== 'cerca' && totalPages > 1
@@ -216,22 +201,6 @@ export default function ExplorePage() {
           <button onClick={() => setActivityFilters({})} className="text-xs text-red-500 hover:underline self-start focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-500/40 rounded">Limpiar filtros</button>
         </FilterPanel>
       )}
-      {showFilters && tab === 'eventos' && (
-        <FilterPanel onClose={() => setShowFilters(false)}>
-          <FilterRow label="Categoría">
-            <input type="text" value={eventFilters.category ?? ''} onChange={(e) => setEventFilters((f) => ({ ...f, category: e.target.value || undefined }))} placeholder="ej. festival, teatro" />
-          </FilterRow>
-          <FilterRow label="Desde">
-            <input type="date" value={eventFilters.date_from ?? ''} onChange={(e) => setEventFilters((f) => ({ ...f, date_from: e.target.value || undefined }))} />
-          </FilterRow>
-          <FilterRow label="Hasta">
-            <input type="date" value={eventFilters.date_to ?? ''} onChange={(e) => setEventFilters((f) => ({ ...f, date_to: e.target.value || undefined }))} />
-          </FilterRow>
-          <CheckFilter label="Solo gratuitos" checked={eventFilters.free ?? false} onChange={(v) => setEventFilters((f) => ({ ...f, free: v || undefined }))} />
-          <button onClick={() => setEventFilters({})} className="text-xs text-red-500 hover:underline self-start focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-500/40 rounded">Limpiar filtros</button>
-        </FilterPanel>
-      )}
-
       {/* Trending */}
       {showTrending && trending && (
         <>
@@ -257,38 +226,6 @@ export default function ExplorePage() {
                         <div className="w-full h-28 bg-primary-100/40 flex items-center justify-center" aria-hidden="true"><MapPin className="h-8 w-8 text-primary-500" /></div>
                       )}
                       <div className="p-2"><p className="text-xs font-semibold text-gray-900 truncate">{p.name}</p><p className="text-xs text-gray-400 truncate">{p.city}</p></div>
-                    </button>
-                  ))}
-                </div>
-                <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none" aria-hidden="true" />
-              </div>
-            </div>
-          )}
-          {trending.events.length > 0 && (
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-primary-600" aria-hidden="true" />
-                  <h2 className="text-sm font-semibold text-gray-600">Eventos más guardados</h2>
-                </div>
-                <button onClick={() => setTab('eventos')} className="text-xs text-primary-600 hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-500/40 rounded">
-                  Ver todos
-                </button>
-              </div>
-              <div className="relative">
-                <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
-                  {trending.events.map((e) => (
-                    <button key={e.id} onClick={() => navigate(`/events/${e.id}`)} aria-label={e.title}
-                      className="group flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
-                      {e.image_url ? (
-                        <img src={e.image_url} alt="" className="w-full h-28 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                      ) : (
-                        <div className="w-full h-28 bg-primary-100/40 flex items-center justify-center" aria-hidden="true"><Calendar className="h-8 w-8 text-primary-500" /></div>
-                      )}
-                      <div className="p-2">
-                        <p className="text-xs font-semibold text-gray-900 truncate">{e.title}</p>
-                        <p className="text-xs text-gray-400">{new Date(e.start_date).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })}</p>
-                      </div>
                     </button>
                   ))}
                 </div>
@@ -355,19 +292,6 @@ export default function ExplorePage() {
           </TabContent>
           {showPagination && (
             <Pagination page={page} totalPages={totalPages} total={totalCount} onPageChange={setPage} isFetching={activities.isFetching} />
-          )}
-        </>
-      )}
-
-      {tab === 'eventos' && (
-        <>
-          <TabContent isLoading={events.isLoading} isEmpty={!events.data?.results?.length}>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-              {events.data?.results.map((event) => <EventCard key={event.id} event={event} />)}
-            </div>
-          </TabContent>
-          {showPagination && (
-            <Pagination page={page} totalPages={totalPages} total={totalCount} onPageChange={setPage} isFetching={events.isFetching} />
           )}
         </>
       )}
