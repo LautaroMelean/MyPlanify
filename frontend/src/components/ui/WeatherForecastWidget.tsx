@@ -53,8 +53,8 @@ export default function WeatherForecastWidget({
                 : 'bg-white border-gray-200'
             }`}
           >
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-              {day.day_name.slice(0, 3)}
+            <span className={`text-xs font-semibold uppercase tracking-wide ${isHighlighted ? 'text-primary-600' : 'text-gray-500'}`}>
+              {isHighlighted ? 'Hoy' : day.day_name.slice(0, 3)}
             </span>
             {getIcon(day.condition)}
             <div className="text-center">

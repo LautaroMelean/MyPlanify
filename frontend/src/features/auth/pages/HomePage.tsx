@@ -85,31 +85,42 @@ export default function HomePage() {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {getGreeting(user?.first_name ?? '')} 👋
+            {getGreeting(user?.first_name ?? '')}!
           </h1>
           <p className="text-gray-500 text-sm mt-0.5">{TODAY_LABEL} · Buenos Aires</p>
         </div>
         {weatherLoading ? (
-          <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-4 py-3 animate-pulse w-40 h-10" />
+          <div className="flex flex-col items-end gap-1">
+            <div className="h-3 w-16 bg-gray-200/30 rounded animate-pulse" />
+            <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-4 py-3 animate-pulse w-48 h-10" />
+          </div>
         ) : weather ? (
-          <WeatherWidget weather={weather} />
+          <div className="flex flex-col items-end gap-1">
+            <span className="text-xs font-semibold text-gray-500 tracking-wide">Hoy · Buenos Aires</span>
+            <WeatherWidget weather={weather} />
+          </div>
         ) : (
-          <div className="flex items-center gap-2 text-sm text-gray-400 bg-white border border-gray-200 rounded-xl px-4 py-3">
-            <Cloud className="h-4 w-4" aria-hidden="true" /> Buenos Aires
+          <div className="flex flex-col items-end gap-1">
+            <span className="text-xs font-semibold text-gray-500 tracking-wide">Hoy · Buenos Aires</span>
+            <div className="flex items-center gap-2 text-sm text-gray-400 bg-white border border-gray-200 rounded-xl px-4 py-3">
+              <Cloud className="h-4 w-4" aria-hidden="true" /> Sin datos
+            </div>
           </div>
         )}
       </div>
 
       {/* HERO — recomendación personalizada */}
-      <div className="bg-gradient-to-br from-violet-900 via-purple-900 to-indigo-900 rounded-2xl p-6 text-white shadow-neon ring-1 ring-violet-500/30">
-        <div className="flex items-center gap-2 mb-1">
-          <Sparkles className="h-5 w-5 text-yellow-300" aria-hidden="true" />
-          <span className="text-sm font-semibold text-indigo-200">Recomendación para vos</span>
+      <div className="bg-gradient-to-br from-violet-700 via-purple-600 to-indigo-700 rounded-2xl p-6 text-white shadow-neon border-2 border-violet-300/40">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 rounded-full px-3 py-0.5 text-xs font-semibold text-indigo-200">
+            <Sparkles className="h-3.5 w-3.5 text-yellow-300" aria-hidden="true" />
+            Recomendación para vos
+          </span>
         </div>
-        <h2 className="text-xl font-bold mb-4">¿Qué hacés hoy en Buenos Aires?</h2>
+        <h2 className="text-xl font-bold mb-4 text-white">¿Qué hacés hoy en Buenos Aires?</h2>
 
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="flex flex-col gap-1">
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-end mb-4">
+          <div className="flex flex-col gap-1 flex-1">
             <label htmlFor="home-budget" className="text-xs text-indigo-200 flex items-center gap-1">
               <DollarSign className="h-3 w-3" aria-hidden="true" /> Presupuesto (ARS)
             </label>
@@ -123,7 +134,7 @@ export default function HomePage() {
               placeholder="5.000"
             />
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 sm:w-28">
             <label htmlFor="home-people" className="text-xs text-indigo-200 flex items-center gap-1">
               <Users className="h-3 w-3" aria-hidden="true" /> Personas
             </label>
@@ -137,26 +148,25 @@ export default function HomePage() {
               max="20"
             />
           </div>
+          <button
+            onClick={handleDiscover}
+            disabled={recLoading}
+            className="flex items-center justify-center gap-2 bg-primary-600 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-primary-700 transition-all disabled:opacity-60 shadow-neon-sm hover:shadow-neon-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 whitespace-nowrap"
+          >
+            {recLoading ? (
+              <>
+                <span className="animate-spin h-4 w-4 border-2 border-indigo-400 border-t-transparent rounded-full" aria-hidden="true" />
+                Buscando...
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-4 w-4" aria-hidden="true" />
+                Descubrí qué hacer hoy
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </>
+            )}
+          </button>
         </div>
-
-        <button
-          onClick={handleDiscover}
-          disabled={recLoading}
-          className="w-full flex items-center justify-center gap-2 bg-primary-600 text-white font-bold py-3 rounded-xl hover:bg-primary-700 transition-all disabled:opacity-60 shadow-neon hover:shadow-neon focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-        >
-          {recLoading ? (
-            <>
-              <span className="animate-spin h-4 w-4 border-2 border-indigo-400 border-t-transparent rounded-full" aria-hidden="true" />
-              Buscando...
-            </>
-          ) : (
-            <>
-              <Sparkles className="h-4 w-4" aria-hidden="true" />
-              Descubrí qué hacer hoy
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </>
-          )}
-        </button>
 
         {recError && (
           <p className="text-xs text-red-300 mt-2 text-center" role="alert">
@@ -336,10 +346,7 @@ export default function HomePage() {
 
       {/* Acciones rápidas */}
       <div>
-        <h2 className="text-sm font-semibold text-gray-600 mb-3">
-          <CalendarDays className="inline h-4 w-4 mr-1 text-gray-400" aria-hidden="true" />
-          Más opciones
-        </h2>
+        <h2 className="text-sm font-semibold text-gray-600 mb-3">Más opciones</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {QUICK_ACTIONS.map((a) => (
             <button

@@ -134,12 +134,14 @@ export default function ExplorePage() {
   return (
     <div className="flex flex-col gap-6">
       <title>Explorar | Planify</title>
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <Compass className="h-6 w-6 text-primary-600" aria-hidden="true" />
-          <h1 className="text-2xl font-bold text-gray-900">Explorar</h1>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <Compass className="h-6 w-6 text-primary-600 flex-shrink-0" aria-hidden="true" />
+            Explorar
+          </h1>
+          <p className="text-gray-500 text-sm mt-0.5">Descubrí los mejores lugares de Buenos Aires.</p>
         </div>
-        <p className="text-gray-500 text-sm">Explorá qué hacer en Buenos Aires.</p>
       </div>
 
       {/* Search + filters — only on lugares tab */}
@@ -197,22 +199,25 @@ export default function ExplorePage() {
             </div>
           </div>
           <div className="relative">
-            <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+            <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
               {trending.places.map((p) => (
                 <button key={p.id} onClick={() => navigate(`/places/${p.id}`)} aria-label={p.name}
-                  className="group flex-shrink-0 w-44 bg-white rounded-xl border border-gray-200 shadow-glass-sm overflow-hidden hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
-                  {p.image_url
-                    ? <img src={p.image_url} alt="" className="w-full h-28 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                    : <div className="w-full h-28 bg-primary-100/40 flex items-center justify-center" aria-hidden="true"><MapPin className="h-8 w-8 text-primary-500" /></div>
-                  }
-                  <div className="p-2">
-                    <p className="text-xs font-semibold text-gray-900 truncate">{p.name}</p>
-                    <p className="text-xs text-gray-400 truncate">{p.category}</p>
+                  className="group relative flex-shrink-0 w-40 sm:w-48 rounded-2xl overflow-hidden shadow-glass-sm hover:shadow-neon-sm transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40">
+                  <div className="h-36 sm:h-44 relative">
+                    {p.image_url
+                      ? <img src={p.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                      : <div className="w-full h-full bg-primary-100/40 flex items-center justify-center" aria-hidden="true"><MapPin className="h-8 w-8 text-primary-400" /></div>
+                    }
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" aria-hidden="true" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3">
+                      <p className="text-xs font-bold text-white truncate leading-tight">{p.name}</p>
+                      <p className="text-[10px] text-white/70 truncate mt-0.5">{p.category.split('/')[0].trim()}</p>
+                    </div>
                   </div>
                 </button>
               ))}
             </div>
-            <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none" aria-hidden="true" />
+            <div className="absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white to-transparent pointer-events-none" aria-hidden="true" />
           </div>
         </div>
       )}

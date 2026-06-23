@@ -117,7 +117,7 @@ export default function Navbar() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar... (presioná /)"
+              placeholder="Buscar lugares, actividades..."
               aria-label="Buscar"
               className="pl-9 pr-4 py-1.5 text-sm border border-white/10 rounded-lg bg-white/5 text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary-500/50 focus:border-primary-500/30 focus:bg-white/8 w-56 transition-all"
             />
