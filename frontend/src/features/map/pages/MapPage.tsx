@@ -4,7 +4,6 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 're
 import { MapPin, Locate, Search, X } from 'lucide-react'
 import { usePlaces } from '@/hooks/usePlaces'
 import { useWeather } from '@/hooks/useWeather'
-import { useExternalPlaces } from '@/hooks/useExternalPlaces'
 import { geocodingService } from '@/services/geocodingService'
 import Button from '@/components/ui/Button'
 import WeatherWidget from '@/components/ui/WeatherWidget'
@@ -67,25 +66,13 @@ export default function MapPage() {
   const [citySearching, setCitySearching] = useState(false)
   const [cityError, setCityError] = useState<string | null>(null)
   const [searchedCity, setSearchedCity] = useState<string | null>(null)
-  const [searchCenter, setSearchCenter] = useState<[number, number] | null>(null)
 
-  const externalCoords = searchCenter
-    ? { lat: searchCenter[0], lon: searchCenter[1], radius: 2000 }
-    : userPos
-    ? { lat: userPos[0], lon: userPos[1], radius: 1500 }
-    : null
-  const { data: externalPlaces = [] } = useExternalPlaces(externalCoords)
-
-  // All places with valid coordinates, de-duplicated
-  const internalIds = useMemo(() => new Set(places.map((p) => p.id)), [places])
+  // Only internal (Excel) places with valid coordinates
   const allPlacesWithCoords = useMemo(
-    () => [
-      ...places.filter((p) => p.latitude && p.longitude && !EXCLUDED_CATEGORIES.has(p.category)),
-      ...externalPlaces.filter(
-        (p) => p.latitude && p.longitude && !EXCLUDED_CATEGORIES.has(p.category) && !internalIds.has(p.id),
-      ),
-    ],
-    [places, externalPlaces, internalIds],
+    () => places.filter(
+      (p) => p.source === 'internal' && p.latitude && p.longitude && !EXCLUDED_CATEGORIES.has(p.category)
+    ),
+    [places],
   )
 
   // Only render markers that are within the current map viewport
@@ -105,7 +92,6 @@ export default function MapPage() {
     if (!navigator.geolocation) { setLocError('Tu navegador no soporta geolocalización.'); return }
     setLocating(true)
     setLocError(null)
-    setSearchCenter(null)
     setSearchedCity(null)
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -128,7 +114,6 @@ export default function MapPage() {
       const result = await geocodingService.geocode(q)
       if (!result) { setCityError('No se encontró esa ciudad. Probá con otro nombre.'); return }
       const coords: [number, number] = [result.lat, result.lon]
-      setSearchCenter(coords)
       setMapCenter(coords)
       setSearchedCity(result.city || result.display_name.split(',')[0])
       setCityQuery('')
@@ -140,7 +125,6 @@ export default function MapPage() {
   }
 
   const clearSearch = () => {
-    setSearchCenter(null)
     setSearchedCity(null)
     setCityError(null)
   }
@@ -256,7 +240,6 @@ export default function MapPage() {
                   <p className="font-semibold text-gray-900">{place.name}</p>
                   <p className="text-xs text-gray-500 mt-0.5">{place.category}</p>
                   {place.address && <p className="text-xs text-gray-400 mt-1">{place.address}</p>}
-                  {place.source === 'osm' && <p className="text-xs text-green-400/70 mt-1">· OpenStreetMap</p>}
                 </div>
               </Popup>
             </Marker>
@@ -269,40 +252,23 @@ export default function MapPage() {
         <div>
           <p className="text-xs text-gray-400 mb-2">Mostrando {visiblePlaces.length} lugar{visiblePlaces.length !== 1 ? 'es' : ''} en esta área — zoom o mové el mapa para ver más.</p>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-            {visiblePlaces.map((place) => {
-              const isInternal = place.source !== 'osm'
-              return isInternal ? (
-                <button
-                  key={place.id}
-                  type="button"
-                  onClick={() => navigate(`/places/${place.id}`)}
-                  aria-label={place.name}
-                  className="flex items-center gap-3 bg-white rounded-xl border border-gray-200 p-3 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
-                >
-                  <div className="bg-primary-500/10 rounded-lg p-2 flex-shrink-0" aria-hidden="true">
-                    <MapPin className="h-4 w-4 text-primary-600" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium text-gray-900 text-sm truncate">{place.name}</p>
-                    <p className="text-xs text-gray-500">{place.city || '—'} · {place.category}</p>
-                  </div>
-                </button>
-              ) : (
-                <div
-                  key={place.id}
-                  className="flex items-center gap-3 bg-white rounded-xl border border-gray-200 p-3 shadow-glass-sm"
-                >
-                  <div className="bg-primary-500/10 rounded-lg p-2 flex-shrink-0" aria-hidden="true">
-                    <MapPin className="h-4 w-4 text-primary-600" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium text-gray-900 text-sm truncate">{place.name}</p>
-                    <p className="text-xs text-gray-500">{place.city || '—'} · {place.category}</p>
-                  </div>
-                  <span className="text-xs text-gray-400 flex-shrink-0">OSM</span>
+            {visiblePlaces.map((place) => (
+              <button
+                key={place.id}
+                type="button"
+                onClick={() => navigate(`/places/${place.id}`)}
+                aria-label={place.name}
+                className="flex items-center gap-3 bg-white rounded-xl border border-gray-200 p-3 shadow-glass-sm hover:shadow-neon-sm hover:border-primary-500/30 transition-all text-left w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40"
+              >
+                <div className="bg-primary-500/10 rounded-lg p-2 flex-shrink-0" aria-hidden="true">
+                  <MapPin className="h-4 w-4 text-primary-600" />
                 </div>
-              )
-            })}
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium text-gray-900 text-sm truncate">{place.name}</p>
+                  <p className="text-xs text-gray-500">{place.city || '—'} · {place.category}</p>
+                </div>
+              </button>
+            ))}
           </div>
         </div>
       )}

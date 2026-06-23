@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sparkles, Users, DollarSign, ArrowRight, Compass, Heart, Cloud, CalendarDays, FolderOpen, ChevronRight, Globe, Lock } from 'lucide-react'
+import { Sparkles, Users, DollarSign, ArrowRight, Compass, Heart, Cloud, CalendarDays, FolderOpen, ChevronRight, Globe, Lock, MapPin, Zap, Calendar } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useWeather, useForecast } from '@/hooks/useWeather'
-import { usePlanner, useMyPlans } from '@/hooks/usePlanner'
+import { useMyPlans } from '@/hooks/usePlanner'
+import { useRecommendations } from '@/hooks/useRecommendations'
 import WeatherWidget from '@/components/ui/WeatherWidget'
 import WeatherForecastWidget from '@/components/ui/WeatherForecastWidget'
 import { localDateString } from '@/lib/format'
@@ -44,7 +45,6 @@ function getGreeting(firstName: string) {
 export default function HomePage() {
   const { user } = useAuthStore()
   const navigate = useNavigate()
-  const planner = usePlanner()
   const { data: plans } = useMyPlans()
 
   const { data: weather, isLoading: weatherLoading } = useWeather(BA)
@@ -52,17 +52,23 @@ export default function HomePage() {
 
   const [budget, setBudget] = useState('5000')
   const [people, setPeople] = useState('2')
+  const [triggered, setTriggered] = useState(false)
+  const [recFilters, setRecFilters] = useState<{ budget: number; people: number }>({ budget: 5000, people: 2 })
 
   const budgetDisplay = budget === '' ? '' : Number(budget).toLocaleString('es-AR')
   const handleBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBudget(e.target.value.replace(/\D/g, ''))
   }
 
-  const handleGeneratePlan = () => {
-    planner.mutate(
-      { date: TODAY, budget, people_count: Number(people), city: 'Buenos Aires' },
-      { onSuccess: (plan) => navigate(`/planes/${plan.id}`) },
-    )
+  const { data: recommendations = [], isFetching: recLoading, isError: recError } = useRecommendations(
+    { budget: recFilters.budget, people: recFilters.people },
+    triggered,
+  )
+  const topRec = recommendations[0] ?? null
+
+  const handleDiscover = () => {
+    setRecFilters({ budget: Number(budget) || 5000, people: Number(people) || 2 })
+    setTriggered(true)
   }
 
   const recentPlans = useMemo(
@@ -93,11 +99,11 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* HERO — generar plan */}
+      {/* HERO — recomendación personalizada */}
       <div className="bg-gradient-to-br from-violet-900 via-purple-900 to-indigo-900 rounded-2xl p-6 text-white shadow-neon ring-1 ring-violet-500/30">
         <div className="flex items-center gap-2 mb-1">
           <Sparkles className="h-5 w-5 text-yellow-300" aria-hidden="true" />
-          <span className="text-sm font-semibold text-indigo-200">Plan inteligente</span>
+          <span className="text-sm font-semibold text-indigo-200">Recomendación para vos</span>
         </div>
         <h2 className="text-xl font-bold mb-4">¿Qué hacés hoy en Buenos Aires?</h2>
 
@@ -133,36 +139,118 @@ export default function HomePage() {
         </div>
 
         <button
-          onClick={handleGeneratePlan}
-          disabled={planner.isPending}
+          onClick={handleDiscover}
+          disabled={recLoading}
           className="w-full flex items-center justify-center gap-2 bg-primary-600 text-white font-bold py-3 rounded-xl hover:bg-primary-700 transition-all disabled:opacity-60 shadow-neon hover:shadow-neon focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
         >
-          {planner.isPending ? (
+          {recLoading ? (
             <>
               <span className="animate-spin h-4 w-4 border-2 border-indigo-400 border-t-transparent rounded-full" aria-hidden="true" />
-              Armando tu plan...
+              Buscando...
             </>
           ) : (
             <>
               <Sparkles className="h-4 w-4" aria-hidden="true" />
-              Generame un plan para hoy
+              Descubrí qué hacer hoy
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </>
           )}
         </button>
 
-        {planner.isError && (
+        {recError && (
           <p className="text-xs text-red-300 mt-2 text-center" role="alert">
-            Error al generar el plan. Intentá de nuevo.
+            Error al buscar recomendaciones. Intentá de nuevo.
           </p>
         )}
 
-        <p className="text-xs text-indigo-300 text-center mt-2">
+        {/* Result card */}
+        {triggered && !recLoading && topRec && (() => {
+          const isPlace    = topRec.item_type === 'place'    && topRec.place_detail
+          const isActivity = topRec.item_type === 'activity' && topRec.activity_detail
+          const isEvent    = topRec.item_type === 'event'    && topRec.event_detail
+
+          const name     = isPlace    ? topRec.place_detail!.name
+                         : isActivity ? topRec.activity_detail!.name
+                         : isEvent    ? topRec.event_detail!.title
+                         : ''
+          const category = isPlace    ? topRec.place_detail!.category
+                         : isActivity ? topRec.activity_detail!.category
+                         : isEvent    ? topRec.event_detail!.category
+                         : ''
+          const address  = isPlace    ? `${topRec.place_detail!.address}, ${topRec.place_detail!.city}`
+                         : isActivity ? topRec.activity_detail!.address
+                         : isEvent    ? `${topRec.event_detail!.place_address}, ${topRec.event_detail!.place_city}`
+                         : ''
+          const image    = isPlace    ? topRec.place_detail!.image_url
+                         : isActivity ? topRec.activity_detail!.image_url
+                         : isEvent    ? topRec.event_detail!.image_url
+                         : ''
+          const detailUrl = isPlace    ? `/places/${topRec.place_detail!.id}`
+                          : isActivity ? `/activities/${topRec.activity_detail!.id}`
+                          : isEvent    ? `/events/${topRec.event_detail!.id}`
+                          : null
+
+          return (
+            <div className="mt-4 bg-white/10 rounded-xl ring-1 ring-white/20 overflow-hidden">
+              {image ? (
+                <img src={image} alt={name} className="w-full h-36 object-cover" loading="lazy" decoding="async" />
+              ) : (
+                <div className={`h-28 flex items-center justify-center ${
+                  isPlace    ? 'bg-gradient-to-br from-blue-900 to-indigo-900'
+                : isActivity ? 'bg-gradient-to-br from-purple-900 to-violet-900'
+                :               'bg-gradient-to-br from-green-900 to-teal-900'
+                }`}>
+                  {isPlace    && <MapPin   className="h-10 w-10 text-blue-300/50"   aria-hidden="true" />}
+                  {isActivity && <Zap      className="h-10 w-10 text-purple-300/50" aria-hidden="true" />}
+                  {isEvent    && <Calendar className="h-10 w-10 text-green-300/50"  aria-hidden="true" />}
+                </div>
+              )}
+              <div className="p-4 flex flex-col gap-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="font-bold text-white text-base leading-tight">{name}</p>
+                    <span className="text-xs text-indigo-300 font-medium capitalize">{category}</span>
+                  </div>
+                  <span className="text-xs bg-yellow-400/20 text-yellow-200 px-2 py-0.5 rounded-full font-semibold flex-shrink-0 mt-0.5">
+                    {parseFloat(topRec.score).toFixed(1)} ★
+                  </span>
+                </div>
+                {address && (
+                  <p className="text-xs text-indigo-200 flex items-start gap-1">
+                    <MapPin className="h-3 w-3 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    {address}
+                  </p>
+                )}
+                {topRec.recommendation_reason && (
+                  <p className="text-xs text-indigo-100 bg-white/5 rounded-lg px-3 py-2 leading-relaxed italic">
+                    "{topRec.recommendation_reason}"
+                  </p>
+                )}
+                {detailUrl && (
+                  <button
+                    onClick={() => navigate(detailUrl)}
+                    className="mt-1 w-full flex items-center justify-center gap-1.5 bg-white/15 hover:bg-white/25 text-white text-sm font-semibold py-2 rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                  >
+                    Ver toda la información <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </button>
+                )}
+              </div>
+            </div>
+          )
+        })()}
+
+        {triggered && !recLoading && !topRec && !recError && (
+          <p className="text-xs text-indigo-300 text-center mt-3">
+            No encontramos recomendaciones para esos parámetros. Probá ajustando el presupuesto.
+          </p>
+        )}
+
+        <p className="text-xs text-indigo-300 text-center mt-3">
           También podés ir al{' '}
           <button onClick={() => navigate('/planner')} className="underline hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/50 rounded">
             planner completo
           </button>{' '}
-          para elegir la fecha
+          para armar un itinerario
         </p>
       </div>
 
