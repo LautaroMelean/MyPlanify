@@ -139,7 +139,7 @@ export default function ExplorePage() {
           <Compass className="h-6 w-6 text-primary-600" aria-hidden="true" />
           <h1 className="text-2xl font-bold text-gray-900">Explorar</h1>
         </div>
-        <p className="text-gray-500 text-sm">Descubrí 225 lugares curados en Buenos Aires.</p>
+        <p className="text-gray-500 text-sm">Explorá qué hacer en Buenos Aires.</p>
       </div>
 
       {/* Search + filters — only on lugares tab */}

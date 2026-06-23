@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet'
 import { MapPin, Locate, Search, X } from 'lucide-react'
@@ -60,7 +60,6 @@ export default function MapPage() {
   const { data: weather } = useWeather(weatherCoords)
   const [locating, setLocating] = useState(false)
   const [locError, setLocError] = useState<string | null>(null)
-  const didAutoLocate = useRef(false)
 
   const [cityQuery, setCityQuery] = useState('')
   const [citySearching, setCitySearching] = useState(false)
@@ -129,12 +128,6 @@ export default function MapPage() {
     setCityError(null)
   }
 
-  useEffect(() => {
-    if (!didAutoLocate.current) {
-      didAutoLocate.current = true
-      locateUser()
-    }
-  }, [])
 
   if (isLoading) {
     return (

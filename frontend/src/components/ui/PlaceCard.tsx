@@ -84,7 +84,7 @@ export default function PlaceCard({ place }: PlaceCardProps) {
         {/* Category + rating — always visible */}
         <div className="flex items-center justify-between mt-2 gap-1">
           <span className="text-xs bg-primary-500/15 text-primary-600 px-1.5 py-0.5 rounded-full font-medium truncate max-w-[55%]">
-            {place.category}
+            {place.category.split('/')[0].trim()}
           </span>
           <div className="flex items-center gap-1.5 flex-shrink-0">
             {place.avg_rating != null && (
